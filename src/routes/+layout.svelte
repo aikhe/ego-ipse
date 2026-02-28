@@ -7,13 +7,31 @@
 	import type { LayoutProps } from './$types';
 
 	let { children }: LayoutProps = $props();
-
 	let showGrid = $state(false);
+	let time = $state('--:--:--');
+
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.shiftKey && event.key === 'G') {
 			showGrid = !showGrid;
 		}
 	}
+
+	$effect(() => {
+		const updateTime = () => {
+			time = new Date().toLocaleTimeString('en-US', {
+				timeZone: 'Asia/Manila',
+				hour: '2-digit',
+				minute: '2-digit',
+				second: '2-digit',
+				hour12: true
+			});
+		};
+
+		updateTime();
+		const interval = setInterval(updateTime, 1000);
+
+		return () => clearInterval(interval);
+	});
 </script>
 
 <svelte:window onkeydown={handleKeydown} />
@@ -23,7 +41,7 @@
 <header class="section-container">
 	<img class="logo size-8" src={logo} alt="Aikhe Logo Mark" />
 
-	<p class="time">01:34.18 AM</p>
+	<p class="time">{time}</p>
 	<p class="time-zone">GMT+8</p>
 	<p class="location">CALOOCAN, PH</p>
 	<p class="coordinates">14.6514° N, 120.9902° E</p>

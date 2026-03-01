@@ -63,7 +63,7 @@
 		/* border-bottom: 1px solid rgba(255, 255, 255, 0.1); */
 
 		font-family: 'Geist Mono', monospace;
-		font-weight: 200;
+		font-weight: 300;
 		letter-spacing: 0.34%;
 		font-size: 14px;
 		color: #797979;

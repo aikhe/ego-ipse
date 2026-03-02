@@ -88,7 +88,7 @@
 	const BOX_DELAY = 300;
 
 	onMount(() => {
-		// cursor reticle: spins freely, follows mouse, fully independent
+		// cursor reticle: spins freely, follows mouse
 		const xTo = gsap.quickTo(reticle, 'x', { duration: 0.8, ease: 'power3.out' });
 		const yTo = gsap.quickTo(reticle, 'y', { duration: 0.8, ease: 'power3.out' });
 		gsap.set(reticle, { xPercent: -50, yPercent: -50, opacity: 0, width: SIZE, height: SIZE });
@@ -129,7 +129,7 @@
 			const sectionRect = infoSection.getBoundingClientRect();
 			const itemRect = currentItem.getBoundingClientRect();
 
-			// 1. Calculate button box position (the anchor)
+			// calculate button box position
 			const btnMinX = itemRect.width * 0.4;
 			const btnMaxX = itemRect.width * 0.9;
 			const btnRelX = btnMinX + Math.random() * (btnMaxX - btnMinX - 16);
@@ -137,12 +137,11 @@
 			const btnFinalY =
 				itemRect.top - sectionRect.top + itemRect.height / 2 - 8 + (Math.random() * 10 - 5);
 
-			// 2. Calculate outside box position based on button box X
-			// Spread is roughly 30% of section width
+			// spread is roughly 30% of section width
 			const spread = sectionRect.width * 0.3;
 			let outX = btnFinalX + (Math.random() * spread - spread / 2);
 
-			// Constrain outX based on card width to prevent overflow
+			// constrain outx based on card width to prevent overflow
 			const currentProj = projects[projectItems.indexOf(currentItem)];
 			const cardWidth = currentProj?.width || 260;
 			const margin = 20;
@@ -158,7 +157,7 @@
 
 			const outY = -40 - Math.random() * 120;
 
-			// box 1: above the section (grouped horizontally with button box)
+			// box 1: above the section
 			gsap.to(randomBox, {
 				opacity: 0,
 				duration: 0.1,
@@ -187,8 +186,8 @@
 					});
 				}
 			});
-			// 3. Update connector line
-			const boxSize = 0.43 * 16; // 0.43rem in px roughly
+			// update connector line
+			const boxSize = 0.43 * 16; // 0.43rem in px
 			const outCX = outX + boxSize / 2;
 			const outCY = outY + boxSize / 2;
 			const btnCX = btnFinalX + boxSize / 2;
@@ -197,7 +196,7 @@
 			const pivotX = outCX + (btnCX - outCX) * 0.5;
 			const pivotY = outCY;
 
-			// Update preview data and visibility
+			// update preview data and visibility
 			previewX = outCX;
 			previewY = outCY;
 			if (currentItem) {
@@ -213,7 +212,7 @@
 				duration: 0.3
 			});
 
-			// Animate the points using a proxy object for smooth transition
+			// animate points via proxy for smooth transition
 			const pointsAttr = connectorLine.getAttribute('points');
 			const currentPoints =
 				pointsAttr && pointsAttr !== '0,0 0,0 0,0'
@@ -281,10 +280,10 @@
 				gsap.to(item, { zIndex: 20, padding: '0 0.6rem', duration: 0.3, ease: 'power3.out' });
 				gsap.to(arrow, { opacity: 0, duration: 0.2, ease: 'power3.out' });
 
-				// cursor reticle + dwell only when not already in expand state
+				// cursor reticle and dwell when not expanded
 				if (!expanded) {
 					if (!isItem(e.relatedTarget)) {
-						// fresh hover: snap cursor reticle to right & fade in
+						// fresh hover: snap reticle and fade in
 						const rect = item.getBoundingClientRect();
 						gsap.set(reticle, { x: rect.right, y: rect.top + rect.height / 2 });
 						gsap.to(reticle, { opacity: 1, duration: 0.3, ease: 'power3.out' });
@@ -324,15 +323,13 @@
 				gsap.to(arrow, { opacity: 0.8, duration: 0.3, ease: 'power3.out' });
 
 				if (!isItem(e.relatedTarget)) {
-					// delay collapse so reticle lingers briefly after leaving
+					// delay collapse so reticle lingers briefly
 					collapseTimer = setTimeout(() => {
 						collapseExpand();
 						gsap.to(reticle, { opacity: 0, duration: 0.3, ease: 'power3.out' });
 					}, EXIT_DELAY);
 				} else {
-					// Moving between items - still clear timers for the current item
-					clearTimeout(dwellTimer!);
-					clearTimeout(boxSpawnTimer!);
+					// timers already cleared above
 				}
 			});
 		});
@@ -345,7 +342,7 @@
 	<div class="reticle-box"></div>
 </div>
 
-<!-- expand reticle: static 0deg, locks to hovered button on dwell -->
+<!-- expand reticle: static 0deg, locks to button on dwell -->
 <div class="reticle reticle--expand" bind:this={expandReticle}></div>
 
 <div class="projects-wrapper" bind:this={infoSection}>
@@ -365,7 +362,7 @@
 	<div class="info__projects">
 		{#each projects as project, i (project.id)}
 			<a
-				href={project.href}
+				href={resolve(project.href)}
 				class="project--item"
 				class:no-border-bottom={project.name === 'Lorem Ipsum'}
 				bind:this={projectItems[i]}
@@ -457,7 +454,7 @@
 		justify-content: center;
 	}
 
-	/* 1px corner brackets via css gradients — adapts to any size */
+	/* 1px corner brackets via css gradients */
 	.reticle-borders,
 	.reticle--expand {
 		background-image:

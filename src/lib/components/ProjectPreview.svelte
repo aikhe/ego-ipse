@@ -25,7 +25,7 @@
 	const COLS = 20;
 	const ROWS = 28;
 
-	// build a shuffled list of [col, row] tile indices
+	// build shuffled tile list
 	function shuffledTiles() {
 		const tiles = Array.from({ length: COLS * ROWS }, (_, i) => [i % COLS, Math.floor(i / COLS)]);
 		for (let i = tiles.length - 1; i > 0; i--) {
@@ -46,7 +46,7 @@
 		const tiles = shuffledTiles();
 		const total = tiles.length;
 
-		// fill fully covered to start a reveal, or clear to start a hide
+		// setup canvas state for reveal or hide
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		if (reveal) {
 			ctx.fillStyle = '#080807';
@@ -154,7 +154,7 @@
 			);
 		}
 
-		// tile reveal: starts as card opens, spans ~0.55s
+		// run tile reveal
 		runTileReveal(true, 0.7, '<0.15');
 	}
 
@@ -162,7 +162,7 @@
 		if (tl) tl.kill();
 		tl = gsap.timeline();
 
-		// 1. fade out content first
+		// fade out content
 		if (content) {
 			tl.to(content.children, {
 				opacity: 0,
@@ -173,10 +173,10 @@
 			});
 		}
 
-		// tile cover: runs while content fades
+		// run tile cover
 		runTileReveal(false, 0.25, '<');
 
-		// 2. collapse container
+		// collapse container
 		tl.to(
 			container,
 			{
@@ -241,7 +241,6 @@
 		z-index: 200;
 		backdrop-filter: blur(4px);
 		box-sizing: border-box;
-		/* Removed overflow: hidden to show corner borders */
 	}
 
 	.corner-accents {

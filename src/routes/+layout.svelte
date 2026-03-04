@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../styles/main.css';
 	import favicon from '$lib/assets/favicon.svg';
+	import logo from '$lib/assets/logo.svg';
 
 	import { resolve } from '$app/paths';
 	import type { LayoutProps } from './$types';
@@ -12,7 +13,7 @@
 
 <header>
 	<div class="header-container container">
-		<p>HELLO WORLD</p>
+		<img class="size-8" src={logo} alt="Aikhe Logo Mark" />
 
 		<nav class="container">
 			<a href={resolve('/')}>root</a>

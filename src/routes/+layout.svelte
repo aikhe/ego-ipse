@@ -11,18 +11,39 @@
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
 <header>
-	<nav class="container">
-		<a href={resolve('/')}>root</a>
-		<a href={resolve('/scrutiny')}>scrutiny</a>
-	</nav>
+	<div class="header-container container">
+		<p>HELLO WORLD</p>
+
+		<nav class="container">
+			<a href={resolve('/')}>root</a>
+			<a href={resolve('/scrutiny')}>scrutiny</a>
+		</nav>
+	</div>
 </header>
 
 {@render children()}
 
 <style>
 	header {
+		position: sticky;
+		top: 0;
+		z-index: 100;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 4rem;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		transition: transform 0.3s ease;
+	}
+
+	.header-container {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+	}
+
+	nav {
+		display: flex;
+		gap: 1rem;
 	}
 </style>

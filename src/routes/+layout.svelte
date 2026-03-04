@@ -1,5 +1,5 @@
 <script lang="ts">
-	import './layout.css';
+	import '../styles/main.css';
 	import favicon from '$lib/assets/favicon.svg';
 
 	import { resolve } from '$app/paths';
@@ -10,9 +10,19 @@
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
-<nav>
-	<a href={resolve('/')}>root</a>
-	<a href={resolve('/scrutiny')}>scrutiny</a>
-</nav>
+<header>
+	<nav class="container">
+		<a href={resolve('/')}>root</a>
+		<a href={resolve('/scrutiny')}>scrutiny</a>
+	</nav>
+</header>
 
 {@render children()}
+
+<style>
+	header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+</style>

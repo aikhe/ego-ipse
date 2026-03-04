@@ -7,7 +7,16 @@
 	import type { LayoutProps } from './$types';
 
 	let { children }: LayoutProps = $props();
+
+	let showGrid = $state(false);
+	function handleKeydown(event: KeyboardEvent) {
+		if (event.shiftKey && event.key === 'G') {
+			showGrid = !showGrid;
+		}
+	}
 </script>
+
+<svelte:window onkeydown={handleKeydown} />
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
@@ -15,10 +24,10 @@
 	<img class="logo size-8" src={logo} alt="Aikhe Logo Mark" />
 
 	<p class="time">01:34.18 AM</p>
-
 	<p class="time-zone">GMT+8</p>
-
 	<p class="location">CALOOCAN, PH</p>
+	<p class="coordinates">14.6514° N, 120.9902° E</p>
+	<button class="contact-btn">CONTACT</button>
 
 	<nav class="nav">
 		<a href={resolve('/')}>ROOT</a>
@@ -28,11 +37,13 @@
 
 {@render children()}
 
-<div class="grid-overlay section-container">
-	{#each Array(12)}
-		<div class="grid-column"></div>
-	{/each}
-</div>
+{#if showGrid}
+	<div class="grid-overlay section-container">
+		{#each Array(12)}
+			<div class="grid-column"></div>
+		{/each}
+	</div>
+{/if}
 
 <style>
 	header {
@@ -46,13 +57,18 @@
 		gap: 1.2rem;
 		align-items: center;
 		margin-inline: auto;
+		white-space: nowrap;
 		/* border-bottom: 1px solid rgba(255, 255, 255, 0.1); */
 
 		font-family: 'Geist Mono', monospace;
 		font-weight: 200;
 		letter-spacing: 0.34%;
-		font-size: 16px;
+		font-size: 14px;
 		color: #797979;
+	}
+
+	header > * {
+		grid-row: 1;
 	}
 
 	.logo {
@@ -68,14 +84,64 @@
 	}
 
 	.location {
-		grid-column: 4 / span 1;
+		grid-column: 4 / span 2;
+	}
+
+	.coordinates {
+		grid-column: 7 / span 2;
 	}
 
 	.nav {
-		grid-column: 9 / span 2;
+		grid-column: 10 / span 2;
 		display: flex;
 		gap: 1rem;
 		justify-content: flex-end;
+	}
+
+	.contact-btn {
+		grid-column: 12 / span 1;
+		justify-self: flex-end;
+		position: relative;
+
+		background-color: rgba(255, 255, 255, 0.06);
+		color: #fff;
+		border: 1px solid #363636;
+		padding: 8px 14px;
+		cursor: pointer;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.contact-btn::before,
+	.contact-btn::after {
+		content: '';
+		position: absolute;
+		border-style: solid;
+		border-color: #888888;
+		pointer-events: none;
+	}
+
+	.contact-btn::before {
+		inset: -1px;
+		background:
+			linear-gradient(to right, #888 1px, transparent 1px) 0 0,
+			linear-gradient(to bottom, #888 1px, transparent 1px) 0 0,
+			linear-gradient(to left, #888 1px, transparent 1px) 100% 0,
+			linear-gradient(to bottom, #888 1px, transparent 1px) 100% 0,
+			linear-gradient(to right, #888 1px, transparent 1px) 0 100%,
+			linear-gradient(to top, #888 1px, transparent 1px) 0 100%,
+			linear-gradient(to left, #888 1px, transparent 1px) 100% 100%,
+			linear-gradient(to top, #888 1px, transparent 1px) 100% 100%;
+		background-repeat: no-repeat;
+		background-size: 8px 8px;
+	}
+
+	.contact-btn:hover {
+		background-color: #1a1a1a;
+		border-color: #444;
+		color: #fff;
 	}
 
 	nav {
@@ -98,7 +164,7 @@
 	}
 
 	.grid-column {
-		background-color: rgba(255, 255, 255, 0.04);
+		background-color: rgba(255, 255, 255, 0.02);
 		/* border-left: 1px solid rgba(255, 255, 255, 0.06); */
 		/* border-right: 1px solid rgba(255, 255, 255, 0.06); */
 	}

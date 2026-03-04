@@ -1,4 +1,6 @@
-.container {
+.section-container {
 	/* max-width: 1380px; */
-	width: 90%;
+	width: 95%;
+	margin-inline: auto;
 }
+

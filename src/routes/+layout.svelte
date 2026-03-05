@@ -3,7 +3,7 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import logo from '$lib/assets/logo.svg';
 
-	import { resolve } from '$app/paths';
+	// import { resolve } from '$app/paths';
 	import type { LayoutProps } from './$types';
 
 	let { children }: LayoutProps = $props();
@@ -163,10 +163,10 @@
 		color: #fff;
 	}
 
-	nav {
-		display: flex;
-		gap: 1rem;
-	}
+	/* nav { */
+	/* 	display: flex; */
+	/* 	gap: 1rem; */
+	/* } */
 
 	.grid-overlay {
 		position: absolute;

@@ -12,7 +12,9 @@
 			section: 'DEVELOPMENT',
 			date: '1.10.33',
 			tags: ['WEB', 'DESIGN'],
-			id: '001'
+			id: '001',
+			width: 500,
+			height: 380
 		},
 		{
 			name: 'Project',
@@ -20,7 +22,9 @@
 			section: 'ARCHIVE',
 			date: '2.15.24',
 			tags: ['UI', 'UX'],
-			id: '002'
+			id: '002',
+			width: 260,
+			height: 380
 		},
 		{
 			name: 'Placeholder',
@@ -28,7 +32,9 @@
 			section: 'EXPERIMENT',
 			date: '3.20.25',
 			tags: ['JS', 'GSAP'],
-			id: '003'
+			id: '003',
+			width: 260,
+			height: 380
 		},
 		{
 			name: 'Lorem Ipsum',
@@ -36,7 +42,9 @@
 			section: 'CONCEPT',
 			date: '4.05.26',
 			tags: ['SVG', 'CSS'],
-			id: '004'
+			id: '004',
+			width: 260,
+			height: 380
 		},
 		{
 			name: 'To Be Replaced',
@@ -44,7 +52,9 @@
 			section: 'LEGACY',
 			date: '5.12.21',
 			tags: ['OLD', 'REF'],
-			id: '005'
+			id: '005',
+			width: 260,
+			height: 380
 		}
 	] as const;
 
@@ -118,7 +128,21 @@
 			// Spread is roughly 30% of section width
 			const spread = sectionRect.width * 0.3;
 			let outX = btnFinalX + (Math.random() * spread - spread / 2);
-			outX = Math.max(0, Math.min(outX, sectionRect.width - 16));
+
+			// Constrain outX based on card width to prevent overflow
+			const currentProj = projects[projectItems.indexOf(currentItem)];
+			const cardWidth = currentProj?.width || 260;
+			const margin = 20;
+
+			const minOutX = cardWidth / 2 + margin;
+			const maxOutX = sectionRect.width - cardWidth / 2 - margin;
+
+			if (minOutX > maxOutX) {
+				outX = sectionRect.width / 2;
+			} else {
+				outX = Math.max(minOutX, Math.min(outX, maxOutX));
+			}
+
 			const outY = -50 - Math.random() * 200;
 
 			// box 1: above the section (grouped horizontally with button box)
@@ -318,7 +342,14 @@
 
 <div class="projects-wrapper" bind:this={infoSection}>
 	<div class="random-box" bind:this={randomBox}></div>
-	<ProjectPreview project={currentProject} visible={showPreview} x={previewX} y={previewY} />
+	<ProjectPreview
+		project={currentProject}
+		visible={showPreview}
+		posX={previewX}
+		posY={previewY}
+		width={currentProject?.width}
+		height={currentProject?.height}
+	/>
 	<div class="random-box" bind:this={buttonBox}></div>
 	<svg class="connector-svg">
 		<polyline bind:this={connectorLine} points="0,0 0,0 0,0" />

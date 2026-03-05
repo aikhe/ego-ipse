@@ -76,7 +76,6 @@
 		grid-template-columns: repeat(12, 1fr);
 		gap: 1.2rem;
 		align-items: center;
-		margin-inline: auto;
 		white-space: nowrap;
 		/* border-bottom: 1px solid rgba(255, 255, 255, 0.1); */
 

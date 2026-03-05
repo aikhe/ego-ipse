@@ -1,3 +1,7 @@
+<script lang="ts">
+	import { resolve } from '$app/paths';
+</script>
+
 <section class="section-container">
 	<div class="hero">
 		<h1 class="hero__title">
@@ -9,16 +13,61 @@
 			RANDOM TEXT. IT HAS ROOTS IN A PIECE OF CLASSICAL LATIN LITERATURE FROM 45 BC.
 		</p>
 	</div>
+
+	<div class="info">
+		<p class="info__title">CREATIVE PROJECTS I’VE WORKED ON_</p>
+		<div class="info__projects">
+			<a href={resolve('/')} class="project--item">
+				<span>Sample</span>
+				<span class="arrow">↗</span>
+			</a>
+			<a href={resolve('/')} class="project--item">
+				<span>Project</span>
+				<span class="arrow">↗</span>
+			</a>
+			<a href={resolve('/')} class="project--item">
+				<span>Placeholder</span>
+				<span class="arrow">↗</span>
+			</a>
+			<a href={resolve('/')} class="project--item">
+				<span>Lorem Ipsum</span>
+				<span class="arrow">↗</span>
+			</a>
+			<a href={resolve('/')} class="project--item">
+				<span>To Be Replaced</span>
+				<span class="arrow">↗</span>
+			</a>
+			<button class="project--more">MORE ...</button>
+		</div>
+
+		<div class="info__socials">
+			<div class="socials--col">
+				<a href="https://twitter.com">X(TWITTER)</a>
+				<a href="https://linkedin.com">LINKEDIN</a>
+				<a href="https://github.com">GITHUB</a>
+			</div>
+			<div class="socials--col">
+				<a href={resolve('/')}>ABOUT</a>
+				<a href={resolve('/')}>BLOG</a>
+				<a href={resolve('/')}>ACEDIA</a>
+			</div>
+		</div>
+	</div>
 </section>
 
 <style>
 	section {
 		height: calc(100vh - 4.8rem);
+
 		display: grid;
 		grid-template-columns: repeat(12, 1fr);
 		gap: 1.2rem;
 		align-items: end;
-		padding-bottom: 3rem;
+		padding-bottom: 2.4rem;
+	}
+
+	section > * {
+		grid-row: 1;
 	}
 
 	.hero {
@@ -46,10 +95,124 @@
 		letter-spacing: 0.34%;
 		line-height: 20px;
 		width: 48ch;
-		color: #676767;
+		color: #797979;
 	}
 
 	.description--strong {
 		color: #ffffff;
+	}
+
+	.info {
+		grid-column: 7 / span 6;
+		display: flex;
+		flex-direction: column;
+		gap: 1.2rem;
+	}
+
+	.info__title {
+		font-family: 'Geist Mono', monospace;
+		font-weight: 300;
+		font-size: 13px;
+		letter-spacing: 0.05em;
+		color: #555;
+		margin: 0;
+		padding-bottom: 2rem;
+	}
+
+	.info__projects {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0 2.4rem;
+	}
+
+	.project--item {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		height: 48px;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+		color: #fff;
+		text-decoration: none;
+		font-size: 1.25rem;
+		transition: color 0.2s ease;
+	}
+
+	.project--item:nth-child(-n + 2) {
+		border-top: 1px solid rgba(255, 255, 255, 0.08);
+	}
+
+	.project--item:hover {
+		color: #797979;
+	}
+
+	.arrow {
+		font-size: 1.125rem;
+		opacity: 0.8;
+	}
+
+	.project--more {
+		height: 48px;
+		background: rgba(255, 255, 255, 0.02);
+		border: 1px solid #363636;
+		color: #fff;
+		font-family: 'Geist Mono', monospace;
+		font-size: 13px;
+		letter-spacing: 0.1em;
+		cursor: pointer;
+		position: relative;
+		display: flex;
+		align-items: center;
+		padding-left: 1.2rem;
+		transition: all 0.2s ease;
+	}
+
+	.project--more::before {
+		content: '';
+		position: absolute;
+		inset: -1px;
+		background:
+			linear-gradient(to right, #888 1px, transparent 1px) 0 0,
+			linear-gradient(to bottom, #888 1px, transparent 1px) 0 0,
+			linear-gradient(to left, #888 1px, transparent 1px) 100% 0,
+			linear-gradient(to bottom, #888 1px, transparent 1px) 100% 0,
+			linear-gradient(to right, #888 1px, transparent 1px) 0 100%,
+			linear-gradient(to top, #888 1px, transparent 1px) 0 100%,
+			linear-gradient(to left, #888 1px, transparent 1px) 100% 100%,
+			linear-gradient(to top, #888 1px, transparent 1px) 100% 100%;
+		background-repeat: no-repeat;
+		background-size: 6px 6px;
+		pointer-events: none;
+	}
+
+	.project--more:hover {
+		background: rgba(255, 255, 255, 0.05);
+		border-color: #444;
+	}
+
+	.info__socials {
+		margin-top: 1.2rem;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 2.4rem;
+	}
+
+	.socials--col {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+	}
+
+	.socials--col a {
+		font-family: 'Geist Mono', monospace;
+		font-size: 12px;
+		color: #555;
+		text-decoration: none;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		transition: color 0.2s ease;
+	}
+
+	.socials--col a:hover {
+		color: #fff;
 	}
 </style>

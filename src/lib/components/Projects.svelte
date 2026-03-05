@@ -4,6 +4,11 @@
 	import gsap from 'gsap';
 	import IconArrow from '$lib/components/IconArrow.svelte';
 	import ProjectPreview from '$lib/components/ProjectPreview.svelte';
+	import chest from '$lib/assets/chest.png';
+	import aikhe from '$lib/assets/aikhe.png';
+	import assembly from '$lib/assets/assembly.png';
+	import clamp from '$lib/assets/clamp.png';
+	import fan from '$lib/assets/fan.png';
 
 	const projects = [
 		{
@@ -13,8 +18,9 @@
 			date: '1.10.33',
 			tags: ['WEB', 'DESIGN'],
 			id: '001',
-			width: 500,
-			height: 380
+			width: 400,
+			height: 460,
+			image: aikhe
 		},
 		{
 			name: 'Project',
@@ -24,7 +30,8 @@
 			tags: ['UI', 'UX'],
 			id: '002',
 			width: 260,
-			height: 380
+			height: 380,
+			image: chest
 		},
 		{
 			name: 'Placeholder',
@@ -34,7 +41,8 @@
 			tags: ['JS', 'GSAP'],
 			id: '003',
 			width: 260,
-			height: 380
+			height: 380,
+			image: chest
 		},
 		{
 			name: 'Lorem Ipsum',
@@ -44,7 +52,8 @@
 			tags: ['SVG', 'CSS'],
 			id: '004',
 			width: 260,
-			height: 380
+			height: 380,
+			image: chest
 		},
 		{
 			name: 'To Be Replaced',
@@ -54,7 +63,8 @@
 			tags: ['OLD', 'REF'],
 			id: '005',
 			width: 260,
-			height: 380
+			height: 380,
+			image: chest
 		}
 	] as const;
 
@@ -194,15 +204,6 @@
 					showPreview = true;
 				}
 			}
-
-			const points = {
-				x1: outCX,
-				y1: outCY,
-				x2: pivotX,
-				y2: pivotY,
-				x3: btnCX,
-				y3: btnCY
-			};
 
 			gsap.to(connectorLine, {
 				opacity: 1,
@@ -355,11 +356,21 @@
 		<polyline bind:this={connectorLine} points="0,0 0,0 0,0" />
 	</svg>
 	<div class="info__projects">
-		{#each projects as project, i (project.name)}
-			<a href={resolve(project.href)} class="project--item" bind:this={projectItems[i]}>
+		{#each projects as project, i (project.id)}
+			<a
+				href={project.href}
+				class="project--item"
+				bind:this={projectItems[i]}
+				on:mouseenter={() => {
+					currentItem = projectItems[i];
+				}}
+				on:mouseleave={() => {
+					currentItem = null;
+				}}
+			>
 				<div class="project--bg"></div>
-				<span>{project.name}</span>
-				<span class="arrow"><IconArrow size={12} /></span>
+				<span class="project--name">{project.name}</span>
+				<span class="arrow"><IconArrow /></span>
 			</a>
 		{/each}
 		<button class="project--more">MORE ...</button>

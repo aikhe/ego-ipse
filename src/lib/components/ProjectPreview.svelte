@@ -8,6 +8,7 @@
 		date: string;
 		tags: readonly string[];
 		id: string;
+		image?: string;
 	} | null = null;
 	export let visible = false;
 	export let posX = 0;
@@ -22,7 +23,7 @@
 
 	$: if (container) {
 		const shouldShow = visible && project;
-		if (shouldShow) {
+		if (shouldShow && project) {
 			if (project.name !== lastProjectName) {
 				lastProjectName = project.name;
 				show();
@@ -111,22 +112,31 @@
 		}
 
 		// 2. Collapse container
-		tl.to(container, {
-			opacity: 0,
-			scaleY: 0,
-			y: 0,
-			duration: 0.3,
-			ease: 'expo.in'
-		}, "-=0.1");
+		tl.to(
+			container,
+			{
+				opacity: 0,
+				scaleY: 0,
+				y: 0,
+				duration: 0.3,
+				ease: 'expo.in'
+			},
+			'-=0.1'
+		);
 	}
 </script>
 
-<div class="preview-container" bind:this={container} style:width="{width}px" style:height="{height}px">
+<div
+	class="preview-container"
+	bind:this={container}
+	style:width="{width}px"
+	style:height="{height}px"
+>
 	<div class="corner-accents"></div>
 	{#if project}
 		<div class="preview-card" bind:this={content}>
 			<div class="header">
-				<h3 class="name">{project.name.toUpperCase()} NAME ...</h3>
+				<h3 class="name">{project.name.toUpperCase()} ...</h3>
 				<div class="meta">
 					<span class="symbol">&gt;</span>
 					<span class="section">{project.section}</span>
@@ -136,11 +146,13 @@
 			</div>
 
 			<div class="content-area">
-				<div class="image-inner">
-					<div class="scanlines"></div>
-					<div class="footer-overlay">
+				<div class="preview-inner">
+					<div class="image-box">
+						<img src={project.image} alt={project.name} class="project-image" />
+					</div>
+					<div class="text-footer">
 						<div class="tags">
-							{#each project.tags as tag}
+							{#each project.tags as tag (tag)}
 								<span class="tag">[ {tag} ]</span>
 							{/each}
 						</div>
@@ -155,8 +167,8 @@
 <style>
 	.preview-container {
 		position: absolute;
-		background: rgba(0, 0, 0, 0.9);
-		border: 1px solid rgba(255, 255, 255, 0.1);
+		background: #080807;
+		border: 1px solid #363636;
 		padding: 0;
 		opacity: 0;
 		pointer-events: none;
@@ -178,16 +190,16 @@
 		position: absolute;
 		inset: 0;
 		background:
-			linear-gradient(to right, white 1px, transparent 1px) 0 0,
-			linear-gradient(to bottom, white 1px, transparent 1px) 0 0,
-			linear-gradient(to left, white 1px, transparent 1px) 100% 0,
-			linear-gradient(to bottom, white 1px, transparent 1px) 100% 0,
-			linear-gradient(to right, white 1px, transparent 1px) 0 100%,
-			linear-gradient(to top, white 1px, transparent 1px) 0 100%,
-			linear-gradient(to left, white 1px, transparent 1px) 100% 100%,
-			linear-gradient(to top, white 1px, transparent 1px) 100% 100%;
+			linear-gradient(to right, #888 1px, transparent 1px) 0 0,
+			linear-gradient(to bottom, #888 1px, transparent 1px) 0 0,
+			linear-gradient(to left, #888 1px, transparent 1px) 100% 0,
+			linear-gradient(to bottom, #888 1px, transparent 1px) 100% 0,
+			linear-gradient(to right, #888 1px, transparent 1px) 0 100%,
+			linear-gradient(to top, #888 1px, transparent 1px) 0 100%,
+			linear-gradient(to left, #888 1px, transparent 1px) 100% 100%,
+			linear-gradient(to top, #888 1px, transparent 1px) 100% 100%;
 		background-repeat: no-repeat;
-		background-size: 6px 6px;
+		background-size: 10px 10px;
 	}
 
 	.preview-card {
@@ -203,18 +215,22 @@
 	.header {
 		display: flex;
 		flex-direction: column;
-		gap: 0.61rem;
-		padding: 1rem 0.8rem;
-		background: rgba(255, 255, 255, 0.04);
-		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		gap: 0.44rem;
+		padding: 0.8rem 0.8rem;
 		flex-shrink: 0;
+
+		font-family: 'Geist Mono', monospace;
+		letter-spacing: 0.34%;
+		font-size: 0.8rem;
+		font-weight: 400;
+
+		background: rgba(255, 255, 255, 0.02);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 	}
 
 	.name {
-		font-family: 'Geist Mono', monospace;
-		font-size: 0.75rem;
-		font-weight: 500;
 		color: #fff;
+		font-weight: 460;
 		margin: 0;
 		letter-spacing: 0.08em;
 	}
@@ -222,18 +238,8 @@
 	.meta {
 		display: flex;
 		align-items: center;
+		color: #888888;
 		gap: 0.6rem;
-		font-family: 'Geist Mono', monospace;
-		font-size: 0.75rem;
-		color: rgba(255, 255, 255, 0.5);
-	}
-
-	.symbol {
-		color: #fff;
-	}
-
-	.section, .date {
-		letter-spacing: 0.02em;
 	}
 
 	.content-area {
@@ -245,41 +251,50 @@
 		box-sizing: border-box;
 	}
 
-	.image-inner {
-		width: 100%;
-		flex-grow: 1;
-		background: #000;
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		position: relative;
+	.preview-inner {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		border: 1px solid #363636;
 		overflow: hidden;
+		background: #000;
+	}
+
+	.image-box {
+		width: 100%;
+		flex: 1;
+		min-height: 0;
+		padding: 1rem;
+		background: #fff;
+		border-bottom: 1px solid #363636;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		box-sizing: border-box;
 	}
 
-	.scanlines {
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(
-			to bottom,
-			transparent 50%,
-			rgba(255, 255, 255, 0.02) 50%
-		);
-		background-size: 100% 4px;
-		pointer-events: none;
-		z-index: 1;
+	.project-image {
+		max-width: 100%;
+		max-height: 100%;
+		object-fit: contain;
+		display: block;
 	}
 
-	.footer-overlay {
-		position: absolute;
-		bottom: 0.8rem;
-		left: 0.8rem;
-		right: 0.8rem;
+	.text-footer {
+		padding: 0.6rem 0.8rem;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+
+		background: #080807;
+		color: #888888;
 		font-family: 'Geist Mono', monospace;
+		font-weight: 500;
+		letter-spacing: 0.34%;
 		font-size: 0.7rem;
-		color: rgba(255, 255, 255, 0.5);
-		z-index: 2;
+
+		flex-shrink: 0;
 	}
 
 	.tags {

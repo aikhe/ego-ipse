@@ -18,8 +18,67 @@
 
 	let container: HTMLDivElement;
 	let content: HTMLDivElement;
+	let canvas: HTMLCanvasElement;
 	let tl: gsap.core.Timeline | null = null;
 	let lastProjectName = '';
+
+	const COLS = 20;
+	const ROWS = 28;
+
+	// build a shuffled list of [col, row] tile indices
+	function shuffledTiles() {
+		const tiles = Array.from({ length: COLS * ROWS }, (_, i) => [i % COLS, Math.floor(i / COLS)]);
+		for (let i = tiles.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[tiles[i], tiles[j]] = [tiles[j], tiles[i]];
+		}
+		return tiles;
+	}
+
+	function runTileReveal(reveal: boolean, duration: number, startAt: gsap.Position) {
+		if (!canvas) return;
+		// sync pixel size to rendered size
+		canvas.width = canvas.offsetWidth;
+		canvas.height = canvas.offsetHeight;
+		const ctx = canvas.getContext('2d')!;
+		const tw = canvas.width / COLS;
+		const th = canvas.height / ROWS;
+		const tiles = shuffledTiles();
+		const total = tiles.length;
+
+		// fill fully covered to start a reveal, or clear to start a hide
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		if (reveal) {
+			ctx.fillStyle = '#080807';
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+		}
+
+		const proxy = { t: 0 };
+		let drawn = 0;
+
+		tl!.to(
+			proxy,
+			{
+				t: 1,
+				duration,
+				ease: 'power2.inOut',
+				onUpdate() {
+					const target = Math.floor(proxy.t * total);
+					while (drawn < target) {
+						const [c, r] = tiles[drawn];
+						if (reveal) {
+							ctx.clearRect(c * tw, r * th, tw + 0.5, th + 0.5);
+						} else {
+							ctx.fillStyle = '#080807';
+							ctx.fillRect(c * tw, r * th, tw + 0.5, th + 0.5);
+						}
+						drawn++;
+					}
+				}
+			},
+			startAt
+		);
+	}
 
 	$: if (container) {
 		const shouldShow = visible && project;
@@ -67,7 +126,7 @@
 			ease: 'expo.out'
 		});
 
-		// Subtle hologram flicker
+		// hologram flicker
 		tl.to(
 			container,
 			{
@@ -94,13 +153,16 @@
 				'-=0.2'
 			);
 		}
+
+		// tile reveal: starts as card opens, spans ~0.55s
+		runTileReveal(true, 0.7, '<0.15');
 	}
 
 	function hide() {
 		if (tl) tl.kill();
 		tl = gsap.timeline();
 
-		// 1. Fade out content first
+		// 1. fade out content first
 		if (content) {
 			tl.to(content.children, {
 				opacity: 0,
@@ -111,7 +173,10 @@
 			});
 		}
 
-		// 2. Collapse container
+		// tile cover: runs while content fades
+		runTileReveal(false, 0.25, '<');
+
+		// 2. collapse container
 		tl.to(
 			container,
 			{
@@ -149,6 +214,7 @@
 				<div class="preview-inner">
 					<div class="image-box">
 						<img src={project.image} alt={project.name} class="project-image" />
+						<canvas bind:this={canvas} class="tile-canvas"></canvas>
 					</div>
 					<div class="text-footer">
 						<div class="tags">
@@ -263,7 +329,7 @@
 
 	.name {
 		color: #fff;
-		font-weight: 460;
+		font-weight: 500;
 		margin: 0;
 		letter-spacing: 0.08em;
 	}
@@ -312,6 +378,14 @@
 		max-height: 100%;
 		object-fit: contain;
 		display: block;
+	}
+
+	.tile-canvas {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
 	}
 
 	.text-footer {

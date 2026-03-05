@@ -18,8 +18,8 @@
 			date: '1.10.33',
 			tags: ['WEB', 'DESIGN'],
 			id: '001',
-			width: 400,
-			height: 460,
+			width: 340,
+			height: 440,
 			image: aikhe
 		},
 		{
@@ -29,9 +29,9 @@
 			date: '2.15.24',
 			tags: ['UI', 'UX'],
 			id: '002',
-			width: 260,
-			height: 380,
-			image: chest
+			width: 290,
+			height: 420,
+			image: assembly
 		},
 		{
 			name: 'Placeholder',
@@ -40,8 +40,8 @@
 			date: '3.20.25',
 			tags: ['JS', 'GSAP'],
 			id: '003',
-			width: 260,
-			height: 380,
+			width: 280,
+			height: 400,
 			image: chest
 		},
 		{
@@ -51,9 +51,9 @@
 			date: '4.05.26',
 			tags: ['SVG', 'CSS'],
 			id: '004',
-			width: 260,
+			width: 320,
 			height: 380,
-			image: chest
+			image: clamp
 		},
 		{
 			name: 'To Be Replaced',
@@ -62,9 +62,9 @@
 			date: '5.12.21',
 			tags: ['OLD', 'REF'],
 			id: '005',
-			width: 260,
+			width: 280,
 			height: 380,
-			image: chest
+			image: fan
 		}
 	] as const;
 
@@ -106,8 +106,12 @@
 			projectItems.some((item) => item.contains(el as Node));
 
 		const collapseExpand = () => {
-			if (!expanded) return;
 			expanded = false;
+			clearTimeout(dwellTimer!);
+			clearTimeout(boxSpawnTimer!);
+
+			gsap.killTweensOf([randomBox, buttonBox, connectorLine]);
+
 			gsap.to(expandReticle, {
 				width: 0,
 				height: 0,
@@ -118,7 +122,6 @@
 			gsap.to([randomBox, buttonBox], { opacity: 0, duration: 0.3 });
 			gsap.to(connectorLine, { opacity: 0, duration: 0.3 });
 			showPreview = false;
-			clearTimeout(boxSpawnTimer!);
 		};
 
 		const showRandomBox = () => {
@@ -153,7 +156,7 @@
 				outX = Math.max(minOutX, Math.min(outX, maxOutX));
 			}
 
-			const outY = -50 - Math.random() * 200;
+			const outY = -40 - Math.random() * 120;
 
 			// box 1: above the section (grouped horizontally with button box)
 			gsap.to(randomBox, {
@@ -326,6 +329,10 @@
 						collapseExpand();
 						gsap.to(reticle, { opacity: 0, duration: 0.3, ease: 'power3.out' });
 					}, EXIT_DELAY);
+				} else {
+					// Moving between items - still clear timers for the current item
+					clearTimeout(dwellTimer!);
+					clearTimeout(boxSpawnTimer!);
 				}
 			});
 		});
@@ -360,6 +367,7 @@
 			<a
 				href={project.href}
 				class="project--item"
+				class:no-border-bottom={project.name === 'Lorem Ipsum'}
 				bind:this={projectItems[i]}
 				on:mouseenter={() => {
 					currentItem = projectItems[i];
@@ -402,6 +410,10 @@
 		text-decoration: none;
 
 		border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+	}
+
+	.no-border-bottom {
+		border-bottom: none !important;
 	}
 
 	.project--bg {

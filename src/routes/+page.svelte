@@ -1,5 +1,14 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import IconArrow from '$lib/components/IconArrow.svelte';
+
+	const projects = [
+		{ name: 'Sample', href: '/' },
+		{ name: 'Project', href: '/' },
+		{ name: 'Placeholder', href: '/' },
+		{ name: 'Lorem Ipsum', href: '/' },
+		{ name: 'To Be Replaced', href: '/' }
+	] as const;
 </script>
 
 <section class="section-container">
@@ -17,26 +26,14 @@
 	<div class="info">
 		<p class="info__title">CREATIVE PROJECTS I’VE WORKED ON_</p>
 		<div class="info__projects">
-			<a href={resolve('/')} class="project--item">
-				<span>Sample</span>
-				<span class="arrow">↗</span>
-			</a>
-			<a href={resolve('/')} class="project--item">
-				<span>Project</span>
-				<span class="arrow">↗</span>
-			</a>
-			<a href={resolve('/')} class="project--item">
-				<span>Placeholder</span>
-				<span class="arrow">↗</span>
-			</a>
-			<a href={resolve('/')} class="project--item">
-				<span>Lorem Ipsum</span>
-				<span class="arrow">↗</span>
-			</a>
-			<a href={resolve('/')} class="project--item">
-				<span>To Be Replaced</span>
-				<span class="arrow">↗</span>
-			</a>
+			{#each projects as project (project.name)}
+				<a href={resolve(project.href)} class="project--item">
+					<span>{project.name}</span>
+					<span class="arrow">
+						<IconArrow />
+					</span>
+				</a>
+			{/each}
 			<button class="project--more">MORE ...</button>
 		</div>
 
@@ -91,8 +88,8 @@
 	.hero__description {
 		font-family: 'Geist Mono', monospace;
 		font-weight: 300;
-		font-size: 0.875rem;
 		letter-spacing: 0.34%;
+		font-size: 0.875rem;
 		line-height: 20px;
 		width: 48ch;
 		color: #797979;
@@ -106,17 +103,15 @@
 		grid-column: 7 / span 6;
 		display: flex;
 		flex-direction: column;
-		gap: 1.2rem;
+		gap: 1rem;
 	}
 
 	.info__title {
 		font-family: 'Geist Mono', monospace;
 		font-weight: 300;
-		font-size: 13px;
-		letter-spacing: 0.05em;
-		color: #555;
-		margin: 0;
-		padding-bottom: 2rem;
+		letter-spacing: 0.34%;
+		font-size: 0.875rem;
+		color: #797979;
 	}
 
 	.info__projects {
@@ -154,16 +149,19 @@
 		height: 48px;
 		background: rgba(255, 255, 255, 0.02);
 		border: 1px solid #363636;
+
 		color: #fff;
 		font-family: 'Geist Mono', monospace;
-		font-size: 13px;
-		letter-spacing: 0.1em;
+		font-weight: 300;
+		letter-spacing: 0.34%;
+		font-size: 0.875rem;
+		line-height: 20px;
+
 		cursor: pointer;
 		position: relative;
 		display: flex;
 		align-items: center;
-		padding-left: 1.2rem;
-		transition: all 0.2s ease;
+		padding-left: 1rem;
 	}
 
 	.project--more::before {
@@ -190,26 +188,23 @@
 	}
 
 	.info__socials {
-		margin-top: 1.2rem;
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 2.4rem;
+		gap: 1.2rem;
 	}
 
 	.socials--col {
 		display: flex;
 		flex-direction: column;
-		gap: 0.2rem;
 	}
 
 	.socials--col a {
 		font-family: 'Geist Mono', monospace;
-		font-size: 12px;
-		color: #555;
-		text-decoration: none;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		transition: color 0.2s ease;
+		font-weight: 300;
+		letter-spacing: 0.34%;
+		font-size: 0.875rem;
+		line-height: 20px;
+		color: #797979;
 	}
 
 	.socials--col a:hover {

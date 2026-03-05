@@ -29,11 +29,10 @@
 
 	.socials--col a {
 		font-family: 'Geist Mono', monospace;
-		font-weight: 300;
+		font-weight: 400;
 		letter-spacing: 0.34%;
 		font-size: 0.875rem;
-		line-height: 20px;
-		color: #797979;
+		line-height: 18px;
 	}
 
 	.socials--col a:hover {

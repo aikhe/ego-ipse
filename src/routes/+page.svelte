@@ -17,6 +17,6 @@
 		grid-template-columns: repeat(12, 1fr);
 		gap: 1.2rem;
 		align-items: end;
-		padding-bottom: 2.4rem;
+		padding-bottom: 2rem;
 	}
 </style>

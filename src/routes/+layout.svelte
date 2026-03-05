@@ -47,10 +47,10 @@
 	<p class="coordinates">14.6514° N, 120.9902° E</p>
 	<button class="contact-btn">CONTACT</button>
 
-	<nav class="nav">
-		<a href={resolve('/')}>ROOT</a>
-		<a href={resolve('/scrutiny')}>SCRUTINY</a>
-	</nav>
+	<!-- <nav class="nav"> -->
+	<!-- 	<a href={resolve('/')}>ROOT</a> -->
+	<!-- 	<a href={resolve('/scrutiny')}>SCRUTINY</a> -->
+	<!-- </nav> -->
 </header>
 
 <main>
@@ -80,10 +80,10 @@
 		/* border-bottom: 1px solid rgba(255, 255, 255, 0.1); */
 
 		font-family: 'Geist Mono', monospace;
-		font-weight: 300;
+		font-weight: 500;
 		letter-spacing: 0.34%;
-		font-size: 14px;
-		color: #797979;
+		font-size: 0.875rem;
+		color: #888888;
 	}
 
 	header > * {
@@ -110,12 +110,12 @@
 		grid-column: 7 / span 2;
 	}
 
-	.nav {
-		grid-column: 10 / span 2;
-		display: flex;
-		gap: 1rem;
-		justify-content: flex-end;
-	}
+	/* .nav { */
+	/* 	grid-column: 10 / span 2; */
+	/* 	display: flex; */
+	/* 	gap: 1rem; */
+	/* 	justify-content: flex-end; */
+	/* } */
 
 	.contact-btn {
 		grid-column: 12 / span 1;

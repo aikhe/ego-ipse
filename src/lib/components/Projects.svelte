@@ -27,7 +27,7 @@
 	.info__projects {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 0 2.4rem;
+		gap: 0 1.2rem;
 	}
 
 	.project--item {
@@ -36,39 +36,49 @@
 		align-items: center;
 		height: 48px;
 
-		font-weight: 300;
-		font-size: 1.25rem;
+		font-weight: 400;
+		font-size: 1.2rem;
 		letter-spacing: 0.34%;
 		color: #fff;
 		text-decoration: none;
 
-		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+		transition: padding 100ms cubic-bezier(0.12, 0, 0.39, 0) 0s;
 	}
 
 	.project--item:nth-child(-n + 2) {
-		border-top: 1px solid rgba(255, 255, 255, 0.08);
+		border-top: 1px solid rgba(255, 255, 255, 0.2);
 	}
 
 	.project--item:hover {
-		color: #797979;
+		/* color: #797979; */
+		padding: 0 0.6rem;
+	}
+
+	.project--item span,
+	.project--item :global(svg) {
+		flex-shrink: 0;
 	}
 
 	.arrow {
 		font-size: 1.125rem;
 		opacity: 0.8;
+		display: flex; /* Helps ensure svg doesn't behave strangely */
+		align-items: center;
 	}
 
 	.project--more {
 		height: 48px;
 		background: rgba(255, 255, 255, 0.02);
 		border: 1px solid #363636;
+		margin-top: -1px;
 
 		color: #fff;
 		font-family: 'Geist Mono', monospace;
-		font-weight: 300;
+		font-weight: 400;
 		letter-spacing: 0.34%;
 		font-size: 0.875rem;
-		line-height: 20px;
+		line-height: 18px;
 
 		cursor: pointer;
 		position: relative;

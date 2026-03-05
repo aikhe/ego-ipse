@@ -15,7 +15,7 @@
 		grid-row: 1;
 		display: flex;
 		flex-direction: column;
-		gap: 2rem;
+		gap: 2.4rem;
 	}
 
 	.hero__title {
@@ -31,16 +31,16 @@
 
 	.hero__description {
 		font-family: 'Geist Mono', monospace;
-		font-weight: 300;
+		font-weight: 500;
 		letter-spacing: 0.34%;
 		font-size: 0.875rem;
-		line-height: 20px;
+		line-height: 16px;
 		width: 48ch;
-		color: #797979;
+		color: #888888;
 	}
 
 	.description--strong {
-		font-weight: 300;
+		font-weight: 500;
 		color: #ffffff;
 	}
 </style>

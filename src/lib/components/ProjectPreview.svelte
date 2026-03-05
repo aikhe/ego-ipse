@@ -207,12 +207,12 @@
 		flex-direction: column;
 		height: 100%;
 		box-sizing: border-box;
-		overflow: hidden; /* Content clipping happens here now */
 		position: relative;
 		z-index: 1;
 	}
 
 	.header {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		gap: 0.44rem;
@@ -226,6 +226,39 @@
 
 		background: rgba(255, 255, 255, 0.02);
 		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.header::before,
+	.header::after {
+		content: '';
+		position: absolute;
+		bottom: -10px;
+		width: 10px;
+		height: 20px;
+		z-index: 10;
+		pointer-events: none;
+	}
+
+	.header::before {
+		left: -1px;
+		background:
+			linear-gradient(to right, #888 1px, transparent 1px) 0 0,
+			linear-gradient(to bottom, #888 1px, transparent 1px) 0 50%;
+		background-repeat: no-repeat;
+		background-size:
+			1px 100%,
+			100% 1px;
+	}
+
+	.header::after {
+		right: -1px;
+		background:
+			linear-gradient(to left, #888 1px, transparent 1px) 100% 0,
+			linear-gradient(to bottom, #888 1px, transparent 1px) 100% 50%;
+		background-repeat: no-repeat;
+		background-size:
+			1px 100%,
+			100% 1px;
 	}
 
 	.name {
@@ -243,7 +276,7 @@
 	}
 
 	.content-area {
-		padding: 1rem 0.8rem 0.8rem 0.8rem;
+		padding: 0.8rem 0.8rem 0.96rem 0.8rem;
 		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
@@ -264,7 +297,7 @@
 		width: 100%;
 		flex: 1;
 		min-height: 0;
-		padding: 1rem;
+		padding: 0.8rem;
 		background: #fff;
 		border-bottom: 1px solid #363636;
 		position: relative;

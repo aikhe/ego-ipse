@@ -18,7 +18,7 @@
 	let expandReticle: HTMLDivElement;
 
 	const SIZE = 32;
-	const DWELL = 800;
+	const DWELL = 400;
 	const EXIT_DELAY = 100;
 
 	onMount(() => {
@@ -143,7 +143,7 @@
 		<a href={resolve(project.href)} class="project--item" bind:this={projectItems[i]}>
 			<div class="project--bg"></div>
 			<span>{project.name}</span>
-			<span class="arrow"><IconArrow size={14} /></span>
+			<span class="arrow"><IconArrow size={12} /></span>
 		</a>
 	{/each}
 	<button class="project--more">MORE ...</button>

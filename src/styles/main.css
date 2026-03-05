@@ -1,7 +1,8 @@
-@import 'tailwindcss';
 @import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap');
+@import 'tailwindcss';
 
 @import './layout/_containers.css';
+@import './base/_typography.css';
 
 *,
 *::before,
@@ -15,7 +16,7 @@
 	font-weight: 200;
 	letter-spacing: 0.34%;
 
-	--color-bg-0: rgb(0, 0, 0);
+	--color-bg-0: #080807;
 	--color-text: rgba(255, 255, 255);
 
 	color: var(--color-text);
@@ -39,3 +40,4 @@ section {
 .inspect {
 	border: red solid 1px;
 }
+

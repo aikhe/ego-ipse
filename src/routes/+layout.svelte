@@ -35,7 +35,9 @@
 	</nav>
 </header>
 
-{@render children()}
+<main>
+	{@render children()}
+</main>
 
 {#if showGrid}
 	<div class="grid-overlay section-container">
@@ -47,8 +49,8 @@
 
 <style>
 	header {
-		position: sticky;
-		top: 0;
+		/* position: sticky; */
+		/* top: 0; */
 		z-index: 2;
 		height: 4.8rem;
 
@@ -106,7 +108,7 @@
 		background-color: rgba(255, 255, 255, 0.06);
 		color: #fff;
 		border: 1px solid #363636;
-		padding: 8px 14px;
+		padding: 6px 12px;
 		cursor: pointer;
 
 		display: flex;

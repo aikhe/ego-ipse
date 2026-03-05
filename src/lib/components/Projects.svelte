@@ -14,15 +14,41 @@
 
 	let projectItems: HTMLAnchorElement[] = [];
 	let reticle: HTMLDivElement;
+	let reticleBorders: HTMLDivElement;
+	let expandReticle: HTMLDivElement;
+
+	const SIZE = 32;
+	const DWELL = 800;
+	const EXIT_DELAY = 100;
 
 	onMount(() => {
+		// cursor reticle: spins freely, follows mouse, fully independent
 		const xTo = gsap.quickTo(reticle, 'x', { duration: 0.8, ease: 'power3.out' });
 		const yTo = gsap.quickTo(reticle, 'y', { duration: 0.8, ease: 'power3.out' });
-		gsap.set(reticle, { xPercent: -50, yPercent: -50, opacity: 0 });
+		gsap.set(reticle, { xPercent: -50, yPercent: -50, opacity: 0, width: SIZE, height: SIZE });
+		gsap.to(reticleBorders, { rotation: 360, duration: 10, repeat: -1, ease: 'none' });
 
-		// check if a node belongs to any project item
+		// expand reticle: separate, always 0deg, locked to button
+		gsap.set(expandReticle, { xPercent: -50, yPercent: -50, opacity: 0, width: 0, height: 0 });
+
+		let dwellTimer: ReturnType<typeof setTimeout> | null = null;
+		let collapseTimer: ReturnType<typeof setTimeout> | null = null;
+		let expanded = false;
+
 		const isItem = (el: EventTarget | null) =>
 			projectItems.some((item) => item.contains(el as Node));
+
+		const collapseExpand = () => {
+			if (!expanded) return;
+			expanded = false;
+			gsap.to(expandReticle, {
+				width: 0,
+				height: 0,
+				opacity: 0,
+				duration: 0.4,
+				ease: 'power3.inOut'
+			});
+		};
 
 		projectItems.forEach((item) => {
 			if (!item) return;
@@ -30,19 +56,53 @@
 			const arrow = item.querySelector('.arrow');
 
 			item.addEventListener('mouseenter', (e: MouseEvent) => {
+				clearTimeout(dwellTimer!);
+				clearTimeout(collapseTimer!);
 				gsap.killTweensOf([bg, arrow, item]);
 
-				// fresh hover from outside: snap reticle to right of this button & fade in
-				if (!isItem(e.relatedTarget)) {
+				// slide expand reticle to new button if already active
+				if (expanded) {
 					const rect = item.getBoundingClientRect();
-					gsap.set(reticle, { x: rect.right, y: rect.top + rect.height / 2 });
-					gsap.to(reticle, { opacity: 1, duration: 0.3, ease: 'power3.out' });
+					gsap.to(expandReticle, {
+						x: rect.left + rect.width / 2,
+						y: rect.top + rect.height / 2,
+						width: rect.width,
+						height: rect.height,
+						duration: 0.5,
+						ease: 'power3.inOut'
+					});
 				}
-				// transitioning from another item: reticle stays where it is, no interruption
 
 				gsap.to(bg, { opacity: 1, duration: 0.3, ease: 'power3.out' });
 				gsap.to(item, { zIndex: 20, padding: '0 0.6rem', duration: 0.3, ease: 'power3.out' });
 				gsap.to(arrow, { opacity: 0, duration: 0.2, ease: 'power3.out' });
+
+				// cursor reticle + dwell only when not already in expand state
+				if (!expanded) {
+					if (!isItem(e.relatedTarget)) {
+						// fresh hover: snap cursor reticle to right & fade in
+						const rect = item.getBoundingClientRect();
+						gsap.set(reticle, { x: rect.right, y: rect.top + rect.height / 2 });
+						gsap.to(reticle, { opacity: 1, duration: 0.3, ease: 'power3.out' });
+					}
+
+					dwellTimer = setTimeout(() => {
+						expanded = true;
+						const rect = item.getBoundingClientRect();
+						const cx = rect.left + rect.width / 2;
+						const cy = rect.top + rect.height / 2;
+
+						gsap.to(reticle, { opacity: 0, duration: 0.2, ease: 'power3.out' });
+						gsap.set(expandReticle, { x: cx, y: cy, width: 0, height: 0 });
+						gsap.to(expandReticle, {
+							width: rect.width,
+							height: rect.height,
+							opacity: 1,
+							duration: 0.5,
+							ease: 'power3.out'
+						});
+					}, DWELL);
+				}
 			});
 
 			item.addEventListener('mousemove', (e: MouseEvent) => {
@@ -51,40 +111,39 @@
 			});
 
 			item.addEventListener('mouseleave', (e: MouseEvent) => {
+				clearTimeout(dwellTimer!);
 				gsap.killTweensOf([bg, arrow, item]);
 				gsap.to(bg, { opacity: 0, duration: 0.3, ease: 'power3.out' });
 				gsap.to(item, { zIndex: 1, padding: '0', duration: 0.3, ease: 'power3.out' });
 				gsap.to(arrow, { opacity: 0.8, duration: 0.3, ease: 'power3.out' });
 
-				// only fade out when truly leaving all project items
 				if (!isItem(e.relatedTarget)) {
-					gsap.to(reticle, { opacity: 0, duration: 0.3, ease: 'power3.out' });
+					// delay collapse so reticle lingers briefly after leaving
+					collapseTimer = setTimeout(() => {
+						collapseExpand();
+						gsap.to(reticle, { opacity: 0, duration: 0.3, ease: 'power3.out' });
+					}, EXIT_DELAY);
 				}
 			});
 		});
 	});
 </script>
 
-<!-- global reticle, fixed to viewport, tracks cursor across all items -->
+<!-- cursor reticle: spins, follows mouse -->
 <div class="reticle" bind:this={reticle}>
-	<div class="reticle-borders">
-		<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<path d="M1 7V1H7M25 1H31V7M31 25V31H25M7 31H1V25" stroke="white" stroke-width="1" />
-		</svg>
-	</div>
-	<div class="reticle-box">
-		<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<rect x="13" y="13" width="6" height="6" fill="white" />
-		</svg>
-	</div>
+	<div class="reticle-borders" bind:this={reticleBorders}></div>
+	<div class="reticle-box"></div>
 </div>
+
+<!-- expand reticle: static 0deg, locks to hovered button on dwell -->
+<div class="reticle reticle--expand" bind:this={expandReticle}></div>
 
 <div class="info__projects">
 	{#each projects as project, i (project.name)}
 		<a href={resolve(project.href)} class="project--item" bind:this={projectItems[i]}>
 			<div class="project--bg"></div>
 			<span>{project.name}</span>
-			<span class="arrow"><IconArrow /></span>
+			<span class="arrow"><IconArrow size={14} /></span>
 		</a>
 	{/each}
 	<button class="project--more">MORE ...</button>
@@ -136,18 +195,11 @@
 		opacity: 0.8;
 	}
 
-	.arrow :global(svg) {
-		width: 1rem;
-		height: 1rem;
-	}
-
-	/* global reticle */
+	/* shared reticle base */
 	.reticle {
 		position: fixed;
 		top: 0;
 		left: 0;
-		width: 32px;
-		height: 32px;
 		pointer-events: none;
 		z-index: 999;
 	}
@@ -161,20 +213,41 @@
 		justify-content: center;
 	}
 
-	.reticle-borders {
-		animation: rotate-reticle 10s linear infinite;
+	/* 1px corner brackets via css gradients — adapts to any size */
+	.reticle-borders,
+	.reticle--expand {
+		background-image:
+			linear-gradient(to right, white 1px, transparent 1px),
+			linear-gradient(to bottom, white 1px, transparent 1px),
+			linear-gradient(to left, white 1px, transparent 1px),
+			linear-gradient(to bottom, white 1px, transparent 1px),
+			linear-gradient(to right, white 1px, transparent 1px),
+			linear-gradient(to top, white 1px, transparent 1px),
+			linear-gradient(to left, white 1px, transparent 1px),
+			linear-gradient(to top, white 1px, transparent 1px);
+		background-position:
+			0 0,
+			0 0,
+			100% 0,
+			100% 0,
+			0 100%,
+			0 100%,
+			100% 100%,
+			100% 100%;
+		background-repeat: no-repeat;
+		background-size: 6px 6px;
 	}
 
-	@keyframes rotate-reticle {
-		to {
-			transform: rotate(360deg);
-		}
+	/* solid 4px center dot */
+	.reticle-box {
+		background: none;
 	}
 
-	.reticle-borders svg,
-	.reticle-box svg {
-		width: 100%;
-		height: 100%;
+	.reticle-box::after {
+		content: '';
+		width: 4px;
+		height: 4px;
+		background: white;
 	}
 
 	.project--more {

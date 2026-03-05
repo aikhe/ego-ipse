@@ -16,10 +16,15 @@
 	let reticle: HTMLDivElement;
 	let reticleBorders: HTMLDivElement;
 	let expandReticle: HTMLDivElement;
+	let infoSection: HTMLDivElement;
+	let randomBox: HTMLDivElement;
+	let buttonBox: HTMLDivElement;
+	let currentItem: HTMLAnchorElement | null = null;
 
 	const SIZE = 32;
 	const DWELL = 400;
 	const EXIT_DELAY = 100;
+	const BOX_DELAY = 300;
 
 	onMount(() => {
 		// cursor reticle: spins freely, follows mouse, fully independent
@@ -33,6 +38,7 @@
 
 		let dwellTimer: ReturnType<typeof setTimeout> | null = null;
 		let collapseTimer: ReturnType<typeof setTimeout> | null = null;
+		let boxSpawnTimer: ReturnType<typeof setTimeout> | null = null;
 		let expanded = false;
 
 		const isItem = (el: EventTarget | null) =>
@@ -48,6 +54,46 @@
 				duration: 0.4,
 				ease: 'power3.inOut'
 			});
+			gsap.to([randomBox, buttonBox], { opacity: 0, duration: 0.3 });
+			clearTimeout(boxSpawnTimer!);
+		};
+
+		const showRandomBox = () => {
+			if (!infoSection || !randomBox || !buttonBox || !currentItem) return;
+			const sectionRect = infoSection.getBoundingClientRect();
+			const itemRect = currentItem.getBoundingClientRect();
+
+			// 1. Calculate button box position (the anchor)
+			const btnMinX = itemRect.width * 0.4;
+			const btnMaxX = itemRect.width * 0.9;
+			const btnRelX = btnMinX + Math.random() * (btnMaxX - btnMinX - 16);
+			const btnFinalX = itemRect.left - sectionRect.left + btnRelX;
+			const btnFinalY = (itemRect.top - sectionRect.top) + (itemRect.height / 2) - 8 + (Math.random() * 10 - 5);
+
+			// 2. Calculate outside box position based on button box X
+			// Spread is roughly 30% of section width
+			const spread = sectionRect.width * 0.3;
+			let outX = btnFinalX + (Math.random() * spread - spread / 2);
+			outX = Math.max(0, Math.min(outX, sectionRect.width - 16));
+			const outY = -50 - Math.random() * 200;
+
+			// box 1: above the section (grouped horizontally with button box)
+			gsap.to(randomBox, {
+				opacity: 0,
+				duration: 0.1,
+				onComplete: () => {
+					gsap.set(randomBox, { left: outX, top: outY, opacity: 1 });
+				}
+			});
+
+			// box 2: inside the current button
+			gsap.to(buttonBox, {
+				opacity: 0,
+				duration: 0.1,
+				onComplete: () => {
+					gsap.set(buttonBox, { left: btnFinalX, top: btnFinalY, opacity: 1 });
+				}
+			});
 		};
 
 		projectItems.forEach((item) => {
@@ -59,6 +105,7 @@
 				clearTimeout(dwellTimer!);
 				clearTimeout(collapseTimer!);
 				gsap.killTweensOf([bg, arrow, item]);
+				currentItem = item;
 
 				// slide expand reticle to new button if already active
 				if (expanded) {
@@ -71,6 +118,8 @@
 						duration: 0.5,
 						ease: 'power3.inOut'
 					});
+					clearTimeout(boxSpawnTimer!);
+					boxSpawnTimer = setTimeout(showRandomBox, BOX_DELAY);
 				}
 
 				gsap.to(bg, { opacity: 1, duration: 0.3, ease: 'power3.out' });
@@ -101,6 +150,7 @@
 							duration: 0.5,
 							ease: 'power3.out'
 						});
+						showRandomBox();
 					}, DWELL);
 				}
 			});
@@ -112,6 +162,7 @@
 
 			item.addEventListener('mouseleave', (e: MouseEvent) => {
 				clearTimeout(dwellTimer!);
+				clearTimeout(boxSpawnTimer!);
 				gsap.killTweensOf([bg, arrow, item]);
 				gsap.to(bg, { opacity: 0, duration: 0.3, ease: 'power3.out' });
 				gsap.to(item, { zIndex: 1, padding: '0', duration: 0.3, ease: 'power3.out' });
@@ -138,18 +189,26 @@
 <!-- expand reticle: static 0deg, locks to hovered button on dwell -->
 <div class="reticle reticle--expand" bind:this={expandReticle}></div>
 
-<div class="info__projects">
-	{#each projects as project, i (project.name)}
-		<a href={resolve(project.href)} class="project--item" bind:this={projectItems[i]}>
-			<div class="project--bg"></div>
-			<span>{project.name}</span>
-			<span class="arrow"><IconArrow size={12} /></span>
-		</a>
-	{/each}
-	<button class="project--more">MORE ...</button>
+<div class="projects-wrapper" bind:this={infoSection}>
+	<div class="random-box" bind:this={randomBox}></div>
+	<div class="random-box" bind:this={buttonBox}></div>
+	<div class="info__projects">
+		{#each projects as project, i (project.name)}
+			<a href={resolve(project.href)} class="project--item" bind:this={projectItems[i]}>
+				<div class="project--bg"></div>
+				<span>{project.name}</span>
+				<span class="arrow"><IconArrow size={12} /></span>
+			</a>
+		{/each}
+		<button class="project--more">MORE ...</button>
+	</div>
 </div>
 
 <style>
+	.projects-wrapper {
+		position: relative;
+	}
+
 	.info__projects {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
@@ -291,5 +350,15 @@
 	.project--more:hover {
 		background: rgba(255, 255, 255, 0.05);
 		border-color: #444;
+	}
+
+	.random-box {
+		position: absolute;
+		width: 1rem;
+		height: 1rem;
+		background: white;
+		pointer-events: none;
+		z-index: 10;
+		opacity: 0;
 	}
 </style>

@@ -3,13 +3,49 @@
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
 	import IconArrow from '$lib/components/IconArrow.svelte';
+	import ProjectPreview from '$lib/components/ProjectPreview.svelte';
 
 	const projects = [
-		{ name: 'Sample', href: '/' },
-		{ name: 'Project', href: '/' },
-		{ name: 'Placeholder', href: '/' },
-		{ name: 'Lorem Ipsum', href: '/' },
-		{ name: 'To Be Replaced', href: '/' }
+		{
+			name: 'Sample',
+			href: '/',
+			section: 'DEVELOPMENT',
+			date: '1.10.33',
+			tags: ['WEB', 'DESIGN'],
+			id: '001'
+		},
+		{
+			name: 'Project',
+			href: '/',
+			section: 'ARCHIVE',
+			date: '2.15.24',
+			tags: ['UI', 'UX'],
+			id: '002'
+		},
+		{
+			name: 'Placeholder',
+			href: '/',
+			section: 'EXPERIMENT',
+			date: '3.20.25',
+			tags: ['JS', 'GSAP'],
+			id: '003'
+		},
+		{
+			name: 'Lorem Ipsum',
+			href: '/',
+			section: 'CONCEPT',
+			date: '4.05.26',
+			tags: ['SVG', 'CSS'],
+			id: '004'
+		},
+		{
+			name: 'To Be Replaced',
+			href: '/',
+			section: 'LEGACY',
+			date: '5.12.21',
+			tags: ['OLD', 'REF'],
+			id: '005'
+		}
 	] as const;
 
 	let projectItems: HTMLAnchorElement[] = [];
@@ -19,7 +55,12 @@
 	let infoSection: HTMLDivElement;
 	let randomBox: HTMLDivElement;
 	let buttonBox: HTMLDivElement;
+	let connectorLine: SVGPolylineElement;
 	let currentItem: HTMLAnchorElement | null = null;
+	let currentProject: (typeof projects)[number] | null = null;
+	let showPreview = false;
+	let previewX = 0;
+	let previewY = 0;
 
 	const SIZE = 32;
 	const DWELL = 400;
@@ -55,6 +96,8 @@
 				ease: 'power3.inOut'
 			});
 			gsap.to([randomBox, buttonBox], { opacity: 0, duration: 0.3 });
+			gsap.to(connectorLine, { opacity: 0, duration: 0.3 });
+			showPreview = false;
 			clearTimeout(boxSpawnTimer!);
 		};
 
@@ -68,7 +111,8 @@
 			const btnMaxX = itemRect.width * 0.9;
 			const btnRelX = btnMinX + Math.random() * (btnMaxX - btnMinX - 16);
 			const btnFinalX = itemRect.left - sectionRect.left + btnRelX;
-			const btnFinalY = (itemRect.top - sectionRect.top) + (itemRect.height / 2) - 8 + (Math.random() * 10 - 5);
+			const btnFinalY =
+				itemRect.top - sectionRect.top + itemRect.height / 2 - 8 + (Math.random() * 10 - 5);
 
 			// 2. Calculate outside box position based on button box X
 			// Spread is roughly 30% of section width
@@ -82,7 +126,13 @@
 				opacity: 0,
 				duration: 0.1,
 				onComplete: () => {
-					gsap.set(randomBox, { left: outX, top: outY, opacity: 1 });
+					gsap.to(randomBox, {
+						left: outX,
+						top: outY,
+						opacity: 1,
+						duration: 0.4,
+						ease: 'power3.out'
+					});
 				}
 			});
 
@@ -91,7 +141,84 @@
 				opacity: 0,
 				duration: 0.1,
 				onComplete: () => {
-					gsap.set(buttonBox, { left: btnFinalX, top: btnFinalY, opacity: 1 });
+					gsap.to(buttonBox, {
+						left: btnFinalX,
+						top: btnFinalY,
+						opacity: 1,
+						duration: 0.4,
+						ease: 'power3.out'
+					});
+				}
+			});
+			// 3. Update connector line
+			const boxSize = 0.43 * 16; // 0.43rem in px roughly
+			const outCX = outX + boxSize / 2;
+			const outCY = outY + boxSize / 2;
+			const btnCX = btnFinalX + boxSize / 2;
+			const btnCY = btnFinalY + boxSize / 2;
+
+			const pivotX = outCX + (btnCX - outCX) * 0.5;
+			const pivotY = outCY;
+
+			// Update preview data and visibility
+			previewX = outCX;
+			previewY = outCY;
+			if (currentItem) {
+				const index = projectItems.indexOf(currentItem);
+				if (index !== -1) {
+					currentProject = projects[index];
+					showPreview = true;
+				}
+			}
+
+			const points = {
+				x1: outCX,
+				y1: outCY,
+				x2: pivotX,
+				y2: pivotY,
+				x3: btnCX,
+				y3: btnCY
+			};
+
+			gsap.to(connectorLine, {
+				opacity: 1,
+				duration: 0.3
+			});
+
+			// Animate the points using a proxy object for smooth transition
+			const pointsAttr = connectorLine.getAttribute('points');
+			const currentPoints =
+				pointsAttr && pointsAttr !== '0,0 0,0 0,0'
+					? pointsAttr.split(' ').map((p) => p.split(',').map(Number))
+					: [
+							[outCX, outCY],
+							[outCX, outCY],
+							[outCX, outCY]
+						];
+
+			const lineData = {
+				p1x: currentPoints[0]?.[0] ?? outCX,
+				p1y: currentPoints[0]?.[1] ?? outCY,
+				p2x: currentPoints[1]?.[0] ?? outCX,
+				p2y: currentPoints[1]?.[1] ?? outCY,
+				p3x: currentPoints[2]?.[0] ?? outCX,
+				p3y: currentPoints[2]?.[1] ?? outCY
+			};
+
+			gsap.to(lineData, {
+				p1x: outCX,
+				p1y: outCY,
+				p2x: pivotX,
+				p2y: pivotY,
+				p3x: btnCX,
+				p3y: btnCY,
+				duration: 0.4,
+				ease: 'power3.out',
+				onUpdate: () => {
+					connectorLine.setAttribute(
+						'points',
+						`${lineData.p1x},${lineData.p1y} ${lineData.p2x},${lineData.p2y} ${lineData.p3x},${lineData.p3y}`
+					);
 				}
 			});
 		};
@@ -191,7 +318,11 @@
 
 <div class="projects-wrapper" bind:this={infoSection}>
 	<div class="random-box" bind:this={randomBox}></div>
+	<ProjectPreview project={currentProject} visible={showPreview} x={previewX} y={previewY} />
 	<div class="random-box" bind:this={buttonBox}></div>
+	<svg class="connector-svg">
+		<polyline bind:this={connectorLine} points="0,0 0,0 0,0" />
+	</svg>
 	<div class="info__projects">
 		{#each projects as project, i (project.name)}
 			<a href={resolve(project.href)} class="project--item" bind:this={projectItems[i]}>
@@ -304,8 +435,8 @@
 
 	.reticle-box::after {
 		content: '';
-		width: 4px;
-		height: 4px;
+		width: 0.43rem;
+		height: 0.43rem;
 		background: white;
 	}
 
@@ -354,11 +485,28 @@
 
 	.random-box {
 		position: absolute;
-		width: 1rem;
-		height: 1rem;
+		width: 0.43rem;
+		height: 0.43rem;
 		background: white;
 		pointer-events: none;
-		z-index: 10;
+		z-index: 100;
+		opacity: 0;
+	}
+
+	.connector-svg {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
+		overflow: visible;
+		z-index: 50;
+	}
+
+	.connector-svg polyline {
+		fill: none;
+		stroke: rgba(255, 255, 255, 0.4);
+		stroke-width: 1px;
 		opacity: 0;
 	}
 </style>

@@ -1,0 +1,12 @@
+{
+	"$schema": "https://btca.dev/schema.json",
+	"provider": "opencode",
+	"model": "claude-haiku-4-5",
+	"resources": [
+		{
+			"name": "ego-ipse",
+			"type": "local",
+			"path": "."
+		}
+	]
+}

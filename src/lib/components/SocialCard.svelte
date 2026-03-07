@@ -187,58 +187,62 @@
 </script>
 
 <div class="social-card" bind:this={container}>
-	<div class="corner-accents"></div>
+	<div class="social-card__accents"></div>
 	{#if displaySocial}
-		<div class="card" bind:this={content}>
-			<div class="left-col">
-				<div class="user-info">
-					<p class="handle">{displaySocial.handle || '@aikheandrei'}</p>
-					<p class="bio">
+		<div class="social-card__inner" bind:this={content}>
+			<div class="social-card__side social-card__side--left">
+				<div class="social-card__user">
+					<p class="social-card__handle">{displaySocial.handle || '@aikheandrei'}</p>
+					<p class="social-card__bio">
 						&gt; {displaySocial.bioPrefix || 'BIO'}
-						<strong>{displaySocial.bioHighlight || '→ CREATIVE DEV'}</strong>
+						<strong class="social-card__bio--strong"
+							>{displaySocial.bioHighlight || '→ CREATIVE DEV'}</strong
+						>
 					</p>
 				</div>
-				<div class="stats">
+				<div class="social-card__stats">
 					{#if displaySocial.stats}
 						{#each displaySocial.stats as stat (stat.label)}
-							<div class="stat-row">
-								<span class="label">{stat.label}:</span>
-								<span class="val">[{stat.value}]</span>
+							<div class="social-card__stat">
+								<span class="social-card__stat-label">{stat.label}:</span>
+								<span class="social-card__stat-val">[{stat.value}]</span>
 							</div>
 						{/each}
 					{:else}
-						<div class="stat-row">
-							<span class="label">FOLLOWING:</span>
-							<span class="val">[939]</span>
+						<div class="social-card__stat">
+							<span class="social-card__stat-label">FOLLOWING:</span>
+							<span class="social-card__stat-val">[939]</span>
 						</div>
-						<div class="stat-row">
-							<span class="label">FOLLOWERS:</span>
-							<span class="val">[4,426]</span>
+						<div class="social-card__stat">
+							<span class="social-card__stat-label">FOLLOWERS:</span>
+							<span class="social-card__stat-val">[4,426]</span>
 						</div>
 					{/if}
 				</div>
-				<div class="bottom-group">
-					<div class="footer-tags">
+				<div class="social-card__bottom">
+					<div class="social-card__tags">
 						{#if displaySocial.tags}
 							{#each displaySocial.tags as tag (tag)}
-								<span class="tag-box">[ {tag} ]</span>
+								<span class="social-card__tag">[ {tag} ]</span>
 							{/each}
 						{:else}
-							<span class="tag-box">[ {displaySocial.name} ]</span>
-							<span class="tag-box">[ {displaySocial.external ? 'SOCIAL' : 'INTERNAL'} ]</span>
+							<span class="social-card__tag">[ {displaySocial.name} ]</span>
+							<span class="social-card__tag"
+								>[ {displaySocial.external ? 'SOCIAL' : 'INTERNAL'} ]</span
+							>
 						{/if}
 					</div>
-					<button class="active-status"> {displaySocial.status || 'ACTIVE...'} </button>
+					<button class="social-card__status"> {displaySocial.status || 'ACTIVE...'} </button>
 				</div>
 			</div>
-			<div class="right-col">
-				<div class="placeholder-box">
-					<img src={displaySocial.image} alt="Preview" class="placeholder-image" />
-					<div class="corner-dot tl"></div>
-					<div class="corner-dot tr"></div>
-					<div class="corner-dot bl"></div>
-					<div class="corner-dot br"></div>
-					<canvas bind:this={canvas} class="tile-canvas"></canvas>
+			<div class="social-card__side social-card__side--right">
+				<div class="social-card__preview">
+					<img src={displaySocial.image} alt="Preview" class="social-card__img" />
+					<div class="social-card__dot social-card__dot--tl"></div>
+					<div class="social-card__dot social-card__dot--tr"></div>
+					<div class="social-card__dot social-card__dot--bl"></div>
+					<div class="social-card__dot social-card__dot--br"></div>
+					<canvas bind:this={canvas} class="social-card__canvas"></canvas>
 				</div>
 			</div>
 		</div>
@@ -251,7 +255,7 @@
 		bottom: calc(100% - 1rem);
 		right: 0;
 		width: calc(50% - 0.6rem); /* 3 grid columns */
-		height: auto; /* Relative to content */
+		height: auto;
 		background: #080807;
 		border: 1px solid #363636;
 		opacity: 0;
@@ -262,14 +266,14 @@
 		backdrop-filter: blur(4px);
 	}
 
-	.corner-accents {
+	.social-card__accents {
 		position: absolute;
 		inset: -1px;
 		pointer-events: none;
 		z-index: 5;
 	}
 
-	.corner-accents::before {
+	.social-card__accents::before {
 		content: '';
 		position: absolute;
 		inset: 0;
@@ -286,30 +290,30 @@
 		background-size: 10px 10px;
 	}
 
-	.card {
+	.social-card__inner {
 		display: grid;
-		grid-template-columns: 1fr 1fr; /* Equal column widths */
-		min-height: 12.5rem; /* Ensure consistent height across all platforms */
+		grid-template-columns: 1fr 1fr;
+		min-height: 12.5rem;
 		padding: 1rem;
 		box-sizing: border-box;
 		gap: 1rem;
 	}
 
-	.left-col {
+	.social-card__side--left {
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
 		font-family: 'Geist Mono', monospace;
 	}
 
-	.user-info {
+	.social-card__user {
 		margin-bottom: 0rem;
 		display: flex;
 		flex-direction: column;
 		row-gap: 0.24rem;
 	}
 
-	.handle {
+	.social-card__handle {
 		color: #fff;
 		margin: 0;
 		font-family: 'Geist Mono', monospace;
@@ -318,7 +322,7 @@
 		font-weight: 400;
 	}
 
-	.bio {
+	.social-card__bio {
 		color: #888;
 		margin: 0.1rem 0 0 0;
 		font-family: 'Geist Mono', monospace;
@@ -328,19 +332,19 @@
 		text-wrap: nowrap;
 	}
 
-	.bio > strong {
+	.social-card__bio--strong {
 		color: #fff;
 		font-weight: 400;
 	}
 
-	.stats {
+	.social-card__stats {
 		display: flex;
 		flex-direction: column;
-		gap: 0.1rem; /* Just change this value to increase or decrease space */
+		gap: 0.1rem;
 		margin: 0.4rem 0;
 	}
 
-	.stat-row {
+	.social-card__stat {
 		display: flex;
 		justify-content: flex-start;
 		gap: 0.4rem;
@@ -348,33 +352,33 @@
 		letter-spacing: 0.034em;
 		font-size: 0.8rem;
 		font-weight: 400;
-		line-height: 1.2; /* Back to a comfortable default */
+		line-height: 1.2;
 	}
 
-	.label {
+	.social-card__stat-label {
 		color: #888;
-		width: 85px; /* Narrower to fit within small column */
+		width: 85px;
 		flex-shrink: 0;
 	}
 
-	.val {
+	.social-card__stat-val {
 		color: #fff;
 		flex-grow: 1;
 	}
 
-	.bottom-group {
+	.social-card__bottom {
 		margin-top: auto;
 		display: flex;
 		flex-direction: column;
 		gap: 0.6rem;
 	}
 
-	.footer-tags {
+	.social-card__tags {
 		display: flex;
 		gap: 0.4rem;
 	}
 
-	.tag-box {
+	.social-card__tag {
 		color: #fff;
 		font-family: 'Geist Mono', monospace;
 		letter-spacing: 0.034em;
@@ -383,7 +387,7 @@
 		white-space: nowrap;
 	}
 
-	.active-status {
+	.social-card__status {
 		width: 100%;
 		padding: 0.24rem;
 		background: rgba(255, 255, 255, 0.02);
@@ -398,16 +402,16 @@
 		cursor: default;
 	}
 
-	.right-col {
+	.social-card__side--right {
 		display: flex;
 		align-items: center;
-		justify-content: center; /* Center the box in the column */
+		justify-content: center;
 	}
 
-	.placeholder-box {
-		width: 100%; /* Fill the column width */
-		aspect-ratio: 1 / 1; /* Maintain square shape */
-		border: 1px dashed rgba(255, 255, 255, 0.4);
+	.social-card__preview {
+		width: 100%;
+		aspect-ratio: 1 / 1;
+		border: 1px dashed rgba(255, 255, 255, 0.6);
 		position: relative;
 		background: #080807;
 		overflow: hidden;
@@ -415,17 +419,16 @@
 		align-items: center;
 		justify-content: center;
 		box-sizing: border-box;
-		/* padding: 0.8rem; */
 	}
 
-	.placeholder-image {
+	.social-card__img {
 		max-width: 100%;
 		max-height: 100%;
 		object-fit: contain;
 		display: block;
 	}
 
-	.corner-dot {
+	.social-card__dot {
 		position: absolute;
 		width: 4px;
 		height: 4px;
@@ -433,24 +436,24 @@
 		z-index: 10;
 	}
 
-	.tl {
+	.social-card__dot--tl {
 		top: -1px;
 		left: -1px;
 	}
-	.tr {
+	.social-card__dot--tr {
 		top: -1px;
 		right: -1px;
 	}
-	.bl {
+	.social-card__dot--bl {
 		bottom: -1px;
 		left: -1px;
 	}
-	.br {
+	.social-card__dot--br {
 		bottom: -1px;
 		right: -1px;
 	}
 
-	.tile-canvas {
+	.social-card__canvas {
 		position: absolute;
 		inset: 0;
 		width: 100%;

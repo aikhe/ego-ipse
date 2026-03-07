@@ -225,7 +225,7 @@
 		gsap.set([lineL, lineR], { opacity: 0 });
 		gsap.to([lineL, lineR], { opacity: 1, duration: 0.3 });
 
-		// Track during the entrance animation (0.5s) and slightly beyond
+		// track during the entrance animation (0.5s) and slightly beyond
 		lineTracking = gsap.to(
 			{},
 			{
@@ -239,8 +239,8 @@
 		if (intervals[index]) clearInterval(intervals[index]);
 		displayTexts[index] = socials[index].name;
 
-		// Only reset global reveal state if the link being exited is the one currently active
-		// This prevents rapid transitions from killing the state of the *new* hover
+		// only reset global reveal state if the link being exited is the one currently active
+		// this prevents rapid transitions from killing the state of the *new* hover
 		if (hoveredIndex === index) {
 			hoveredIndex = null;
 			isSocialRevealed = false;

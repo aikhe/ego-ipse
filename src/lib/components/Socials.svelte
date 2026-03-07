@@ -1,15 +1,113 @@
 <script lang="ts">
 	import SocialCard from './SocialCard.svelte';
 	import gsap from 'gsap';
+	import acedia from '$lib/assets/acedia.png';
 
-	const socials = [
-		{ name: 'X(TWITTER)', href: 'https://twitter.com', external: true },
-		{ name: 'LINKEDIN', href: 'https://linkedin.com', external: true },
-		{ name: 'GITHUB', href: 'https://github.com', external: true },
-		{ name: 'ABOUT', href: '/', external: false },
-		{ name: 'BLOG', href: '/', external: false },
-		{ name: 'ACEDIA', href: '/', external: false }
-	] as const;
+	interface Social {
+		name: string;
+		href: string;
+		external: boolean;
+		handle?: string;
+		bioPrefix?: string;
+		bioHighlight?: string;
+		stats?: { label: string; value: string }[];
+		tags?: string[];
+		status?: string;
+		image?: string;
+	}
+
+	const socials: Social[] = [
+		{
+			name: 'X(TWITTER)',
+			href: 'https://twitter.com',
+			external: true,
+			handle: '@aikheandrei',
+			bioPrefix: 'BIO',
+			bioHighlight: '→ CREATIVE DEV',
+			image: acedia,
+			stats: [
+				{ label: 'FOLLOWING', value: '939' },
+				{ label: 'FOLLOWERS', value: '4,426' }
+			],
+			tags: ['X', 'SOCIAL'],
+			status: 'ACTIVE...'
+		},
+		{
+			name: 'LINKEDIN',
+			href: 'https://linkedin.com',
+			external: true,
+			handle: 'aikhe-andrei',
+			bioPrefix: 'PROFESSIONAL',
+			bioHighlight: '→ ENG',
+			image: acedia,
+			stats: [
+				{ label: 'CONNECTS', value: '500+' },
+				{ label: 'POSTS', value: '124' }
+			],
+			tags: ['LINKEDIN', 'WORK'],
+			status: 'HIRED...'
+		},
+		{
+			name: 'GITHUB',
+			href: 'https://github.com',
+			external: true,
+			handle: 'aikhe',
+			bioPrefix: 'SOURCE',
+			bioHighlight: '→ OPEN SOURCE',
+			image: acedia,
+			stats: [
+				{ label: 'REPOS', value: '86' },
+				{ label: 'STARS', value: '1,204' }
+			],
+			tags: ['GITHUB', 'CODE'],
+			status: 'PUSHING...'
+		},
+		{
+			name: 'ABOUT',
+			href: '/',
+			external: false,
+			handle: '@aikhe',
+			bioPrefix: 'ORIGIN',
+			bioHighlight: '→ HUMAN ENTITY',
+			image: acedia,
+			stats: [
+				{ label: 'AGE', value: '24' },
+				{ label: 'LOC', value: 'SEA' }
+			],
+			tags: ['ABOUT', 'INTERNAL'],
+			status: 'IDLE...'
+		},
+		{
+			name: 'BLOG',
+			href: '/',
+			external: false,
+			handle: 'log_entry',
+			bioPrefix: 'DATA',
+			bioHighlight: '→ THOUGHTS',
+			image: acedia,
+			stats: [
+				{ label: 'ENTRIES', value: '42' },
+				{ label: 'READS', value: '12.4K' }
+			],
+			tags: ['BLOG', 'DATA'],
+			status: 'READING...'
+		},
+		{
+			name: 'ACEDIA',
+			href: '/',
+			external: false,
+			handle: 'null_state',
+			bioPrefix: 'VOID',
+			bioHighlight: '→ EXPERIMENT',
+			image: acedia,
+			stats: [
+				{ label: 'STATUS', value: 'OFFLINE' },
+				{ label: 'VERSION', value: '0.0.1' }
+			],
+			tags: ['EXPERIMENTAL', 'VOID'],
+			status: 'SHUTTING DOWN...'
+		}
+	];
 
 	// glitch palette
 	const smallSymbols = '·.:,;+-';

@@ -6,6 +6,13 @@
 		name: string;
 		href: string;
 		external: boolean;
+		handle?: string;
+		bioPrefix?: string;
+		bioHighlight?: string;
+		stats?: { label: string; value: string }[];
+		tags?: string[];
+		status?: string;
+		image?: string;
 	}
 
 	interface Props {
@@ -185,29 +192,48 @@
 		<div class="card" bind:this={content}>
 			<div class="left-col">
 				<div class="user-info">
-					<p class="handle">@aikheandrei</p>
-					<p class="bio">&gt; BIO → CREATIVE DEVELOPER</p>
+					<p class="handle">{displaySocial.handle || '@aikheandrei'}</p>
+					<p class="bio">
+						&gt; {displaySocial.bioPrefix || 'BIO'}
+						<strong>{displaySocial.bioHighlight || '→ CREATIVE DEV'}</strong>
+					</p>
 				</div>
 				<div class="stats">
-					<div class="stat-row">
-						<span class="label">FOLLOWING:</span>
-						<span class="val">[939]</span>
-					</div>
-					<div class="stat-row">
-						<span class="label">FOLLOWERS:</span>
-						<span class="val">[4,426]</span>
-					</div>
+					{#if displaySocial.stats}
+						{#each displaySocial.stats as stat (stat.label)}
+							<div class="stat-row">
+								<span class="label">{stat.label}:</span>
+								<span class="val">[{stat.value}]</span>
+							</div>
+						{/each}
+					{:else}
+						<div class="stat-row">
+							<span class="label">FOLLOWING:</span>
+							<span class="val">[939]</span>
+						</div>
+						<div class="stat-row">
+							<span class="label">FOLLOWERS:</span>
+							<span class="val">[4,426]</span>
+						</div>
+					{/if}
 				</div>
 				<div class="bottom-group">
 					<div class="footer-tags">
-						<span class="tag-box">[ {displaySocial.name} ]</span>
-						<span class="tag-box">[ {displaySocial.external ? 'SOCIAL' : 'INTERNAL'} ]</span>
+						{#if displaySocial.tags}
+							{#each displaySocial.tags as tag (tag)}
+								<span class="tag-box">[ {tag} ]</span>
+							{/each}
+						{:else}
+							<span class="tag-box">[ {displaySocial.name} ]</span>
+							<span class="tag-box">[ {displaySocial.external ? 'SOCIAL' : 'INTERNAL'} ]</span>
+						{/if}
 					</div>
-					<button class="active-status"> ACTIVE... </button>
+					<button class="active-status"> {displaySocial.status || 'ACTIVE...'} </button>
 				</div>
 			</div>
 			<div class="right-col">
 				<div class="placeholder-box">
+					<img src={displaySocial.image} alt="Preview" class="placeholder-image" />
 					<div class="corner-dot tl"></div>
 					<div class="corner-dot tr"></div>
 					<div class="corner-dot bl"></div>
@@ -263,7 +289,7 @@
 	.card {
 		display: grid;
 		grid-template-columns: 1fr 1fr; /* Equal column widths */
-		height: auto;
+		min-height: 12.5rem; /* Ensure consistent height across all platforms */
 		padding: 1rem;
 		box-sizing: border-box;
 		gap: 1rem;
@@ -278,6 +304,9 @@
 
 	.user-info {
 		margin-bottom: 0rem;
+		display: flex;
+		flex-direction: column;
+		row-gap: 0.24rem;
 	}
 
 	.handle {
@@ -296,23 +325,30 @@
 		letter-spacing: 0.034em;
 		font-size: 0.8rem;
 		font-weight: 400;
+		text-wrap: nowrap;
+	}
+
+	.bio > strong {
+		color: #fff;
+		font-weight: 400;
 	}
 
 	.stats {
 		display: flex;
 		flex-direction: column;
-		gap: 0.15rem;
+		gap: 0.1rem; /* Just change this value to increase or decrease space */
 		margin: 0.4rem 0;
 	}
 
 	.stat-row {
 		display: flex;
 		justify-content: flex-start;
-		gap: 0.5rem;
+		gap: 0.4rem;
 		font-family: 'Geist Mono', monospace;
 		letter-spacing: 0.034em;
 		font-size: 0.8rem;
 		font-weight: 400;
+		line-height: 1.2; /* Back to a comfortable default */
 	}
 
 	.label {
@@ -330,7 +366,7 @@
 		margin-top: auto;
 		display: flex;
 		flex-direction: column;
-		gap: 0.8rem;
+		gap: 0.6rem;
 	}
 
 	.footer-tags {
@@ -342,21 +378,21 @@
 		color: #fff;
 		font-family: 'Geist Mono', monospace;
 		letter-spacing: 0.034em;
-		font-size: 0.8rem;
 		font-weight: 400;
+		font-size: 0.7rem;
 		white-space: nowrap;
 	}
 
 	.active-status {
 		width: 100%;
-		padding: 0.44rem;
+		padding: 0.24rem;
 		background: rgba(255, 255, 255, 0.02);
 		border: 1px solid #363636;
 		color: #888888;
 		font-family: 'Geist Mono', monospace;
-		font-weight: 500;
 		letter-spacing: 0.034em;
-		font-size: 0.7rem;
+		font-weight: 400;
+		font-size: 0.8rem;
 		text-align: center;
 		transition: background 0.2s ease;
 		cursor: default;
@@ -373,7 +409,20 @@
 		aspect-ratio: 1 / 1; /* Maintain square shape */
 		border: 1px dashed rgba(255, 255, 255, 0.4);
 		position: relative;
-		background: #000;
+		background: #080807;
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
+		/* padding: 0.8rem; */
+	}
+
+	.placeholder-image {
+		max-width: 100%;
+		max-height: 100%;
+		object-fit: contain;
+		display: block;
 	}
 
 	.corner-dot {

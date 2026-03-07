@@ -20,8 +20,8 @@
 	let hoveredIndex = $state<number | null>(null);
 	let isSocialRevealed = $state(false);
 
-	let linkElements: HTMLAnchorElement[] = [];
-	let boxElements: HTMLDivElement[] = [];
+	let linkElements = $state<HTMLAnchorElement[]>([]);
+	let boxElements = $state<HTMLDivElement[]>([]);
 	let container = $state<HTMLDivElement>();
 	let lineL = $state<SVGPolylineElement>();
 	let lineR = $state<SVGPolylineElement>();

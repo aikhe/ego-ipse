@@ -73,7 +73,7 @@
 		}
 	] as const;
 
-	let projectItems: HTMLAnchorElement[] = [];
+	let projectItems = $state<HTMLAnchorElement[]>([]);
 	let reticle: HTMLDivElement;
 	let reticleBorders: HTMLDivElement;
 	let expandReticle: HTMLDivElement;
@@ -81,11 +81,11 @@
 	let randomBox: HTMLDivElement;
 	let buttonBox: HTMLDivElement;
 	let connectorLine: SVGPolylineElement;
-	let currentItem: HTMLAnchorElement | null = null;
-	let currentProject: (typeof projects)[number] | null = null;
-	let showPreview = false;
-	let previewX = 0;
-	let previewY = 0;
+	let currentItem = $state<HTMLAnchorElement | null>(null);
+	let currentProject = $state<(typeof projects)[number] | null>(null);
+	let showPreview = $state(false);
+	let previewX = $state(0);
+	let previewY = $state(0);
 
 	const SIZE = 32;
 	const DWELL = 400;
@@ -372,10 +372,10 @@
 				class="project--item"
 				class:no-border-bottom={project.name === 'Lorem Ipsum'}
 				bind:this={projectItems[i]}
-				on:mouseenter={() => {
+				onmouseenter={() => {
 					currentItem = projectItems[i];
 				}}
-				on:mouseleave={() => {
+				onmouseleave={() => {
 					currentItem = null;
 				}}
 			>

@@ -20,7 +20,8 @@
 			id: '001',
 			width: 340,
 			height: 440,
-			image: aikhe
+			image: aikhe,
+			external: false
 		},
 		{
 			name: 'Project',
@@ -31,7 +32,8 @@
 			id: '002',
 			width: 290,
 			height: 420,
-			image: assembly
+			image: assembly,
+			external: false
 		},
 		{
 			name: 'Placeholder',
@@ -42,7 +44,8 @@
 			id: '003',
 			width: 280,
 			height: 400,
-			image: chest
+			image: chest,
+			external: false
 		},
 		{
 			name: 'Lorem Ipsum',
@@ -53,7 +56,8 @@
 			id: '004',
 			width: 320,
 			height: 380,
-			image: clamp
+			image: clamp,
+			external: false
 		},
 		{
 			name: 'To Be Replaced',
@@ -64,7 +68,8 @@
 			id: '005',
 			width: 280,
 			height: 380,
-			image: fan
+			image: fan,
+			external: false
 		}
 	] as const;
 
@@ -362,7 +367,8 @@
 	<div class="info__projects">
 		{#each projects as project, i (project.id)}
 			<a
-				href={resolve(project.href)}
+				href={project.external ? project.href : resolve(project.href)}
+				rel={project.external ? 'external' : undefined}
 				class="project--item"
 				class:no-border-bottom={project.name === 'Lorem Ipsum'}
 				bind:this={projectItems[i]}

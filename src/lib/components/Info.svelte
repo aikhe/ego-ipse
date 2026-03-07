@@ -16,6 +16,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.88rem;
+		position: relative;
 	}
 
 	.info__title {

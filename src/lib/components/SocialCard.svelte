@@ -101,8 +101,8 @@
 		tl = gsap.timeline();
 
 		tl.set(container!, {
-			transformOrigin: 'bottom right',
-			scaleY: 0, // start from 0 for the hologram effect
+			transformOrigin: 'bottom left',
+			scaleY: 0,
 			opacity: 0,
 			y: 10
 		});
@@ -222,18 +222,17 @@
 <style>
 	.social-card {
 		position: absolute;
-		bottom: 100%;
+		bottom: calc(100% - 1rem);
 		right: 0;
 		width: calc(50% - 0.6rem); /* 3 grid columns */
 		height: auto; /* Relative to content */
 		background: #080807;
 		border: 1px solid #363636;
-		margin-bottom: -1.2rem;
 		opacity: 0;
 		pointer-events: none;
 		z-index: 999;
 		box-sizing: border-box;
-		transform-origin: bottom right;
+		transform-origin: bottom left;
 		backdrop-filter: blur(4px);
 	}
 

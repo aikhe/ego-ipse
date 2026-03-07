@@ -265,7 +265,7 @@
 		display: grid;
 		grid-template-columns: 1fr 1fr; /* Equal column widths */
 		height: auto;
-		padding: 1.2rem;
+		padding: 1rem;
 		box-sizing: border-box;
 		gap: 1rem;
 	}
@@ -336,7 +336,7 @@
 
 	.footer-tags {
 		display: flex;
-		gap: 0.5rem;
+		gap: 0.4rem;
 	}
 
 	.tag-box {
@@ -345,6 +345,7 @@
 		letter-spacing: 0.034em;
 		font-size: 0.8rem;
 		font-weight: 400;
+		white-space: nowrap;
 	}
 
 	.active-status {
@@ -385,20 +386,20 @@
 	}
 
 	.tl {
-		top: -2.5px;
-		left: -2.5px;
+		top: -1px;
+		left: -1px;
 	}
 	.tr {
-		top: -2.5px;
-		right: -2.5px;
+		top: -1px;
+		right: -1px;
 	}
 	.bl {
-		bottom: -2.5px;
-		left: -2.5px;
+		bottom: -1px;
+		left: -1px;
 	}
 	.br {
-		bottom: -2.5px;
-		right: -2.5px;
+		bottom: -1px;
+		right: -1px;
 	}
 
 	.tile-canvas {

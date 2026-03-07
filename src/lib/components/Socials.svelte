@@ -27,7 +27,9 @@
 			image: acedia,
 			stats: [
 				{ label: 'FOLLOWING', value: '939' },
-				{ label: 'FOLLOWERS', value: '4,426' }
+				{ label: 'FOLLOWERS', value: '4,426' },
+				{ label: 'LEVEL', value: '99' },
+				{ label: 'RANK', value: 'S' }
 			],
 			tags: ['X', 'SOCIAL'],
 			status: 'ACTIVE...'
@@ -42,7 +44,8 @@
 			image: acedia,
 			stats: [
 				{ label: 'CONNECTS', value: '500+' },
-				{ label: 'POSTS', value: '124' }
+				{ label: 'POSTS', value: '124' },
+				{ label: 'SKILLS', value: '12' }
 			],
 			tags: ['LINKEDIN', 'WORK'],
 			status: 'HIRED...'
@@ -57,7 +60,9 @@
 			image: acedia,
 			stats: [
 				{ label: 'REPOS', value: '86' },
-				{ label: 'STARS', value: '1,204' }
+				{ label: 'STARS', value: '1,204' },
+				{ label: 'PUSHES', value: '1.2K' },
+				{ label: 'FORKS', value: '42' }
 			],
 			tags: ['GITHUB', 'CODE'],
 			status: 'PUSHING...'
@@ -72,7 +77,8 @@
 			image: acedia,
 			stats: [
 				{ label: 'AGE', value: '24' },
-				{ label: 'LOC', value: 'SEA' }
+				{ label: 'LOC', value: 'SEA' },
+				{ label: 'EXP', value: '5Y' }
 			],
 			tags: ['ABOUT', 'INTERNAL'],
 			status: 'IDLE...'
@@ -87,7 +93,8 @@
 			image: acedia,
 			stats: [
 				{ label: 'ENTRIES', value: '42' },
-				{ label: 'READS', value: '12.4K' }
+				{ label: 'READS', value: '12.4K' },
+				{ label: 'TOPIC', value: 'DEV' }
 			],
 			tags: ['BLOG', 'DATA'],
 			status: 'READING...'

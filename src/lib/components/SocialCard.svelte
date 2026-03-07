@@ -217,6 +217,14 @@
 							<span class="social-card__stat-label">FOLLOWERS:</span>
 							<span class="social-card__stat-val">[4,426]</span>
 						</div>
+						<div class="social-card__stat">
+							<span class="social-card__stat-label">LEVEL:</span>
+							<span class="social-card__stat-val">[99]</span>
+						</div>
+						<div class="social-card__stat">
+							<span class="social-card__stat-label">RANK:</span>
+							<span class="social-card__stat-val">[S]</span>
+						</div>
 					{/if}
 				</div>
 				<div class="social-card__bottom">

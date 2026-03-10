@@ -2,6 +2,7 @@
 	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
+
 	import IconArrow from './IconArrow.svelte';
 	import ProjectPreview from './ProjectPreview.svelte';
 	import chest from '$lib/assets/chest.png';
@@ -365,7 +366,7 @@
 		<polyline bind:this={connectorLine} points="0,0 0,0 0,0" />
 	</svg>
 	<div class="info__projects">
-		{#each projects as project, i (project.id)}
+		{#each projects as project, i (i + project.name)}
 			<a
 				href={project.external ? project.href : resolve(project.href)}
 				rel={project.external ? 'external' : undefined}

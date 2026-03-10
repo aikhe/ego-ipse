@@ -221,7 +221,7 @@
 					</div>
 					<div class="text-footer">
 						<div class="tags">
-							{#each project.tags as tag (tag)}
+							{#each project.tags as tag, i (i + tag)}
 								<span class="tag">[ {tag} ]</span>
 							{/each}
 						</div>

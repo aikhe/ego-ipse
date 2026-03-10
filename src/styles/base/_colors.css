@@ -29,6 +29,7 @@
     --color-overlay-05: rgba(255, 255, 255, 0.05);
     --color-overlay-06: rgba(255, 255, 255, 0.06);
     --color-overlay-10: rgba(255, 255, 255, 0.1);
+    --color-overlay-15: rgba(255, 255, 255, 0.12);
     --color-overlay-20: rgba(255, 255, 255, 0.2);
     --color-overlay-40: rgba(255, 255, 255, 0.4);
     --color-overlay-60: rgba(255, 255, 255, 0.6);
@@ -75,7 +76,7 @@
     --color-accent-blue: #676767;
     --color-accent-cyan: #080807;
 
-    --color-primary: #ffffff;
+    --color-primary: #f5f5f5;
     --color-bg: #f5f5f5;
     --color-bg-secondary: #e8e8e8;
     --color-bg-surface: rgba(0, 0, 0, 0.02);

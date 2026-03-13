@@ -3,6 +3,7 @@
     --color-black: #000000;
     --color-white: #ffffff;
     --color-debug: red;
+    --logo-invert: 1;
 
     /* accents */
     --color-accent-blue: #7892c1;
@@ -58,6 +59,7 @@
         --color-border-muted: #cccccc;
         --color-border-soft: rgba(0, 0, 0, 0.06);
         --color-border-vivid: rgba(0, 0, 0, 0.1);
+        --logo-invert: 0;
 
         --color-overlay-02: rgba(0, 0, 0, 0.02);
         --color-overlay-05: rgba(0, 0, 0, 0.05);
@@ -70,8 +72,8 @@
 }
 
 :root[data-theme="light"] {
-    --color-accent-blue: rgba(113, 137, 181, 0.6);
-    --color-accent-cyan: #b8d6d9;
+    --color-accent-blue: #676767;
+    --color-accent-cyan: #080807;
 
     --color-primary: #ffffff;
     --color-bg: #f5f5f5;
@@ -87,11 +89,12 @@
     --color-border-muted: #cccccc;
     --color-border-soft: rgba(0, 0, 0, 0.06);
     --color-border-vivid: rgba(0, 0, 0, 0.1);
+    --logo-invert: 0;
 
     --color-overlay-02: rgba(0, 0, 0, 0.02);
     --color-overlay-05: rgba(0, 0, 0, 0.05);
     --color-overlay-06: rgba(0, 0, 0, 0.06);
-    --color-overlay-10: rgba(0, 0, 0, 0.3);
+    --color-overlay-10: rgba(0, 0, 0, 0.1);
     --color-overlay-20: rgba(0, 0, 0, 0.3);
     --color-overlay-40: rgba(0, 0, 0, 0.4);
     --color-overlay-60: rgba(0, 0, 0, 0.6);

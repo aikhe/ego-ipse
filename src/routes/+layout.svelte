@@ -153,6 +153,7 @@
 
 	.logo {
 		grid-column: 1;
+		filter: brightness(0) invert(var(--logo-invert, 0));
 	}
 
 	.time {

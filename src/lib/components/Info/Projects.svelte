@@ -424,7 +424,7 @@
 		inset: 0;
 		background: linear-gradient(
 			90deg,
-			transparent 10%,
+			transparent 20%,
 			var(--color-accent-blue) 70%,
 			var(--color-accent-cyan) 100%
 		);

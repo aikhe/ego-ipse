@@ -1,6 +1,6 @@
 <div class="hero">
 	<h1 class="hero__title">
-		<strong class="title--strong">Lorem Ipsum</strong> is simply dummy text of the printing and typesetting
+		<strong class="title--strong">Aikhe</strong> is a creative developer of the printing and typesetting
 		industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
 	</h1>
 	<p class="hero__description">
@@ -22,11 +22,14 @@
 		font-family: 'GeistPixel Square', sans-serif;
 		font-size: 2rem;
 		line-height: 34px;
+		letter-spacing: 0.34%;
 		width: 38ch;
 	}
 
 	.title--strong {
-		font-family: 'GeistPixel Line', sans-serif;
+		font-family: 'Advine-Pixel', sans-serif;
+		font-size: 4rem;
+		letter-spacing: 4%;
 	}
 
 	.hero__description {

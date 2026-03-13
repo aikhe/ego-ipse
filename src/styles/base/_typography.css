@@ -13,3 +13,11 @@
 	font-style: normal;
 	font-display: swap;
 }
+
+@font-face {
+	font-family: 'Advine-Pixel';
+	src: url('../../lib/assets/fonts/Advine-Pixel.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}

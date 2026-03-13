@@ -2,6 +2,7 @@
 @import 'tailwindcss';
 
 @import './layout/_containers.css';
+@import './base/_colors.css';
 @import './base/_typography.css';
 
 *,
@@ -16,9 +17,6 @@
 	font-weight: 200;
 	letter-spacing: 0.34%;
 
-	--color-bg-0: #080807;
-	--color-text: rgba(255, 255, 255);
-
 	color: var(--color-text);
 }
 
@@ -27,7 +25,7 @@ body {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 
-	background-color: var(--color-bg-0);
+	background-color: var(--color-bg);
 }
 
 section {
@@ -38,6 +36,5 @@ section {
 }
 
 .inspect {
-	border: red solid 1px;
+	border: var(--color-debug) solid 1px;
 }
-

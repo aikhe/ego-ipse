@@ -24,7 +24,7 @@
 		font-weight: 500;
 		letter-spacing: 0.34%;
 		font-size: 0.875rem;
-		color: #888888;
+		color: var(--color-text-muted);
 
 		display: flex;
 		align-items: center;

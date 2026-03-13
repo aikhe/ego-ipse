@@ -1,0 +1,40 @@
+:root {
+  /* base colors */
+  --color-black: #000000;
+  --color-white: #ffffff;
+
+  /* brand colors */
+  --color-primary: #080807;
+
+  /* background colors */
+  --color-bg: var(--color-primary);
+  --color-bg-secondary: #1a1a1a;
+  --color-bg-surface: rgba(255, 255, 255, 0.02);
+  --color-bg-surface-hover: rgba(255, 255, 255, 0.05);
+
+  /* text colors */
+  --color-text: var(--color-white);
+  --color-text-muted: #888888;
+
+  /* border colors */
+  --color-border: #363636;
+  --color-border-muted: #444444;
+  --color-border-soft: rgba(255, 255, 255, 0.1);
+  --color-border-vivid: rgba(255, 255, 255, 0.2);
+
+  /* accents */
+  --color-accent-blue: #7892c1;
+  --color-accent-cyan: #b8d6d9;
+
+  /* utility alphas */
+  --color-white-a02: rgba(255, 255, 255, 0.02);
+  --color-white-a05: rgba(255, 255, 255, 0.05);
+  --color-white-a06: rgba(255, 255, 255, 0.06);
+  --color-white-a10: rgba(255, 255, 255, 0.1);
+  --color-white-a20: rgba(255, 255, 255, 0.2);
+  --color-white-a40: rgba(255, 255, 255, 0.4);
+  --color-white-a60: rgba(255, 255, 255, 0.6);
+
+  /* debug */
+  --color-debug: red;
+}

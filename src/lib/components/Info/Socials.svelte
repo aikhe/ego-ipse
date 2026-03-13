@@ -336,7 +336,7 @@
 		display: block;
 		width: 100%;
 		overflow: hidden;
-		color: #fff;
+		color: var(--color-white);
 		text-decoration: none;
 		z-index: 1;
 		transition: color 0.1s ease;
@@ -349,14 +349,14 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background-color: #fff;
+		background-color: var(--color-white);
 		transform: translateY(100%);
 		transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 		z-index: -1;
 	}
 
 	.socials__link:hover {
-		color: #000;
+		color: var(--color-black);
 	}
 
 	.socials__link:hover::before {
@@ -367,7 +367,7 @@
 		position: absolute;
 		width: 0.43rem;
 		height: 0.43rem;
-		background: #000;
+		background: var(--color-black);
 		pointer-events: none;
 		opacity: 0;
 		z-index: 2;
@@ -387,7 +387,7 @@
 
 	.socials__connector polyline {
 		fill: none;
-		stroke: rgba(255, 255, 255, 0.4);
+		stroke: var(--color-white-a40);
 		stroke-width: 1px;
 		opacity: 0;
 	}

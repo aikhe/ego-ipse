@@ -409,10 +409,10 @@
 		font-weight: 400;
 		font-size: 1.2rem;
 		letter-spacing: 0.34%;
-		color: #fff;
+		color: var(--color-white);
 		text-decoration: none;
 
-		border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+		border-bottom: 1px solid var(--color-white-a20);
 	}
 
 	.no-border-bottom {
@@ -422,14 +422,19 @@
 	.project--bg {
 		position: absolute;
 		inset: 0;
-		background: linear-gradient(90deg, transparent 10%, #7892c1 80%, #b8d6d9 100%);
+		background: linear-gradient(
+			90deg,
+			transparent 10%,
+			var(--color-accent-blue) 80%,
+			var(--color-accent-cyan) 100%
+		);
 		opacity: 0;
 		z-index: 0;
 		pointer-events: none;
 	}
 
 	.project--item:nth-child(-n + 2) {
-		border-top: 1px solid rgba(255, 255, 255, 0.2);
+		border-top: 1px solid var(--color-white-a20);
 	}
 
 	.project--item span {
@@ -464,14 +469,14 @@
 	.reticle-borders,
 	.reticle--expand {
 		background-image:
-			linear-gradient(to right, white 1px, transparent 1px),
-			linear-gradient(to bottom, white 1px, transparent 1px),
-			linear-gradient(to left, white 1px, transparent 1px),
-			linear-gradient(to bottom, white 1px, transparent 1px),
-			linear-gradient(to right, white 1px, transparent 1px),
-			linear-gradient(to top, white 1px, transparent 1px),
-			linear-gradient(to left, white 1px, transparent 1px),
-			linear-gradient(to top, white 1px, transparent 1px);
+			linear-gradient(to right, var(--color-white) 1px, transparent 1px),
+			linear-gradient(to bottom, var(--color-white) 1px, transparent 1px),
+			linear-gradient(to left, var(--color-white) 1px, transparent 1px),
+			linear-gradient(to bottom, var(--color-white) 1px, transparent 1px),
+			linear-gradient(to right, var(--color-white) 1px, transparent 1px),
+			linear-gradient(to top, var(--color-white) 1px, transparent 1px),
+			linear-gradient(to left, var(--color-white) 1px, transparent 1px),
+			linear-gradient(to top, var(--color-white) 1px, transparent 1px);
 		background-position:
 			0 0,
 			0 0,
@@ -494,16 +499,16 @@
 		content: '';
 		width: 0.43rem;
 		height: 0.43rem;
-		background: white;
+		background: var(--color-white);
 	}
 
 	.project--more {
 		height: 48px;
-		background: rgba(255, 255, 255, 0.02);
-		border: 1px solid #363636;
+		background: var(--color-white-a02);
+		border: 1px solid var(--color-border);
 		margin-top: -1px;
 
-		color: #fff;
+		color: var(--color-white);
 		font-family: 'Geist Mono', monospace;
 		font-weight: 400;
 		letter-spacing: 0.34%;
@@ -522,29 +527,29 @@
 		position: absolute;
 		inset: -1px;
 		background:
-			linear-gradient(to right, #888 1px, transparent 1px) 0 0,
-			linear-gradient(to bottom, #888 1px, transparent 1px) 0 0,
-			linear-gradient(to left, #888 1px, transparent 1px) 100% 0,
-			linear-gradient(to bottom, #888 1px, transparent 1px) 100% 0,
-			linear-gradient(to right, #888 1px, transparent 1px) 0 100%,
-			linear-gradient(to top, #888 1px, transparent 1px) 0 100%,
-			linear-gradient(to left, #888 1px, transparent 1px) 100% 100%,
-			linear-gradient(to top, #888 1px, transparent 1px) 100% 100%;
+			linear-gradient(to right, var(--color-text-muted) 1px, transparent 1px) 0 0,
+			linear-gradient(to bottom, var(--color-text-muted) 1px, transparent 1px) 0 0,
+			linear-gradient(to left, var(--color-text-muted) 1px, transparent 1px) 100% 0,
+			linear-gradient(to bottom, var(--color-text-muted) 1px, transparent 1px) 100% 0,
+			linear-gradient(to right, var(--color-text-muted) 1px, transparent 1px) 0 100%,
+			linear-gradient(to top, var(--color-text-muted) 1px, transparent 1px) 0 100%,
+			linear-gradient(to left, var(--color-text-muted) 1px, transparent 1px) 100% 100%,
+			linear-gradient(to top, var(--color-text-muted) 1px, transparent 1px) 100% 100%;
 		background-repeat: no-repeat;
 		background-size: 8px 8px;
 		pointer-events: none;
 	}
 
 	.project--more:hover {
-		background: rgba(255, 255, 255, 0.05);
-		border-color: #444;
+		background: var(--color-white-a05);
+		border-color: var(--color-border-muted);
 	}
 
 	.random-box {
 		position: absolute;
 		width: 0.43rem;
 		height: 0.43rem;
-		background: white;
+		background: var(--color-white);
 		pointer-events: none;
 		z-index: 100;
 		opacity: 0;
@@ -562,7 +567,7 @@
 
 	.connector-svg polyline {
 		fill: none;
-		stroke: rgba(255, 255, 255, 0.4);
+		stroke: var(--color-white-a40);
 		stroke-width: 1px;
 		opacity: 0;
 	}

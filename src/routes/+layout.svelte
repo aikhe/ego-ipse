@@ -83,7 +83,7 @@
 		font-weight: 500;
 		letter-spacing: 0.34%;
 		font-size: 0.875rem;
-		color: #888888;
+		color: var(--color-text-muted);
 	}
 
 	header > * {
@@ -122,9 +122,9 @@
 		justify-self: flex-end;
 		position: relative;
 
-		background-color: rgba(255, 255, 255, 0.06);
-		color: #fff;
-		border: 1px solid #363636;
+		background-color: var(--color-white-a06);
+		color: var(--color-white);
+		border: 1px solid var(--color-border);
 		padding: 6px 12px;
 		cursor: pointer;
 
@@ -138,29 +138,29 @@
 		content: '';
 		position: absolute;
 		border-style: solid;
-		border-color: #888888;
+		border-color: var(--color-text-muted);
 		pointer-events: none;
 	}
 
 	.contact-btn::before {
 		inset: -1px;
 		background:
-			linear-gradient(to right, #888 1px, transparent 1px) 0 0,
-			linear-gradient(to bottom, #888 1px, transparent 1px) 0 0,
-			linear-gradient(to left, #888 1px, transparent 1px) 100% 0,
-			linear-gradient(to bottom, #888 1px, transparent 1px) 100% 0,
-			linear-gradient(to right, #888 1px, transparent 1px) 0 100%,
-			linear-gradient(to top, #888 1px, transparent 1px) 0 100%,
-			linear-gradient(to left, #888 1px, transparent 1px) 100% 100%,
-			linear-gradient(to top, #888 1px, transparent 1px) 100% 100%;
+			linear-gradient(to right, var(--color-text-muted) 1px, transparent 1px) 0 0,
+			linear-gradient(to bottom, var(--color-text-muted) 1px, transparent 1px) 0 0,
+			linear-gradient(to left, var(--color-text-muted) 1px, transparent 1px) 100% 0,
+			linear-gradient(to bottom, var(--color-text-muted) 1px, transparent 1px) 100% 0,
+			linear-gradient(to right, var(--color-text-muted) 1px, transparent 1px) 0 100%,
+			linear-gradient(to top, var(--color-text-muted) 1px, transparent 1px) 0 100%,
+			linear-gradient(to left, var(--color-text-muted) 1px, transparent 1px) 100% 100%,
+			linear-gradient(to top, var(--color-text-muted) 1px, transparent 1px) 100% 100%;
 		background-repeat: no-repeat;
 		background-size: 8px 8px;
 	}
 
 	.contact-btn:hover {
-		background-color: #1a1a1a;
-		border-color: #444;
-		color: #fff;
+		background-color: var(--color-bg-secondary);
+		border-color: var(--color-border-muted);
+		color: var(--color-white);
 	}
 
 	/* nav { */
@@ -183,7 +183,7 @@
 	}
 
 	.grid-column {
-		background-color: rgba(255, 255, 255, 0.02);
+		background-color: var(--color-white-a02);
 		/* border-left: 1px solid rgba(255, 255, 255, 0.06); */
 		/* border-right: 1px solid rgba(255, 255, 255, 0.06); */
 	}

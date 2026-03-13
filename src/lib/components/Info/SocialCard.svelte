@@ -264,8 +264,8 @@
 		right: 0;
 		width: calc(50% - 0.6rem); /* 3 grid columns */
 		height: auto;
-		background: #080807;
-		border: 1px solid #363636;
+		background: var(--color-bg);
+		border: 1px solid var(--color-border);
 		opacity: 0;
 		pointer-events: none;
 		z-index: 999;
@@ -286,14 +286,14 @@
 		position: absolute;
 		inset: 0;
 		background:
-			linear-gradient(to right, #888 1px, transparent 1px) 0 0,
-			linear-gradient(to bottom, #888 1px, transparent 1px) 0 0,
-			linear-gradient(to left, #888 1px, transparent 1px) 100% 0,
-			linear-gradient(to bottom, #888 1px, transparent 1px) 100% 0,
-			linear-gradient(to right, #888 1px, transparent 1px) 0 100%,
-			linear-gradient(to top, #888 1px, transparent 1px) 0 100%,
-			linear-gradient(to left, #888 1px, transparent 1px) 100% 100%,
-			linear-gradient(to top, #888 1px, transparent 1px) 100% 100%;
+			linear-gradient(to right, var(--color-text-muted) 1px, transparent 1px) 0 0,
+			linear-gradient(to bottom, var(--color-text-muted) 1px, transparent 1px) 0 0,
+			linear-gradient(to left, var(--color-text-muted) 1px, transparent 1px) 100% 0,
+			linear-gradient(to bottom, var(--color-text-muted) 1px, transparent 1px) 100% 0,
+			linear-gradient(to right, var(--color-text-muted) 1px, transparent 1px) 0 100%,
+			linear-gradient(to top, var(--color-text-muted) 1px, transparent 1px) 0 100%,
+			linear-gradient(to left, var(--color-text-muted) 1px, transparent 1px) 100% 100%,
+			linear-gradient(to top, var(--color-text-muted) 1px, transparent 1px) 100% 100%;
 		background-repeat: no-repeat;
 		background-size: 10px 10px;
 	}
@@ -322,7 +322,7 @@
 	}
 
 	.social-card__handle {
-		color: #fff;
+		color: var(--color-white);
 		margin: 0;
 		font-family: 'Geist Mono', monospace;
 		letter-spacing: 0.034em;
@@ -331,7 +331,7 @@
 	}
 
 	.social-card__bio {
-		color: #888;
+		color: var(--color-text-muted);
 		margin: 0.1rem 0 0 0;
 		font-family: 'Geist Mono', monospace;
 		letter-spacing: 0.034em;
@@ -341,7 +341,7 @@
 	}
 
 	.social-card__bio--strong {
-		color: #fff;
+		color: var(--color-white);
 		font-weight: 400;
 	}
 
@@ -364,13 +364,13 @@
 	}
 
 	.social-card__stat-label {
-		color: #888;
+		color: var(--color-text-muted);
 		width: 85px;
 		flex-shrink: 0;
 	}
 
 	.social-card__stat-val {
-		color: #fff;
+		color: var(--color-white);
 		flex-grow: 1;
 	}
 
@@ -387,7 +387,7 @@
 	}
 
 	.social-card__tag {
-		color: #fff;
+		color: var(--color-white);
 		font-family: 'Geist Mono', monospace;
 		letter-spacing: 0.034em;
 		font-weight: 400;
@@ -398,9 +398,9 @@
 	.social-card__status {
 		width: 100%;
 		padding: 0.24rem;
-		background: rgba(255, 255, 255, 0.02);
-		border: 1px solid #363636;
-		color: #888888;
+		background: var(--color-white-a02);
+		border: 1px solid var(--color-border);
+		color: var(--color-text-muted);
 		font-family: 'Geist Mono', monospace;
 		letter-spacing: 0.034em;
 		font-weight: 400;
@@ -419,9 +419,9 @@
 	.social-card__preview {
 		width: 100%;
 		aspect-ratio: 1 / 1;
-		border: 1px dashed rgba(255, 255, 255, 0.6);
+		border: 1px dashed var(--color-white-a60);
 		position: relative;
-		background: #080807;
+		background: var(--color-bg);
 		overflow: hidden;
 		display: flex;
 		align-items: center;
@@ -440,7 +440,7 @@
 		position: absolute;
 		width: 4px;
 		height: 4px;
-		background: #fff;
+		background: var(--color-white);
 		z-index: 10;
 	}
 

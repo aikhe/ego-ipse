@@ -36,11 +36,11 @@
 		font-size: 0.875rem;
 		line-height: 16px;
 		width: 48ch;
-		color: #888888;
+		color: var(--color-text-muted);
 	}
 
 	.description--strong {
 		font-weight: 500;
-		color: #ffffff;
+		color: var(--color-white);
 	}
 </style>

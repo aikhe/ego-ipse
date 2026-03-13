@@ -290,8 +290,8 @@
 		font-size: 0.8rem;
 		font-weight: 400;
 
-		background: var(--color-white-a02);
-		border-bottom: 1px solid var(--color-white-a10);
+		background: var(--color-overlay-02);
+		border-bottom: 1px solid var(--color-overlay-10);
 	}
 
 	.header::before,
@@ -328,7 +328,7 @@
 	}
 
 	.name {
-		color: var(--color-white);
+		color: var(--color-text);
 		font-weight: 500;
 		margin: 0;
 		letter-spacing: 0.08em;
@@ -356,7 +356,7 @@
 		flex: 1;
 		border: 1px solid var(--color-border);
 		overflow: hidden;
-		background: var(--color-black);
+		background: var(--color-bg);
 	}
 
 	.image-box {
@@ -364,7 +364,7 @@
 		flex: 1;
 		min-height: 0;
 		padding: 0.8rem;
-		background: var(--color-white);
+		background: var(--color-text);
 		border-bottom: 1px solid var(--color-border);
 		position: relative;
 		display: flex;

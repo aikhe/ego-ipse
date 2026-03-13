@@ -322,7 +322,7 @@
 	}
 
 	.social-card__handle {
-		color: var(--color-white);
+		color: var(--color-text);
 		margin: 0;
 		font-family: 'Geist Mono', monospace;
 		letter-spacing: 0.034em;
@@ -341,7 +341,7 @@
 	}
 
 	.social-card__bio--strong {
-		color: var(--color-white);
+		color: var(--color-text);
 		font-weight: 400;
 	}
 
@@ -370,7 +370,7 @@
 	}
 
 	.social-card__stat-val {
-		color: var(--color-white);
+		color: var(--color-text);
 		flex-grow: 1;
 	}
 
@@ -387,7 +387,7 @@
 	}
 
 	.social-card__tag {
-		color: var(--color-white);
+		color: var(--color-text);
 		font-family: 'Geist Mono', monospace;
 		letter-spacing: 0.034em;
 		font-weight: 400;
@@ -398,7 +398,7 @@
 	.social-card__status {
 		width: 100%;
 		padding: 0.24rem;
-		background: var(--color-white-a02);
+		background: var(--color-overlay-02);
 		border: 1px solid var(--color-border);
 		color: var(--color-text-muted);
 		font-family: 'Geist Mono', monospace;
@@ -419,7 +419,7 @@
 	.social-card__preview {
 		width: 100%;
 		aspect-ratio: 1 / 1;
-		border: 1px dashed var(--color-white-a60);
+		border: 1px dashed var(--color-overlay-60);
 		position: relative;
 		background: var(--color-bg);
 		overflow: hidden;
@@ -440,7 +440,7 @@
 		position: absolute;
 		width: 4px;
 		height: 4px;
-		background: var(--color-white);
+		background: var(--color-text);
 		z-index: 10;
 	}
 

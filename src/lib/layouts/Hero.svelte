@@ -41,6 +41,6 @@
 
 	.description--strong {
 		font-weight: 500;
-		color: var(--color-white);
+		color: var(--color-text);
 	}
 </style>

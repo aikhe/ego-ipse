@@ -122,8 +122,8 @@
 		justify-self: flex-end;
 		position: relative;
 
-		background-color: var(--color-white-a06);
-		color: var(--color-white);
+		background-color: var(--color-overlay-06);
+		color: var(--color-text);
 		border: 1px solid var(--color-border);
 		padding: 6px 12px;
 		cursor: pointer;
@@ -160,7 +160,7 @@
 	.contact-btn:hover {
 		background-color: var(--color-bg-secondary);
 		border-color: var(--color-border-muted);
-		color: var(--color-white);
+		color: var(--color-text);
 	}
 
 	/* nav { */
@@ -183,7 +183,7 @@
 	}
 
 	.grid-column {
-		background-color: var(--color-white-a02);
+		background-color: var(--color-overlay-02);
 		/* border-left: 1px solid rgba(255, 255, 255, 0.06); */
 		/* border-right: 1px solid rgba(255, 255, 255, 0.06); */
 	}

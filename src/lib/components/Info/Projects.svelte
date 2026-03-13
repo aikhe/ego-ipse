@@ -409,10 +409,10 @@
 		font-weight: 400;
 		font-size: 1.2rem;
 		letter-spacing: 0.34%;
-		color: var(--color-white);
+		color: var(--color-text);
 		text-decoration: none;
 
-		border-bottom: 1px solid var(--color-white-a20);
+		border-bottom: 1px solid var(--color-overlay-20);
 	}
 
 	.no-border-bottom {
@@ -434,7 +434,7 @@
 	}
 
 	.project--item:nth-child(-n + 2) {
-		border-top: 1px solid var(--color-white-a20);
+		border-top: 1px solid var(--color-overlay-20);
 	}
 
 	.project--item span {
@@ -469,14 +469,14 @@
 	.reticle-borders,
 	.reticle--expand {
 		background-image:
-			linear-gradient(to right, var(--color-white) 1px, transparent 1px),
-			linear-gradient(to bottom, var(--color-white) 1px, transparent 1px),
-			linear-gradient(to left, var(--color-white) 1px, transparent 1px),
-			linear-gradient(to bottom, var(--color-white) 1px, transparent 1px),
-			linear-gradient(to right, var(--color-white) 1px, transparent 1px),
-			linear-gradient(to top, var(--color-white) 1px, transparent 1px),
-			linear-gradient(to left, var(--color-white) 1px, transparent 1px),
-			linear-gradient(to top, var(--color-white) 1px, transparent 1px);
+			linear-gradient(to right, var(--color-text) 1px, transparent 1px),
+			linear-gradient(to bottom, var(--color-text) 1px, transparent 1px),
+			linear-gradient(to left, var(--color-text) 1px, transparent 1px),
+			linear-gradient(to bottom, var(--color-text) 1px, transparent 1px),
+			linear-gradient(to right, var(--color-text) 1px, transparent 1px),
+			linear-gradient(to top, var(--color-text) 1px, transparent 1px),
+			linear-gradient(to left, var(--color-text) 1px, transparent 1px),
+			linear-gradient(to top, var(--color-text) 1px, transparent 1px);
 		background-position:
 			0 0,
 			0 0,
@@ -499,16 +499,16 @@
 		content: '';
 		width: 0.43rem;
 		height: 0.43rem;
-		background: var(--color-white);
+		background: var(--color-text);
 	}
 
 	.project--more {
 		height: 48px;
-		background: var(--color-white-a02);
+		background: var(--color-overlay-02);
 		border: 1px solid var(--color-border);
 		margin-top: -1px;
 
-		color: var(--color-white);
+		color: var(--color-text);
 		font-family: 'Geist Mono', monospace;
 		font-weight: 400;
 		letter-spacing: 0.34%;
@@ -541,7 +541,7 @@
 	}
 
 	.project--more:hover {
-		background: var(--color-white-a05);
+		background: var(--color-overlay-05);
 		border-color: var(--color-border-muted);
 	}
 
@@ -549,7 +549,7 @@
 		position: absolute;
 		width: 0.43rem;
 		height: 0.43rem;
-		background: var(--color-white);
+		background: var(--color-text);
 		pointer-events: none;
 		z-index: 100;
 		opacity: 0;
@@ -567,7 +567,7 @@
 
 	.connector-svg polyline {
 		fill: none;
-		stroke: var(--color-white-a40);
+		stroke: var(--color-overlay-40);
 		stroke-width: 1px;
 		opacity: 0;
 	}

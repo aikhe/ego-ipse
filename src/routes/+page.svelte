@@ -20,9 +20,9 @@
 </div>
 
 <div class="controls">
-	<button class="spin-btn" onclick={() => { trigger1++; activeIdx = 1 }}>BOX 1</button>
-	<button class="spin-btn" onclick={() => { trigger2++; activeIdx = 2 }}>BOX 2</button>
-	<button class="spin-btn" onclick={() => { trigger3++; activeIdx = 3 }}>BOX 3</button>
+	<button class="spin-btn" onclick={() => { trigger1++; activeIdx = 1 }}>SPIN BOX 1</button>
+	<button class="spin-btn" onclick={() => { trigger2++; activeIdx = 2 }}>SPIN BOX 2</button>
+	<button class="spin-btn" onclick={() => { trigger3++; activeIdx = 3 }}>SPIN BOX 3</button>
 </div>
 
 <style>

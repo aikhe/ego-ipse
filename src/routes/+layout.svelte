@@ -201,9 +201,9 @@
 		justify-self: flex-end;
 		position: relative;
 
-		background-color: var(--color-overlay-06);
+		background: var(--color-overlay-02);
 		color: var(--color-text);
-		border: 1px solid var(--color-border);
+		border: 1px solid var(--color-overlay-20);
 		padding: 6px 12px;
 		cursor: pointer;
 
@@ -224,22 +224,20 @@
 	.contact-btn::before {
 		inset: -1px;
 		background:
-			linear-gradient(to right, var(--color-text-muted) 1px, transparent 1px) 0 0,
-			linear-gradient(to bottom, var(--color-text-muted) 1px, transparent 1px) 0 0,
-			linear-gradient(to left, var(--color-text-muted) 1px, transparent 1px) 100% 0,
-			linear-gradient(to bottom, var(--color-text-muted) 1px, transparent 1px) 100% 0,
-			linear-gradient(to right, var(--color-text-muted) 1px, transparent 1px) 0 100%,
-			linear-gradient(to top, var(--color-text-muted) 1px, transparent 1px) 0 100%,
-			linear-gradient(to left, var(--color-text-muted) 1px, transparent 1px) 100% 100%,
-			linear-gradient(to top, var(--color-text-muted) 1px, transparent 1px) 100% 100%;
+			linear-gradient(to right, var(--color-text) 1px, transparent 1px) 0 0,
+			linear-gradient(to bottom, var(--color-text) 1px, transparent 1px) 0 0,
+			linear-gradient(to left, var(--color-text) 1px, transparent 1px) 100% 0,
+			linear-gradient(to bottom, var(--color-text) 1px, transparent 1px) 100% 0,
+			linear-gradient(to right, var(--color-text) 1px, transparent 1px) 0 100%,
+			linear-gradient(to top, var(--color-text) 1px, transparent 1px) 0 100%,
+			linear-gradient(to left, var(--color-text) 1px, transparent 1px) 100% 100%,
+			linear-gradient(to top, var(--color-text) 1px, transparent 1px) 100% 100%;
 		background-repeat: no-repeat;
 		background-size: 8px 8px;
 	}
 
 	.contact-btn:hover {
-		background-color: var(--color-bg-secondary);
-		border-color: var(--color-border-muted);
-		color: var(--color-text);
+		background: var(--color-overlay-05);
 	}
 
 	/* nav { */

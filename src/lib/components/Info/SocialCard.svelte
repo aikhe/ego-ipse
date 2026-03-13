@@ -268,7 +268,7 @@
 		width: calc(50% - 0.6rem); /* 3 grid columns */
 		height: auto;
 		background: var(--color-bg);
-		border: 1px solid var(--color-border);
+		border: 1px solid var(--color-overlay-20);
 		opacity: 0;
 		pointer-events: none;
 		z-index: 999;
@@ -289,14 +289,14 @@
 		position: absolute;
 		inset: 0;
 		background:
-			linear-gradient(to right, var(--color-text-muted) 1px, transparent 1px) 0 0,
-			linear-gradient(to bottom, var(--color-text-muted) 1px, transparent 1px) 0 0,
-			linear-gradient(to left, var(--color-text-muted) 1px, transparent 1px) 100% 0,
-			linear-gradient(to bottom, var(--color-text-muted) 1px, transparent 1px) 100% 0,
-			linear-gradient(to right, var(--color-text-muted) 1px, transparent 1px) 0 100%,
-			linear-gradient(to top, var(--color-text-muted) 1px, transparent 1px) 0 100%,
-			linear-gradient(to left, var(--color-text-muted) 1px, transparent 1px) 100% 100%,
-			linear-gradient(to top, var(--color-text-muted) 1px, transparent 1px) 100% 100%;
+			linear-gradient(to right, var(--color-text) 1px, transparent 1px) 0 0,
+			linear-gradient(to bottom, var(--color-text) 1px, transparent 1px) 0 0,
+			linear-gradient(to left, var(--color-text) 1px, transparent 1px) 100% 0,
+			linear-gradient(to bottom, var(--color-text) 1px, transparent 1px) 100% 0,
+			linear-gradient(to right, var(--color-text) 1px, transparent 1px) 0 100%,
+			linear-gradient(to top, var(--color-text) 1px, transparent 1px) 0 100%,
+			linear-gradient(to left, var(--color-text) 1px, transparent 1px) 100% 100%,
+			linear-gradient(to top, var(--color-text) 1px, transparent 1px) 100% 100%;
 		background-repeat: no-repeat;
 		background-size: 10px 10px;
 	}
@@ -334,7 +334,7 @@
 	}
 
 	.social-card__bio {
-		color: var(--color-text-muted);
+		color: var(--color-overlay-60);
 		margin: 0.1rem 0 0 0;
 		font-family: 'Geist Mono', monospace;
 		letter-spacing: 0.034em;
@@ -367,7 +367,7 @@
 	}
 
 	.social-card__stat-label {
-		color: var(--color-text-muted);
+		color: var(--color-overlay-60);
 		width: 85px;
 		flex-shrink: 0;
 	}
@@ -402,8 +402,8 @@
 		width: 100%;
 		padding: 0.24rem;
 		background: var(--color-overlay-02);
-		border: 1px solid var(--color-border);
-		color: var(--color-text-muted);
+		border: 1px solid var(--color-overlay-20);
+		color: var(--color-overlay-60);
 		font-family: 'Geist Mono', monospace;
 		letter-spacing: 0.034em;
 		font-weight: 400;
@@ -425,7 +425,7 @@
 		border: 1px dashed var(--color-overlay-60);
 		position: relative;
 		background: var(--color-bg);
-		overflow: hidden;
+		overflow: visible;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -444,12 +444,12 @@
 		width: 4px;
 		height: 4px;
 		background: var(--color-text);
-		z-index: 10;
+		z-index: 100;
 	}
 
 	.social-card__dot--tl {
-		top: -1px;
-		left: -1px;
+		top: -2px;
+		left: -2px;
 	}
 	.social-card__dot--tr {
 		top: -1px;

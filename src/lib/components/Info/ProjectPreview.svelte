@@ -238,7 +238,7 @@
 	.preview-container {
 		position: absolute;
 		background: var(--color-bg);
-		border: 1px solid var(--color-border);
+		border: 1px solid var(--color-overlay-20);
 		padding: 0;
 		opacity: 0;
 		pointer-events: none;
@@ -259,14 +259,14 @@
 		position: absolute;
 		inset: 0;
 		background:
-			linear-gradient(to right, var(--color-text-muted) 1px, transparent 1px) 0 0,
-			linear-gradient(to bottom, var(--color-text-muted) 1px, transparent 1px) 0 0,
-			linear-gradient(to left, var(--color-text-muted) 1px, transparent 1px) 100% 0,
-			linear-gradient(to bottom, var(--color-text-muted) 1px, transparent 1px) 100% 0,
-			linear-gradient(to right, var(--color-text-muted) 1px, transparent 1px) 0 100%,
-			linear-gradient(to top, var(--color-text-muted) 1px, transparent 1px) 0 100%,
-			linear-gradient(to left, var(--color-text-muted) 1px, transparent 1px) 100% 100%,
-			linear-gradient(to top, var(--color-text-muted) 1px, transparent 1px) 100% 100%;
+			linear-gradient(to right, var(--color-text) 1px, transparent 1px) 0 0,
+			linear-gradient(to bottom, var(--color-text) 1px, transparent 1px) 0 0,
+			linear-gradient(to left, var(--color-text) 1px, transparent 1px) 100% 0,
+			linear-gradient(to bottom, var(--color-text) 1px, transparent 1px) 100% 0,
+			linear-gradient(to right, var(--color-text) 1px, transparent 1px) 0 100%,
+			linear-gradient(to top, var(--color-text) 1px, transparent 1px) 0 100%,
+			linear-gradient(to left, var(--color-text) 1px, transparent 1px) 100% 100%,
+			linear-gradient(to top, var(--color-text) 1px, transparent 1px) 100% 100%;
 		background-repeat: no-repeat;
 		background-size: 10px 10px;
 	}
@@ -294,7 +294,7 @@
 		font-weight: 400;
 
 		background: var(--color-overlay-02);
-		border-bottom: 1px solid var(--color-overlay-10);
+		border-bottom: 1px solid var(--color-overlay-20);
 	}
 
 	.header::before,
@@ -311,8 +311,8 @@
 	.header::before {
 		left: -1px;
 		background:
-			linear-gradient(to right, var(--color-text-muted) 1px, transparent 1px) 0 0,
-			linear-gradient(to bottom, var(--color-text-muted) 1px, transparent 1px) 0 50%;
+			linear-gradient(to right, var(--color-text) 1px, transparent 1px) 0 0,
+			linear-gradient(to bottom, var(--color-text) 1px, transparent 1px) 0 50%;
 		background-repeat: no-repeat;
 		background-size:
 			1px 100%,
@@ -322,8 +322,8 @@
 	.header::after {
 		right: -1px;
 		background:
-			linear-gradient(to left, var(--color-text-muted) 1px, transparent 1px) 100% 0,
-			linear-gradient(to bottom, var(--color-text-muted) 1px, transparent 1px) 100% 50%;
+			linear-gradient(to left, var(--color-text) 1px, transparent 1px) 100% 0,
+			linear-gradient(to bottom, var(--color-text) 1px, transparent 1px) 100% 50%;
 		background-repeat: no-repeat;
 		background-size:
 			1px 100%,
@@ -340,7 +340,7 @@
 	.meta {
 		display: flex;
 		align-items: center;
-		color: var(--color-text-muted);
+		color: var(--color-overlay-60);
 		gap: 0.6rem;
 	}
 
@@ -357,7 +357,7 @@
 		display: flex;
 		flex-direction: column;
 		flex: 1;
-		border: 1px solid var(--color-border);
+		border: 1px solid var(--color-overlay-20);
 		overflow: hidden;
 		background: var(--color-bg);
 	}
@@ -368,7 +368,7 @@
 		min-height: 0;
 		padding: 0.8rem;
 		background: #fff;
-		border-bottom: 1px solid var(--color-border);
+		border-bottom: 1px solid var(--color-overlay-20);
 		position: relative;
 		display: flex;
 		align-items: center;
@@ -398,7 +398,7 @@
 		align-items: center;
 
 		background: var(--color-bg);
-		color: var(--color-text-muted);
+		color: var(--color-overlay-60);
 		font-family: 'Geist Mono', monospace;
 		font-weight: 500;
 		letter-spacing: 0.34%;

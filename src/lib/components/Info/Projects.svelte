@@ -505,7 +505,7 @@
 	.project--more {
 		height: 48px;
 		background: var(--color-overlay-02);
-		border: 1px solid var(--color-border);
+		border: 1px solid var(--color-overlay-20);
 		margin-top: -1px;
 
 		color: var(--color-text);
@@ -527,14 +527,14 @@
 		position: absolute;
 		inset: -1px;
 		background:
-			linear-gradient(to right, var(--color-text-muted) 1px, transparent 1px) 0 0,
-			linear-gradient(to bottom, var(--color-text-muted) 1px, transparent 1px) 0 0,
-			linear-gradient(to left, var(--color-text-muted) 1px, transparent 1px) 100% 0,
-			linear-gradient(to bottom, var(--color-text-muted) 1px, transparent 1px) 100% 0,
-			linear-gradient(to right, var(--color-text-muted) 1px, transparent 1px) 0 100%,
-			linear-gradient(to top, var(--color-text-muted) 1px, transparent 1px) 0 100%,
-			linear-gradient(to left, var(--color-text-muted) 1px, transparent 1px) 100% 100%,
-			linear-gradient(to top, var(--color-text-muted) 1px, transparent 1px) 100% 100%;
+			linear-gradient(to right, var(--color-text) 1px, transparent 1px) 0 0,
+			linear-gradient(to bottom, var(--color-text) 1px, transparent 1px) 0 0,
+			linear-gradient(to left, var(--color-text) 1px, transparent 1px) 100% 0,
+			linear-gradient(to bottom, var(--color-text) 1px, transparent 1px) 100% 0,
+			linear-gradient(to right, var(--color-text) 1px, transparent 1px) 0 100%,
+			linear-gradient(to top, var(--color-text) 1px, transparent 1px) 0 100%,
+			linear-gradient(to left, var(--color-text) 1px, transparent 1px) 100% 100%,
+			linear-gradient(to top, var(--color-text) 1px, transparent 1px) 100% 100%;
 		background-repeat: no-repeat;
 		background-size: 8px 8px;
 		pointer-events: none;
@@ -542,7 +542,6 @@
 
 	.project--more:hover {
 		background: var(--color-overlay-05);
-		border-color: var(--color-border-muted);
 	}
 
 	.random-box {

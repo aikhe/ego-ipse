@@ -7,8 +7,14 @@
 	import type { LayoutProps } from './$types';
 
 	let { children }: LayoutProps = $props();
+	let theme = $state('dark');
 	let showGrid = $state(false);
 	let time = $state('--:--:--');
+
+	function toggleTheme() {
+		theme = theme === 'dark' ? 'light' : 'dark';
+		document.documentElement.setAttribute('data-theme', theme);
+	}
 
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.shiftKey && event.key === 'G') {
@@ -45,6 +51,11 @@
 	<p class="time-zone">GMT+8</p>
 	<p class="location">CALOOCAN, PH</p>
 	<p class="coordinates">14.6514° N, 120.9902° E</p>
+
+	<button class="theme-toggle" onclick={toggleTheme}>
+		MODE: {theme.toUpperCase()}
+	</button>
+
 	<button class="contact-btn">CONTACT</button>
 
 	<!-- <nav class="nav"> -->
@@ -108,6 +119,23 @@
 
 	.coordinates {
 		grid-column: 7 / span 2;
+	}
+
+	.theme-toggle {
+		grid-column: 9;
+		background: none;
+		border: none;
+		color: var(--color-text-muted);
+		font-family: 'Geist Mono', monospace;
+		font-size: 0.875rem;
+		font-weight: 500;
+		cursor: pointer;
+		text-align: left;
+		padding: 0;
+	}
+
+	.theme-toggle:hover {
+		color: var(--color-text);
 	}
 
 	/* .nav { */

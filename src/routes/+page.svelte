@@ -1,4 +1,7 @@
 <script lang="ts">
+	// import Hero from '$lib/layouts/Hero.svelte';
+	// import Info from '$lib/layouts/Info.svelte';
+
 	import { Canvas } from '@threlte/core'
 	import Scene from './Scene.svelte'
 
@@ -7,6 +10,12 @@
 	let trigger3 = $state(0)
 	let activeIdx = $state(1) // box 1 is white by default
 </script>
+
+<!-- <section class="section-container"> -->
+<!-- 	<Hero /> -->
+<!---->
+<!-- 	<Info /> -->
+<!-- </section> -->
 
 <div class="canvas-container">
 	<Canvas>
@@ -26,6 +35,16 @@
 </div>
 
 <style>
+	/* section { */
+	/* 	height: calc(100vh - 4.8rem); */
+	/**/
+	/* 	display: grid; */
+	/* 	grid-template-columns: repeat(12, 1fr); */
+	/* 	gap: 1.2rem; */
+	/* 	align-items: end; */
+	/* 	padding-bottom: 2rem; */
+	/* } */
+
 	.canvas-container {
 		position: absolute;
 		top: 0;

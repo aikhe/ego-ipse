@@ -52,9 +52,12 @@
 		const tiles = shuffledTiles();
 		const total = tiles.length;
 
+		const themeColor =
+			getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
+
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		if (reveal) {
-			ctx.fillStyle = '#080807';
+			ctx.fillStyle = themeColor;
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
 		}
 
@@ -74,7 +77,7 @@
 						if (reveal) {
 							ctx.clearRect(c * tw, r * th, tw + 0.5, th + 0.5);
 						} else {
-							ctx.fillStyle = '#080807';
+							ctx.fillStyle = themeColor;
 							ctx.fillRect(c * tw, r * th, tw + 0.5, th + 0.5);
 						}
 						drawn++;

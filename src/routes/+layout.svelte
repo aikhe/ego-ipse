@@ -20,6 +20,9 @@
 		if (event.shiftKey && event.key === 'G') {
 			showGrid = !showGrid;
 		}
+		if (event.shiftKey && event.key === 'T') {
+			toggleTheme();
+		}
 	}
 
 	$effect(() => {

@@ -47,10 +47,13 @@
 		const tiles = shuffledTiles();
 		const total = tiles.length;
 
+		const themeColor =
+			getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
+
 		// setup canvas state for reveal or hide
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		if (reveal) {
-			ctx.fillStyle = '#080807';
+			ctx.fillStyle = themeColor;
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
 		}
 
@@ -70,7 +73,7 @@
 						if (reveal) {
 							ctx.clearRect(c * tw, r * th, tw + 0.5, th + 0.5);
 						} else {
-							ctx.fillStyle = '#080807';
+							ctx.fillStyle = themeColor;
 							ctx.fillRect(c * tw, r * th, tw + 0.5, th + 0.5);
 						}
 						drawn++;
@@ -364,7 +367,7 @@
 		flex: 1;
 		min-height: 0;
 		padding: 0.8rem;
-		background: var(--color-text);
+		background: #fff;
 		border-bottom: 1px solid var(--color-border);
 		position: relative;
 		display: flex;

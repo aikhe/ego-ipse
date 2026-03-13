@@ -7,14 +7,61 @@
 	import type { LayoutProps } from './$types';
 
 	let { children }: LayoutProps = $props();
-	let theme = $state('dark');
+	let theme = $state('light');
 	let showGrid = $state(false);
 	let time = $state('--:--:--');
 
 	function toggleTheme() {
 		theme = theme === 'dark' ? 'light' : 'dark';
-		document.documentElement.setAttribute('data-theme', theme);
 	}
+
+	// glitch animation logic
+	const smallSymbols = '·.:,;+-';
+	const largeSymbols = 'urilQZXW';
+	let themeDisplayText = $state('LIGHT');
+	let glitchInterval: ReturnType<typeof setInterval> | null = null;
+
+	function startGlitch() {
+		const original = theme.toUpperCase();
+		let frames = 0;
+		const revealSpeed = 3;
+		const totalFrames = original.length * revealSpeed + 15;
+		const resolveDelays = original.split('').map(() => Math.floor(Math.random() * 5));
+
+		if (glitchInterval) clearInterval(glitchInterval);
+
+		glitchInterval = setInterval(() => {
+			const charsToShow = Math.min(original.length, Math.floor(frames / revealSpeed) + 1);
+
+			themeDisplayText = original
+				.split('')
+				.map((_, i) => {
+					if (i >= charsToShow) return '';
+
+					const appearedFrame = i * revealSpeed;
+					const progress = frames - appearedFrame - resolveDelays[i];
+
+					if (progress > 8) return original[i];
+					if (progress > 4) return largeSymbols[Math.floor(Math.random() * largeSymbols.length)];
+					return smallSymbols[Math.floor(Math.random() * smallSymbols.length)];
+				})
+				.join('');
+
+			if (frames > totalFrames) {
+				if (glitchInterval) clearInterval(glitchInterval);
+				glitchInterval = null;
+				themeDisplayText = original;
+			}
+			frames++;
+		}, 20);
+	}
+
+	$effect(() => {
+		document.documentElement.setAttribute('data-theme', theme);
+		// Update the text immediately if not glitching, or start a glitch?
+		// The user wants it "when the theme changes"
+		startGlitch();
+	});
 
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.shiftKey && event.key === 'G') {
@@ -56,7 +103,7 @@
 	<p class="coordinates">14.6514° N, 120.9902° E</p>
 
 	<button class="theme-toggle" onclick={toggleTheme}>
-		MODE: {theme.toUpperCase()}
+		MODE: {themeDisplayText}
 	</button>
 
 	<button class="contact-btn">CONTACT</button>

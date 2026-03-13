@@ -425,7 +425,7 @@
 		background: linear-gradient(
 			90deg,
 			transparent 10%,
-			var(--color-accent-blue) 80%,
+			var(--color-accent-blue) 70%,
 			var(--color-accent-cyan) 100%
 		);
 		opacity: 0;

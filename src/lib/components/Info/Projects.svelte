@@ -2,8 +2,8 @@
 	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
-	import IconArrow from '$lib/components/IconArrow.svelte';
-	import ProjectPreview from '$lib/components/ProjectPreview.svelte';
+	import IconArrow from './IconArrow.svelte';
+	import ProjectPreview from './ProjectPreview.svelte';
 	import chest from '$lib/assets/chest.png';
 	import aikhe from '$lib/assets/aikhe.png';
 	import assembly from '$lib/assets/assembly.png';

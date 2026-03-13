@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Projects from '$lib/components/Projects.svelte';
-	import Socials from '$lib/components/Socials.svelte';
+	import Projects from '$lib/components/Info/Projects.svelte';
+	import Socials from '$lib/components/Info/Socials.svelte';
 </script>
 
 <div class="info">

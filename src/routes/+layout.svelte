@@ -35,7 +35,7 @@
 
 			themeDisplayText = original
 				.split('')
-				.map((_, i) => {
+				.map((_: string, i: number) => {
 					if (i >= charsToShow) return '';
 
 					const appearedFrame = i * revealSpeed;
@@ -125,6 +125,15 @@
 		{/each}
 	</div>
 {/if}
+
+<div class="grid-background section-container">
+	{#each Array(12)}
+		<div class="bg-grid-column"></div>
+	{/each}
+</div>
+
+<div class="stripe-gutter stripe-gutter--left"></div>
+<div class="stripe-gutter stripe-gutter--right"></div>
 
 <style>
 	header {
@@ -263,5 +272,53 @@
 		background-color: var(--color-overlay-02);
 		/* border-left: 1px solid rgba(255, 255, 255, 0.06); */
 		/* border-right: 1px solid rgba(255, 255, 255, 0.06); */
+	}
+
+	.grid-background {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		margin-inline: auto;
+		display: grid;
+		grid-template-columns: repeat(12, 1fr);
+		gap: 1.2rem;
+		pointer-events: none;
+		z-index: -1; 
+	}
+
+	.bg-grid-column:is(:nth-child(1), :nth-child(2), :nth-child(4), :nth-child(7), :nth-child(10)) {
+		border-left: 1px dashed var(--color-overlay-15);
+	}
+
+	.bg-grid-column:nth-child(9) {
+		border-right: 1px dashed var(--color-overlay-15);
+	}
+
+	.bg-grid-column:last-child {
+		border-right: 1px dashed var(--color-overlay-15);
+	}
+
+	.stripe-gutter {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		/* match the gutter of .section-container */
+		width: max(calc((100vw - var(--container-width)) / 2), calc((100vw - var(--container-max-width)) / 2));
+		z-index: 1000;
+		pointer-events: none;
+		background-color: var(--color-overlay-10);
+		mask-image: url('$lib/assets/stripe.svg');
+		mask-repeat: repeat;
+		mask-size: 7px 7px;
+	}
+
+	.stripe-gutter--left {
+		left: 0;
+	}
+
+	.stripe-gutter--right {
+		right: 0;
 	}
 </style>

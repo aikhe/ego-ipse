@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import gsap from 'gsap';
-	import acedia from '$lib/assets/acedia.png';
 
 	export let project: {
 		name: string;
@@ -217,7 +216,7 @@
 			<div class="content-area">
 				<div class="preview-inner">
 					<div class="image-box">
-						<img src={project.image || acedia} alt={project.name} class="project-image" />
+						<img src={project.image} alt={project.name} class="project-image" />
 						<canvas bind:this={canvas} class="tile-canvas"></canvas>
 					</div>
 					<div class="text-footer">

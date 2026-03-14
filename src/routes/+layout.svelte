@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../styles/main.css';
-	import favicon from '$lib/assets/favicon.svg';
+	import favicon from '$lib/assets/favicon.ico';
 	import logo from '$lib/assets/logo.svg';
 
 	// import { resolve } from '$app/paths';

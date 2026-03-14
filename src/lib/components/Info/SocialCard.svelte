@@ -448,8 +448,8 @@
 	}
 
 	.social-card__dot--tl {
-		top: -2px;
-		left: -2px;
+		top: -1px;
+		left: -1px;
 	}
 	.social-card__dot--tr {
 		top: -1px;

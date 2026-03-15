@@ -1,29 +1,17 @@
 <script lang="ts">
-// import Hero from '$lib/layouts/Hero.svelte';
-// import Info from '$lib/layouts/Info.svelte';
-
 import { Canvas } from '@threlte/core'
 import Scene from './Scene.svelte'
 </script>
 
-<Canvas>
-	<Scene />
-</Canvas>
-
-<!-- <section class="section-container"> -->
-<!-- 	<Hero /> -->
-<!---->
-<!-- 	<Info /> -->
-<!-- </section> -->
+<div class="canvas-container">
+	<Canvas>
+		<Scene />
+	</Canvas>
+</div>
 
 <style>
-/* section { */
-/* 	height: calc(100vh - 4.8rem); */
-/**/
-/* 	display: grid; */
-/* 	grid-template-columns: repeat(12, 1fr); */
-/* 	gap: 1.2rem; */
-/* 	align-items: end; */
-/* 	padding-bottom: 2rem; */
-/* } */
+.canvas-container {
+	width: 100%;
+	height: 100vh;
+}
 </style>

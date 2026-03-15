@@ -3,7 +3,6 @@
 	import favicon from '$lib/assets/favicon.ico';
 	import logo from '$lib/assets/logo.svg';
 
-	// import { resolve } from '$app/paths';
 	import type { LayoutProps } from './$types';
 
 	let { children }: LayoutProps = $props();
@@ -58,8 +57,7 @@
 
 	$effect(() => {
 		document.documentElement.setAttribute('data-theme', theme);
-		// Update the text immediately if not glitching, or start a glitch?
-		// The user wants it "when the theme changes"
+		// when the theme changes
 		startGlitch();
 	});
 
@@ -108,10 +106,6 @@
 
 	<button class="contact-btn">CONTACT</button>
 
-	<!-- <nav class="nav"> -->
-	<!-- 	<a href={resolve('/')}>ROOT</a> -->
-	<!-- 	<a href={resolve('/scrutiny')}>SCRUTINY</a> -->
-	<!-- </nav> -->
 </header>
 
 <main>
@@ -137,8 +131,6 @@
 
 <style>
 	header {
-		/* position: sticky; */
-		/* top: 0; */
 		z-index: 2;
 		height: 4.8rem;
 
@@ -147,7 +139,6 @@
 		gap: 1.2rem;
 		align-items: center;
 		white-space: nowrap;
-		/* border-bottom: 1px solid rgba(255, 255, 255, 0.1); */
 
 		font-family: 'Geist Mono', monospace;
 		font-weight: 500;
@@ -198,12 +189,6 @@
 		color: var(--color-text);
 	}
 
-	/* .nav { */
-	/* 	grid-column: 10 / span 2; */
-	/* 	display: flex; */
-	/* 	gap: 1rem; */
-	/* 	justify-content: flex-end; */
-	/* } */
 
 	.contact-btn {
 		grid-column: 12 / span 1;
@@ -249,10 +234,6 @@
 		background: var(--color-overlay-05);
 	}
 
-	/* nav { */
-	/* 	display: flex; */
-	/* 	gap: 1rem; */
-	/* } */
 
 	.grid-overlay {
 		position: absolute;
@@ -270,8 +251,6 @@
 
 	.grid-column {
 		background-color: var(--color-overlay-02);
-		/* border-left: 1px solid rgba(255, 255, 255, 0.06); */
-		/* border-right: 1px solid rgba(255, 255, 255, 0.06); */
 	}
 
 	.grid-background {

@@ -9,6 +9,7 @@
 		"@sveltejs/vite-plugin-svelte": "^6.2.4",
 		"@tailwindcss/vite": "^4.1.18",
 		"@types/node": "^24",
+		"@types/three": "^0.183.1",
 		"@vitest/browser-playwright": "^4.0.18",
 		"eslint": "^9.39.2",
 		"eslint-config-prettier": "^10.1.8",
@@ -44,6 +45,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@threlte/core": "^8.4.1",
 		"gsap": "^3.14.2"
 	}
 }

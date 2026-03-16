@@ -19,15 +19,38 @@
 
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')!
-  ctx.font = `${fontSize}px "Minecraft", monospace`
-  const textWidth = ctx.measureText(text.toUpperCase()).width
-  const gap = 40
-  const tilePixels = Math.ceil(textWidth + gap)
-
-  canvas.width = tilePixels
   canvas.height = 64
 
+  let tilePixels = $state(64) // initial fallback
+  const tileWorld = $derived((tilePixels / canvas.height) * boxH)
+
   const textures: THREE.CanvasTexture[] = []
+
+  // measure and resize canvas reactively
+  $effect(() => {
+    document.fonts.ready.then(() => {
+      ctx.font = `${fontSize}px "Minecraft", monospace`
+      const measure = ctx.measureText(text.toUpperCase()).width
+      const newWidth = Math.ceil(measure + 120) // increased gap
+      if (tilePixels !== newWidth) {
+        tilePixels = newWidth
+        canvas.width = tilePixels
+        drawCanvas()
+      }
+    })
+  })
+
+  // update texture repeat/offset whenever tileWorld/text changes
+  $effect(() => {
+    if (tilePixels > 0 && textures.length > 0) {
+      textures.forEach((tex, i) => {
+        const sideWidth = (i === 0 || i === 2) ? boxW : boxD
+        const perimOffset = sideOffsets[i]
+        tex.repeat.x = sideWidth / tileWorld
+        tex.offset.x = perimOffset / tileWorld
+      })
+    }
+  })
 
   function drawCanvas() {
     const uppercaseText = text.toUpperCase()
@@ -42,8 +65,7 @@
     })
   }
 
-  // calculate world units based on aspect ratio (64px = boxH units)
-  const tileWorld = (tilePixels / canvas.height) * boxH
+
 
   // 4 sides: front(w), right(d), back(w), left(d) — perimeter order
   const perimeter = 2 * (boxW + boxD)

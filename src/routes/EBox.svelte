@@ -53,15 +53,38 @@
 
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')!
-  ctx.font = `${fontSize}px "Minecraft", monospace`
-  const textWidth = ctx.measureText(marqueeText).width
-  const gap = 40
-  const tilePixels = Math.ceil(textWidth + gap)
-
-  canvas.width = tilePixels
   canvas.height = 64
 
+  let tilePixels = $state(64)
+  const tileWorld = $derived((tilePixels / canvas.height) * extrudeDepth)
+
   const textures: THREE.CanvasTexture[] = []
+
+  $effect(() => {
+    document.fonts.ready.then(() => {
+      ctx.font = `${fontSize}px "Minecraft", monospace`
+      const measure = ctx.measureText(marqueeText).width
+      const newWidth = Math.ceil(measure + 120) 
+      if (tilePixels !== newWidth) {
+        tilePixels = newWidth
+        canvas.width = tilePixels
+        drawCanvas()
+      }
+    })
+  })
+
+  // Update repeats/offsets reactively
+  $effect(() => {
+    if (tilePixels > 0 && textures.length > 0) {
+      // index 0: right (d), 1: front (w), 2: left (d)
+      const widths = [d, w, d]
+      const offsets = [sideOffsets.right, sideOffsets.front, sideOffsets.left]
+      textures.forEach((tex, i) => {
+        tex.repeat.x = widths[i] / tileWorld
+        tex.offset.x = offsets[i] / tileWorld
+      })
+    }
+  })
   
   function drawCanvas() {
     ctx.fillStyle = '#080807'
@@ -73,8 +96,7 @@
     textures.forEach(t => { t.needsUpdate = true })
   }
 
-  // calculate world units based on aspect ratio (64px = extrudeDepth units)
-  const tileWorld = (tilePixels / canvas.height) * extrudeDepth
+
 
   // The 3 continuous outer flat faces of the E-Shape mapping exactly to the Box planes:
   // Right (+x face), Front (+z face), Left (-x face)

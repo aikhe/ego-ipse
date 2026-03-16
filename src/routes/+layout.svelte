@@ -6,7 +6,7 @@
 	import type { LayoutProps } from './$types';
 
 	let { children }: LayoutProps = $props();
-	let theme = $state('light');
+	let theme = $state('dark');
 	let showGrid = $state(false);
 	let time = $state('--:--:--');
 

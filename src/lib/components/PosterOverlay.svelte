@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
+  import { fade } from 'svelte/transition';
   import gsap from 'gsap';
 
   let { selected = $bindable(), images } = $props<{
@@ -130,7 +131,13 @@
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class="poster-overlay" onclick={close} aria-modal="true" role="dialog">
+<div 
+  class="poster-overlay" 
+  transition:fade={{ duration: 300 }}
+  onclick={close} 
+  aria-modal="true" 
+  role="dialog"
+>
   <div 
     class="poster-overlay__container" 
     bind:this={container}
@@ -156,18 +163,13 @@
     position: fixed;
     inset: 0;
     z-index: 1000;
-    background: rgba(8, 8, 8, 0.95);
+    background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(12px);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: zoom-out;
-    animation: fade-in 0.3s ease-out;
-  }
-
-  @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    user-select: none;
   }
 
   .poster-overlay__container {
@@ -176,9 +178,9 @@
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
-    scroll-behavior: auto; /* Removed smooth to prevent JS jitter */
-    padding: 1vw; /* 1vw on ALL edge sides */
-    gap: 0.5rem; /* Further reduced */
+    scroll-behavior: auto;
+    padding: 1vw;
+    gap: 0.5rem;
     scrollbar-width: none;
     -ms-overflow-style: none;
     align-items: center;
@@ -208,9 +210,7 @@
     height: 100%;
     width: auto;
     object-fit: contain;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    pointer-events: none; /* Ensure images don't block wheel/drag events */
+    pointer-events: none;
   }
 
   /* Contact Button Style for Close Button (Forced Light Theme) */
@@ -218,16 +218,15 @@
     position: fixed;
     top: 2.4rem;
     right: 2.4rem;
-    background: rgba(0, 0, 0, 0.02); /* Light theme --color-overlay-02 */
-    color: #080807; /* Light theme --color-text */
-    border: 1px solid rgba(0, 0, 0, 0.3); /* Light theme --color-overlay-20 */
+    background: rgba(0, 0, 0, 0.02);
+    color: #080807;
+    border: 1px solid rgba(0, 0, 0, 0.3);
     padding: 6px 12px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     
-    /* Exact font style from header inheritance */
     font-family: 'Geist Mono', monospace;
     font-size: 0.875rem;
     font-weight: 500;

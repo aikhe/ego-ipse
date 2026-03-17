@@ -129,6 +129,14 @@
 <div class="stripe-gutter stripe-gutter--left"></div>
 <div class="stripe-gutter stripe-gutter--right"></div>
 
+<!-- font preloader to ensure canvas can use them immediately -->
+<div class="font-preloader" aria-hidden="true">
+	<span style="font-family: 'Minecraft';"></span>
+	<span style="font-family: 'Advine-Pixel';"></span>
+	<span style="font-family: 'GeistPixel Square';"></span>
+	<span style="font-family: 'GeistPixel Line';"></span>
+</div>
+
 <style>
 	header {
 		z-index: 2;
@@ -299,5 +307,13 @@
 
 	.stripe-gutter--right {
 		right: 0;
+	}
+
+	.font-preloader {
+		position: fixed;
+		opacity: 0;
+		pointer-events: none;
+		z-index: -9999;
+		white-space: pre;
 	}
 </style>

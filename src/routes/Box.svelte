@@ -66,7 +66,7 @@
   // react to text or active status changes
   $effect(() => {
     updateMarquee()
-    document.fonts.ready.then(updateMarquee)
+    document.fonts.load(`${fontSize}px "Minecraft"`).then(updateMarquee)
   })
 
   // update texture repeat and offsets

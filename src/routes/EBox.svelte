@@ -58,13 +58,15 @@
   let tilePixels = $state(64)
   const tileWorld = $derived((tilePixels / canvas.height) * extrudeDepth)
 
-  const textures: THREE.CanvasTexture[] = []
+  const textures = $state<THREE.CanvasTexture[]>([])
 
   $effect(() => {
+    // Re-run measurement whenever text changes
+    const _t = marqueeText
     document.fonts.ready.then(() => {
       ctx.font = `${fontSize}px "Minecraft", monospace`
       const measure = ctx.measureText(marqueeText).width
-      const newWidth = Math.ceil(measure + 120) 
+      const newWidth = Math.ceil(measure + 140) 
       if (tilePixels !== newWidth) {
         tilePixels = newWidth
         canvas.width = tilePixels
@@ -75,18 +77,19 @@
 
   // Update repeats/offsets reactively
   $effect(() => {
-    if (tilePixels > 0 && textures.length > 0) {
+    if (tilePixels > 64 && textures.length > 0) {
       // index 0: right (d), 1: front (w), 2: left (d)
       const widths = [d, w, d]
-      const offsets = [sideOffsets.right, sideOffsets.front, sideOffsets.left]
+      const currentOffsets = [sideOffsets.right, sideOffsets.front, sideOffsets.left]
       textures.forEach((tex, i) => {
         tex.repeat.x = widths[i] / tileWorld
-        tex.offset.x = offsets[i] / tileWorld
+        tex.offset.x = currentOffsets[i] / tileWorld
       })
     }
   })
   
   function drawCanvas() {
+    if (tilePixels <= 0 || !canvas.width) return
     ctx.fillStyle = '#080807'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
     ctx.font = `${fontSize}px "Minecraft", monospace`
@@ -133,9 +136,9 @@
 
   useTask((delta) => {
     const scroll = delta * scrollSpeed
-    textures.forEach(t => {
+    for (const t of textures) {
       t.offset.x += scroll
-    })
+    }
   })
 
   // use '#080807' to perfectly match box faces color and set offsets to prevent clipping edges

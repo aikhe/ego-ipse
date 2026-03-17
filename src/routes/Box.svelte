@@ -24,14 +24,16 @@
   let tilePixels = $state(64) // initial fallback
   const tileWorld = $derived((tilePixels / canvas.height) * boxH)
 
-  const textures: THREE.CanvasTexture[] = []
+  const textures = $state<THREE.CanvasTexture[]>([])
 
   // measure and resize canvas reactively
   $effect(() => {
+    // Re-run measurement whenever text changes
+    const _t = text 
     document.fonts.ready.then(() => {
       ctx.font = `${fontSize}px "Minecraft", monospace`
       const measure = ctx.measureText(text.toUpperCase()).width
-      const newWidth = Math.ceil(measure + 120) // increased gap
+      const newWidth = Math.ceil(measure + 140) // healthy gap
       if (tilePixels !== newWidth) {
         tilePixels = newWidth
         canvas.width = tilePixels
@@ -42,7 +44,7 @@
 
   // update texture repeat/offset whenever tileWorld/text changes
   $effect(() => {
-    if (tilePixels > 0 && textures.length > 0) {
+    if (tilePixels > 64 && textures.length > 0) {
       textures.forEach((tex, i) => {
         const sideWidth = (i === 0 || i === 2) ? boxW : boxD
         const perimOffset = sideOffsets[i]
@@ -53,6 +55,7 @@
   })
 
   function drawCanvas() {
+    if (tilePixels <= 0) return
     const uppercaseText = text.toUpperCase()
     ctx.fillStyle = '#080807'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
@@ -64,8 +67,6 @@
       t.needsUpdate = true
     })
   }
-
-
 
   // 4 sides: front(w), right(d), back(w), left(d) — perimeter order
   const perimeter = 2 * (boxW + boxD)
@@ -99,9 +100,9 @@
 
   useTask((delta) => {
     const scroll = delta * scrollSpeed
-    textures.forEach(t => {
+    for (const t of textures) {
       t.offset.x += scroll
-    })
+    }
   })
 
   // use '#080807' to perfectly match box faces color and set offsets to prevent clipping edges

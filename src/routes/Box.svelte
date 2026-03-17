@@ -30,16 +30,26 @@
   $effect(() => {
     // Re-run measurement whenever text changes
     const _t = text 
-    document.fonts.ready.then(() => {
+    const measure = () => {
       ctx.font = `${fontSize}px "Minecraft", monospace`
-      const measure = ctx.measureText(text.toUpperCase()).width
-      const newWidth = Math.ceil(measure + 140) // healthy gap
+      const textWidth = ctx.measureText(text.toUpperCase()).width
+      const newWidth = Math.ceil(textWidth + 140) // healthy gap
       if (tilePixels !== newWidth) {
         tilePixels = newWidth
         canvas.width = tilePixels
         drawCanvas()
       }
-    })
+    }
+
+    document.fonts.ready.then(measure)
+    const i1 = setTimeout(measure, 100)
+    const i2 = setTimeout(measure, 500)
+    const i3 = setTimeout(measure, 1500)
+    return () => {
+      clearTimeout(i1)
+      clearTimeout(i2)
+      clearTimeout(i3)
+    }
   })
 
   // update texture repeat/offset whenever tileWorld/text changes
@@ -50,6 +60,7 @@
         const perimOffset = sideOffsets[i]
         tex.repeat.x = sideWidth / tileWorld
         tex.offset.x = perimOffset / tileWorld
+        tex.needsUpdate = true
       })
     }
   })

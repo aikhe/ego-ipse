@@ -60,13 +60,13 @@
   canvas.height = 64
 
   let tilePixels = $state(0)
-  const tileWorld = $derived((tilePixels / 64) * boxH)
+  const tileWorld = $derived((tilePixels / canvas.height) * boxH)
 
   function drawCanvas() {
     if (canvas.width <= 0) return
     ctx.fillStyle = '#080807'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
-    ctx.font = `${fontSize}px "Minecraft"`
+    ctx.font = `${fontSize}px "Minecraft", monospace`
     ctx.fillStyle = active ? '#ffffff' : '#444444'
     ctx.textBaseline = 'middle'
     ctx.fillText(text.toUpperCase(), 0, (canvas.height / 2) + 4)
@@ -74,7 +74,7 @@
   }
 
   function updateMarquee() {
-    ctx.font = `${fontSize}px "Minecraft"`
+    ctx.font = `${fontSize}px "Minecraft", monospace`
     const width = Math.ceil(ctx.measureText(text.toUpperCase()).width + 40)
     if (tilePixels !== width) {
       tilePixels = width

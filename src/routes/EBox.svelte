@@ -4,214 +4,144 @@
   import gsap from 'gsap'
   import * as THREE from 'three'
 
-  let { position, trigger = 0, active = false }: { position: [number, number, number], trigger?: number, active?: boolean } = $props()
+  let { 
+    position, 
+    trigger = 0, 
+    active = false, 
+    text = 'SENIOR PROJECT DISCOVERY SHOWCASE' 
+  }: { 
+    position: [number, number, number], 
+    trigger?: number, 
+    active?: boolean, 
+    text?: string 
+  } = $props()
 
   let rotY = $state(0)
   const tweenTarget = { val: 0 }
   let prevTrigger = 0
 
   // dimensions
-  const w = 4
-  const d = 4
-  const segment = d / 7
-  const thickness = segment
-  const disconnectGap = 0.4
-  const extrudeDepth = 1.1
+  const [boxW, boxH, boxD] = [4, 1.1, 4]
 
-  // shape boundary
-  const startX = -w/2 + thickness + disconnectGap
-  const barRight = startX + thickness
-  const t2Bottom = -d/2 + 2 * segment
-  const t2Top = -d/2 + 3 * segment
-  const t3Bottom = -d/2 + 4 * segment
-  const t3Top = -d/2 + 5 * segment
+  // e-shape geometry
+  const seg = boxD / 7
+  const thk = seg
+  const gap = 0.4
+  const sX = -boxW/2 + thk + gap
+  const bR = sX + thk
+  const t2B = -boxD/2 + 2 * seg
+  const t2T = -boxD/2 + 3 * seg
+  const t3B = -boxD/2 + 4 * seg
+  const t3T = -boxD/2 + 5 * seg
 
   const shape = new THREE.Shape()
-  shape.moveTo(-w/2, -d/2)
-  shape.lineTo(w/2, -d/2)
-  shape.lineTo(w/2, -d/2 + segment)
-  shape.lineTo(-w/2 + thickness, -d/2 + segment)
-  shape.lineTo(-w/2 + thickness, d/2 - segment)
-  shape.lineTo(w/2 - thickness, d/2 - segment)
-  shape.lineTo(w/2 - thickness, t3Top)
-  shape.lineTo(startX, t3Top)
-  shape.lineTo(startX, t2Bottom)
-  shape.lineTo(w/2, t2Bottom)
-  shape.lineTo(w/2, t2Top)
-  shape.lineTo(barRight, t2Top)
-  shape.lineTo(barRight, t3Bottom)
-  shape.lineTo(w/2, t3Bottom)
-  shape.lineTo(w/2, d/2)
-  shape.lineTo(-w/2, d/2)
+  shape.moveTo(-boxW/2, -boxD/2)
+  shape.lineTo(boxW/2, -boxD/2)
+  shape.lineTo(boxW/2, -boxD/2 + seg)
+  shape.lineTo(-boxW/2 + thk, -boxD/2 + seg)
+  shape.lineTo(-boxW/2 + thk, boxD/2 - seg)
+  shape.lineTo(boxW/2 - thk, boxD/2 - seg)
+  shape.lineTo(boxW/2 - thk, t3T)
+  shape.lineTo(sX, t3T)
+  shape.lineTo(sX, t2B)
+  shape.lineTo(boxW/2, t2B)
+  shape.lineTo(boxW/2, t2T)
+  shape.lineTo(bR, t2T)
+  shape.lineTo(bR, t3B)
+  shape.lineTo(boxW/2, t3B)
+  shape.lineTo(boxW/2, boxD/2)
+  shape.lineTo(-boxW/2, boxD/2)
   shape.closePath()
 
-  const extrudeSettings = { depth: extrudeDepth, bevelEnabled: false }
-
-  // marquee setup - one canvas tile, scrolled via uv offset
-  const marqueeText = 'SENIOR PROJECT DISCOVERY SHOWCASE'
+  // marquee logic
   const fontSize = 38
-
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')!
   canvas.height = 64
 
-  let tilePixels = $state(64)
-  const tileWorld = $derived((tilePixels / canvas.height) * extrudeDepth)
+  let tilePixels = $state(0)
+  const tileWorld = $derived((tilePixels / 64) * boxH)
 
-  const textures = $state<THREE.CanvasTexture[]>([])
-
-  $effect(() => {
-    // Re-run measurement whenever text changes
-    const _t = marqueeText
-    // Robust font loading and measurement
-    const measure = () => {
-      ctx.font = `${fontSize}px "Minecraft", monospace`
-      const textWidth = ctx.measureText(marqueeText).width
-      const newWidth = Math.ceil(textWidth + 140)
-      if (tilePixels !== newWidth) {
-        tilePixels = newWidth
-        canvas.width = tilePixels
-        drawCanvas()
-      }
-    }
-    
-    document.fonts.ready.then(measure)
-    // Extra ticks to catch font swap
-    const i1 = setTimeout(measure, 100)
-    const i2 = setTimeout(measure, 500)
-    const i3 = setTimeout(measure, 1500)
-    return () => {
-      clearTimeout(i1)
-      clearTimeout(i2)
-      clearTimeout(i3)
-    }
-  })
-
-  // Update repeats/offsets reactively
-  $effect(() => {
-    if (tilePixels > 64 && textures.length > 0) {
-      // index 0: right (d), 1: front (w), 2: left (d)
-      const widths = [d, w, d]
-      const currentOffsets = [sideOffsets.right, sideOffsets.front, sideOffsets.left]
-      textures.forEach((tex, i) => {
-        tex.repeat.x = widths[i] / tileWorld
-        tex.offset.x = currentOffsets[i] / tileWorld
-        tex.needsUpdate = true // Signal that texture metrics changed
-      })
-    }
-  })
-  
   function drawCanvas() {
-    if (tilePixels <= 0 || !canvas.width) return
+    if (canvas.width <= 0) return
     ctx.fillStyle = '#080807'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
-    ctx.font = `${fontSize}px "Minecraft", monospace`
+    ctx.font = `${fontSize}px "Minecraft"`
     ctx.fillStyle = active ? '#ffffff' : '#444444'
     ctx.textBaseline = 'middle'
-    ctx.fillText(marqueeText, 0, (canvas.height / 2) + 4)
-    textures.forEach(t => { t.needsUpdate = true })
+    ctx.fillText(text.toUpperCase(), 0, (canvas.height / 2) + 4)
+    textures.forEach(t => t.needsUpdate = true)
   }
 
-
-
-  // The 3 continuous outer flat faces of the E-Shape mapping exactly to the Box planes:
-  // Right (+x face), Front (+z face), Left (-x face)
-  const sideOffsets = {
-    right: w,
-    front: 0,
-    left: -d
+  function updateMarquee() {
+    ctx.font = `${fontSize}px "Minecraft"`
+    const width = Math.ceil(ctx.measureText(text.toUpperCase()).width + 40)
+    if (tilePixels !== width) {
+      tilePixels = width
+      canvas.width = width
+    }
+    drawCanvas()
   }
 
-  function createTex(sideWidth: number, perimOffset: number) {
+  const textures = [0, 1, 2].map(() => {
     const tex = new THREE.CanvasTexture(canvas)
     tex.colorSpace = THREE.SRGBColorSpace
     tex.wrapS = THREE.RepeatWrapping
     tex.wrapT = THREE.ClampToEdgeWrapping
-    tex.minFilter = THREE.NearestFilter
-    tex.magFilter = THREE.NearestFilter
-    tex.repeat.x = sideWidth / tileWorld
-    tex.offset.x = perimOffset / tileWorld // Match seamless boundary logic
+    tex.minFilter = tex.magFilter = THREE.NearestFilter
     return tex
-  }
-
-  const rightTex = createTex(d, sideOffsets.right)
-  const frontTex = createTex(w, sideOffsets.front)
-  const leftTex = createTex(d, sideOffsets.left)
-  textures.push(rightTex, frontTex, leftTex)
-
-  drawCanvas()
-
-  $effect(() => {
-    drawCanvas()
   })
 
-  const scrollSpeed = 0.08
+  // react to text or active status changes
+  $effect(() => {
+    updateMarquee()
+    document.fonts.ready.then(updateMarquee)
+  })
+
+  // update texture repeat and offsets
+  $effect(() => {
+    if (tileWorld <= 0) return
+    const widths = [boxW, boxD, boxD]
+    const offsets = [0, boxW, 2 * boxW + boxD]
+    textures.forEach((tex, i) => {
+      tex.repeat.x = widths[i] / tileWorld
+      tex.offset.x = offsets[i] / tileWorld
+    })
+  })
 
   useTask((delta) => {
-    const scroll = delta * scrollSpeed
-    for (const t of textures) {
-      t.offset.x += scroll
-    }
+    textures.forEach(t => t.offset.x += delta * 0.08)
   })
 
-  // use '#080807' to perfectly match box faces color and set offsets to prevent clipping edges
-  const offsetProps = { polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }
-  const rightMat = new THREE.MeshBasicMaterial({ map: rightTex, toneMapped: false, ...offsetProps })
-  const frontMat = new THREE.MeshBasicMaterial({ map: frontTex, toneMapped: false, ...offsetProps })
-  const leftMat = new THREE.MeshBasicMaterial({ map: leftTex, toneMapped: false, ...offsetProps })
+  const poly = { polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }
+  const [matF, matR, matL] = textures.map(map => new THREE.MeshBasicMaterial({ map, toneMapped: false, ...poly }))
 
-  // spin when trigger increments
+  // spin animation
   $effect(() => {
     if (trigger <= prevTrigger) return
     prevTrigger = trigger
-
     gsap.killTweensOf(tweenTarget)
     tweenTarget.val = 0
-
     gsap.to(tweenTarget, {
       val: Math.PI * 2,
       duration: 5,
       ease: 'elastic.out(1.5, 1)',
-      onUpdate: () => {
-        rotY = tweenTarget.val
-      }
+      onUpdate: () => { rotY = tweenTarget.val }
     })
   })
 </script>
 
 <T.Group {position} rotation.y={rotY}>
   <T.Mesh rotation.x={Math.PI / 2} rotation.z={Math.PI / -2} position.y={0.55}>
-    <T.ExtrudeGeometry args={[shape, extrudeSettings]} />
+    <T.ExtrudeGeometry args={[shape, { depth: boxH, bevelEnabled: false }]} />
     <T.MeshBasicMaterial color="#080807" toneMapped={false} polygonOffset polygonOffsetFactor={2} polygonOffsetUnits={2} />
     <Outlines color={active ? 'white' : '#444444'} thickness={0.025} />
     <Edges color={active ? 'white' : '#444444'} threshold={15} />
   </T.Mesh>
 
   {#if active}
-    <!-- right marquee (x+) -->
-    <T.Mesh
-      position.x={w / 2}
-      rotation.y={Math.PI / 2}
-      material={rightMat}
-    >
-      <T.PlaneGeometry args={[d, extrudeDepth]} />
-    </T.Mesh>
-
-    <!-- front marquee (z+) -->
-    <T.Mesh
-      position.z={d / 2}
-      material={frontMat}
-    >
-      <T.PlaneGeometry args={[w, extrudeDepth]} />
-    </T.Mesh>
-
-    <!-- left marquee (x-) -->
-    <T.Mesh
-      position.x={-(w / 2)}
-      rotation.y={-Math.PI / 2}
-      material={leftMat}
-    >
-      <T.PlaneGeometry args={[d, extrudeDepth]} />
-    </T.Mesh>
+    <T.Mesh position.z={boxD/2} material={matF}><T.PlaneGeometry args={[boxW, boxH]} /></T.Mesh>
+    <T.Mesh position.x={boxW/2} rotation.y={Math.PI/2} material={matR}><T.PlaneGeometry args={[boxD, boxH]} /></T.Mesh>
+    <T.Mesh position.x={-boxW/2} rotation.y={-Math.PI/2} material={matL}><T.PlaneGeometry args={[boxD, boxH]} /></T.Mesh>
   {/if}
 </T.Group>

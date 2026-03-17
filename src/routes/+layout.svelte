@@ -131,10 +131,10 @@
 
 <!-- font preloader to ensure canvas can use them immediately -->
 <div class="font-preloader" aria-hidden="true">
-	<span style="font-family: 'Minecraft';"></span>
-	<span style="font-family: 'Advine-Pixel';"></span>
-	<span style="font-family: 'GeistPixel Square';"></span>
-	<span style="font-family: 'GeistPixel Line';"></span>
+	<span style="font-family: 'Minecraft';">A</span>
+	<span style="font-family: 'Advine-Pixel';">A</span>
+	<span style="font-family: 'GeistPixel Square';">A</span>
+	<span style="font-family: 'GeistPixel Line';">A</span>
 </div>
 
 <style>

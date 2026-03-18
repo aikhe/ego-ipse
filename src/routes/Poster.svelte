@@ -3,7 +3,7 @@
   import * as THREE from 'three'
   import gsap from 'gsap'
 
-  let { index, texture, hovered, width, height, onenter, onleave } = $props<{
+  let { index, texture, hovered, width, height, onenter, onleave, onclick } = $props<{
     index: number
     texture: THREE.Texture
     hovered: number | null
@@ -11,6 +11,7 @@
     height: number
     onenter: () => void
     onleave: () => void
+    onclick?: () => void
   }>()
 
   const basePos = $derived({
@@ -66,11 +67,19 @@
 <T.Mesh
   position={[basePos.x, basePos.y, basePos.z]}
   oncreate={(ref: THREE.Mesh) => { mesh = ref }}
-  onpointerenter={(e: PointerEvent) => {
+  onpointerenter={(e: any) => {
     e.stopPropagation()
+    document.body.style.cursor = 'pointer'
     onenter()
   }}
-  onpointerleave={onleave}
+  onpointerleave={() => {
+    document.body.style.cursor = 'auto'
+    onleave()
+  }}
+  onclick={(e: any) => {
+    e.stopPropagation()
+    onclick?.()
+  }}
 >
   <T.PlaneGeometry args={[width, height]} />
   <T.MeshBasicMaterial

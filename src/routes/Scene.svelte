@@ -24,6 +24,10 @@
   const width = 3
   const height = (3690 / 2848) * width
 
+  let { onposterclick } = $props<{
+    onposterclick?: (index: number) => void
+  }>()
+
   let hovered = $state<number | null>(null)
 </script>
 
@@ -46,6 +50,7 @@
     {height}
     onenter={() => hovered = i}
     onleave={() => hovered = null}
+    onclick={() => onposterclick?.(i)}
   />
   {/each}
 {/if}

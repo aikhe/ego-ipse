@@ -6,8 +6,8 @@
 	import IconArrow from './IconArrow.svelte';
 	import ProjectPreview from './ProjectPreview.svelte';
 
+	import katha from '$lib/assets/projects/katha.png';
 	import chest from '$lib/assets/chest.png';
-	import aikhe from '$lib/assets/aikhe.png';
 	import assembly from '$lib/assets/assembly.png';
 	import clamp from '$lib/assets/clamp.png';
 	import fan from '$lib/assets/fan.png';
@@ -22,7 +22,7 @@
 			id: '25-26',
 			width: 340,
 			height: 440,
-			image: aikhe,
+			image: katha,
 			external: false
 		},
 		{

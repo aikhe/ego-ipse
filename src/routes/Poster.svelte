@@ -25,7 +25,7 @@
   const { invalidate } = useThrelte()
 
   const colorNormal = new THREE.Color(0xffffff)
-  const colorDimmed = new THREE.Color(0x4c4c4c)
+  const colorDimmed = new THREE.Color(0x888888)
 
   $effect(() => {
     if (!mesh || !material) return
@@ -35,7 +35,7 @@
     
     // Smooth transitions managed directly by GSAP
     const targetColor = isDimmed ? colorDimmed : colorNormal
-    const targetY = isHovered ? basePos.y + 0.08 : basePos.y
+    const targetY = isHovered ? basePos.y + 0.04 : basePos.y
 
     // Proper depth isolation prevents slicing intersections
     mesh.renderOrder = isHovered ? 50 : index

@@ -363,8 +363,8 @@
 		width: 100%;
 		flex: 1;
 		min-height: 0;
-		padding: 0.8rem;
-		background: #fff;
+		/* padding: 0.8rem; */
+		/* background: #fff; */
 		position: relative;
 		display: flex;
 		align-items: center;

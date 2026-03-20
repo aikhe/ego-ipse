@@ -7,10 +7,10 @@
 	import ProjectPreview from './ProjectPreview.svelte';
 
 	import katha from '$lib/assets/projects/katha.png';
-	import chest from '$lib/assets/chest.png';
-	import assembly from '$lib/assets/assembly.png';
-	import clamp from '$lib/assets/clamp.png';
-	import fan from '$lib/assets/fan.png';
+	import sola from '$lib/assets/projects/sola.png';
+	import praf from '$lib/assets/projects/praf.png';
+	import success from '$lib/assets/projects/success.png';
+	import uccingo from '$lib/assets/projects/uccingo.png';
 
 	const projects = [
 		{
@@ -34,7 +34,7 @@
 			id: '2025',
 			width: 290,
 			height: 420,
-			image: assembly,
+			image: sola,
 			external: false
 		},
 		{
@@ -45,8 +45,8 @@
 			tags: ['VSS', 'TUI'],
 			id: '2025',
 			width: 280,
-			height: 400,
-			image: chest,
+			height: 410,
+			image: success,
 			external: false
 		},
 		{
@@ -58,7 +58,7 @@
 			id: '2025',
 			width: 320,
 			height: 380,
-			image: clamp,
+			image: praf,
 			external: false
 		},
 		{
@@ -70,7 +70,7 @@
 			id: '25-26',
 			width: 320,
 			height: 400,
-			image: fan,
+			image: uccingo,
 			external: false
 		}
 	] as const;

@@ -6,8 +6,11 @@
     --logo-invert: 1;
 
     /* accents */
-    --color-accent-blue: #7892c1;
-    --color-accent-cyan: #b8d6d9;
+    /* --color-accent-blue: #7892c1; */
+    /* --color-accent-cyan: #b8d6d9; */
+
+    --color-accent-blue: #D8D8D8;
+    --color-accent-cyan: #ffffff;
 
     /* default / dark mode */
     --color-primary: #080807;

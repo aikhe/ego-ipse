@@ -68,8 +68,8 @@
 			date: '07.2025 | PRESENT',
 			tags: ['FULLSTACK', 'CMS'],
 			id: '25-26',
-			width: 280,
-			height: 380,
+			width: 320,
+			height: 400,
 			image: fan,
 			external: false
 		}

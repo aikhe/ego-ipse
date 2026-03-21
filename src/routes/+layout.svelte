@@ -100,11 +100,11 @@
 	<p class="location">CALOOCAN, PH</p>
 	<p class="coordinates">14.6514° N, 120.9902° E</p>
 
-	<button class="theme-toggle" onclick={toggleTheme}>
+	<button class="theme-toggle z-99" onclick={toggleTheme}>
 		MODE: {themeDisplayText}
 	</button>
 
-	<button class="contact-btn">CONTACT</button>
+	<button class="contact-btn z-99">CONTACT</button>
 
 </header>
 

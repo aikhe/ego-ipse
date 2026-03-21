@@ -2,6 +2,11 @@
 	import SocialCard from './SocialCard.svelte';
 	import gsap from 'gsap';
 	import xIcon from '$lib/assets/socials/X.png';
+	import linkedinIcon from '$lib/assets/socials/linkedin.png';
+	import githubIcon from '$lib/assets/socials/github.png';
+	import aboutIcon from '$lib/assets/socials/about.png';
+	import blogIcon from '$lib/assets/socials/blog.png';
+	import acediaIcon from '$lib/assets/socials/acedia.png';
 
 	interface Social {
 		name: string;
@@ -44,7 +49,7 @@
 			handle: 'aikhe-andrei',
 			bioPrefix: 'PROFESSIONAL',
 			bioHighlight: '→ ENG',
-			image: xIcon,
+			image: linkedinIcon,
 			stats: [
 				{ label: 'CONNECTS', value: '268' },
 				{ label: 'POSTS', value: '1' },
@@ -59,8 +64,8 @@
 			external: true,
 			handle: 'aikhe',
 			bioPrefix: 'OS',
-			bioHighlight: '→ ARCH & NEOVIM',
-			image: xIcon,
+			bioHighlight: '→ OPEN SOURCE',
+			image: githubIcon,
 			stats: [
 				{ label: 'CONTRIBUTIONS', value: '—' },
 				{ label: 'STARS', value: '—' },
@@ -77,7 +82,7 @@
 			handle: '@aikhe',
 			bioPrefix: 'ORIGIN',
 			bioHighlight: '→ HUMAN ENTITY',
-			image: xIcon,
+			image: aboutIcon,
 			stats: [
 				{ label: 'AGE', value: '24' },
 				{ label: 'LOC', value: 'SEA' },
@@ -93,7 +98,7 @@
 			handle: 'log_entry',
 			bioPrefix: 'DATA',
 			bioHighlight: '→ THOUGHTS',
-			image: xIcon,
+			image: blogIcon,
 			stats: [
 				{ label: 'ENTRIES', value: '8' },
 				{ label: 'TOPIC', value: 'CODE\\AI\\ART' }
@@ -108,7 +113,7 @@
 			handle: 'null_state',
 			bioPrefix: 'VOID',
 			bioHighlight: '→ EXPERIMENT',
-			image: xIcon,
+			image: acediaIcon,
 			stats: [
 				{ label: 'STATUS', value: 'OFFLINE' },
 				{ label: 'VERSION', value: '0.0.1' }

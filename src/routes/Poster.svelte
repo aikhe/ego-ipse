@@ -1,9 +1,11 @@
 <script lang="ts">
   import { T, useThrelte } from '@threlte/core'
+  import * as THREE from 'three'
+  import gsap from 'gsap'
 
   let { index, texture, hovered, width, height, onenter, onleave } = $props<{
     index: number
-    texture: any
+    texture: THREE.Texture
     hovered: number | null
     width: number
     height: number
@@ -17,11 +19,9 @@
     z: index * -0.4
   })
 
-  let mesh: any = null
-  let material: any = null
+  let mesh: THREE.Mesh | null = null
+  let material: THREE.MeshBasicMaterial | null = null
 
-  import * as THREE from 'three'
-  import gsap from 'gsap'
   const { invalidate } = useThrelte()
 
   const colorNormal = new THREE.Color(0xffffff)
@@ -59,8 +59,8 @@
 
 <T.Mesh
   position={[basePos.x, basePos.y, basePos.z]}
-  oncreate={(ref: any) => { mesh = ref }}
-  onpointerenter={(e: any) => {
+  oncreate={(ref: THREE.Mesh) => { mesh = ref }}
+  onpointerenter={(e: PointerEvent) => {
     e.stopPropagation()
     onenter()
   }}
@@ -70,6 +70,6 @@
   <T.MeshBasicMaterial
     transparent
     map={texture}
-    oncreate={(ref: any) => { material = ref }}
+    oncreate={(ref: THREE.MeshBasicMaterial) => { material = ref }}
   />
 </T.Mesh>

@@ -117,7 +117,6 @@
 			yPercent: -100,
 			transformOrigin: 'bottom center',
 			scaleY: 0,
-			opacity: 0,
 			y: 0
 		});
 
@@ -133,7 +132,6 @@
 		tl.to(
 			container,
 			{
-				opacity: 0.7,
 				duration: 0.05,
 				repeat: 3,
 				yoyo: true,

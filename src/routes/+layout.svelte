@@ -129,14 +129,6 @@
 <div class="stripe-gutter stripe-gutter--left"></div>
 <div class="stripe-gutter stripe-gutter--right"></div>
 
-<!-- font preloader to ensure canvas can use them immediately -->
-<div class="font-preloader" aria-hidden="true">
-	<span style="font-family: 'Minecraft';">A</span>
-	<span style="font-family: 'Advine-Pixel';">A</span>
-	<span style="font-family: 'GeistPixel Square';">A</span>
-	<span style="font-family: 'GeistPixel Line';">A</span>
-</div>
-
 <style>
 	header {
 		z-index: 2;
@@ -272,7 +264,7 @@
 		grid-template-columns: repeat(12, 1fr);
 		gap: 1.2rem;
 		pointer-events: none;
-		z-index: -1; 
+		z-index: -99; 
 	}
 
 	.bg-grid-column:is(:nth-child(1), :nth-child(2), :nth-child(4), :nth-child(7), :nth-child(10)) {
@@ -307,13 +299,5 @@
 
 	.stripe-gutter--right {
 		right: 0;
-	}
-
-	.font-preloader {
-		position: fixed;
-		opacity: 0;
-		pointer-events: none;
-		z-index: -9999;
-		white-space: pre;
 	}
 </style>

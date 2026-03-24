@@ -17,7 +17,7 @@
 			name: 'Katha',
 			href: '/',
 			section: 'IDEA COMPRESSION',
-			date: '03.2025 | PRESENT',
+			date: '03.2026 | PRESENT',
 			tags: ['AI & MCP', 'WEB'],
 			id: '25-26',
 			width: 340,
@@ -372,7 +372,6 @@
 				href={project.external ? project.href : resolve(project.href)}
 				rel={project.external ? 'external' : undefined}
 				class="project--item"
-				class:no-border-bottom={project.name === 'Lorem Ipsum'}
 				bind:this={projectItems[i]}
 				onmouseenter={() => {
 					currentItem = projectItems[i];
@@ -415,10 +414,6 @@
 		text-decoration: none;
 
 		border-bottom: 1px solid var(--color-overlay-20);
-	}
-
-	.no-border-bottom {
-		border-bottom: none !important;
 	}
 
 	.project--bg {

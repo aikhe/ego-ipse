@@ -1,38 +1,40 @@
 <script lang="ts">
   import { T } from '@threlte/core'
-  import { interactivity } from '@threlte/extras'
-  import Box from './Box.svelte'
-  import EBox from './EBox.svelte'
+  import { useTexture } from '@threlte/extras'
+  import poster1 from '$lib/assets/posters/1.png'
+  import poster2 from '$lib/assets/posters/2.png'
+  import poster3 from '$lib/assets/posters/3.png'
+  import poster4 from '$lib/assets/posters/4.png'
 
-  let { 
-    trigger1 = 0, 
-    trigger2 = 0, 
-    trigger3 = 0,
-    active1 = false,
-    active2 = false,
-    active3 = false
-  }: { 
-    trigger1?: number, 
-    trigger2?: number, 
-    trigger3?: number,
-    active1?: boolean,
-    active2?: boolean,
-    active3?: boolean
-  } = $props()
+  const posters = [poster1, poster2, poster3, poster4]
 
-  interactivity()
+  const textures = useTexture(posters, {
+    transform: (t) => {
+      t.anisotropy = 16
+      t.generateMipmaps = false
+      t.colorSpace = 'srgb'
+      return t
+    }
+  })
+
+  const width = 3
+  const height = (3690 / 2848) * width
 </script>
 
 <T.OrthographicCamera
   makeDefault
-  position={[10, 9, 10]}
-  zoom={80}
+  position={[6, 6, 7]}
+  zoom={94}
   oncreate={(ref) => {
-    ref.lookAt(0, 0, 0)
-    ref.updateProjectionMatrix()
+    ref.lookAt(2.2, 1, 0)
   }}
 />
 
-<EBox position={[0, 1.3, 0]} trigger={trigger1} active={active1} />
-<Box position={[0, 0, 0]} trigger={trigger2} active={active2} />
-<Box position={[0, -1.3, 0]} trigger={trigger3} text="STUDENT COLLABORATIVE NETWORK" active={active3} />
+{#if $textures}
+  {#each $textures as texture, i (i)}
+    <T.Mesh position={[i * 0.9, i * 0.8, i * -0.4]}>
+      <T.PlaneGeometry args={[width, height]} />
+      <T.MeshBasicMaterial map={texture} />
+    </T.Mesh>
+  {/each}
+{/if}

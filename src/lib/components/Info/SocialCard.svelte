@@ -113,7 +113,6 @@
 		tl.set(container!, {
 			transformOrigin: 'bottom left',
 			scaleY: 0,
-			opacity: 0,
 			y: 10
 		});
 
@@ -129,7 +128,6 @@
 		tl.to(
 			container!,
 			{
-				opacity: 0.7,
 				duration: 0.05,
 				repeat: 3,
 				yoyo: true,
@@ -178,7 +176,6 @@
 		tl.to(
 			container!,
 			{
-				opacity: 0,
 				scaleY: 0,
 				y: 10,
 				duration: 0.3,

@@ -1,6 +1,6 @@
 <div class="hero">
 	<h1 class="hero__title">
-		<strong class="title--strong">Aikhe</strong> is a creative developer of the printing and typesetting
+		<strong class="title--strong">Aikhe</strong> is a design engineer of the printing and typesetting
 		industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
 	</h1>
 	<p class="hero__description">

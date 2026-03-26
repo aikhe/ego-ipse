@@ -358,7 +358,7 @@
 	.social-card__stat {
 		display: flex;
 		justify-content: flex-start;
-		gap: 0.4rem;
+		gap: 1.86rem;
 		font-family: 'Geist Mono', monospace;
 		letter-spacing: 0.034em;
 		font-size: 0.8rem;

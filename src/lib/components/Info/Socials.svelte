@@ -1,7 +1,7 @@
 <script lang="ts">
 	import SocialCard from './SocialCard.svelte';
 	import gsap from 'gsap';
-	import acedia from '$lib/assets/acedia.png';
+	import xIcon from '$lib/assets/socials/X.png';
 
 	interface Social {
 		name: string;
@@ -13,108 +13,139 @@
 		stats?: { label: string; value: string }[];
 		tags?: string[];
 		status?: string;
-		image?: string;
+		image: string;
 	}
 
-	const socials: Social[] = [
+	// github stats index in socials array
+	const GITHUB_INDEX = 2;
+
+	let socials = $state<Social[]>([
 		{
 			name: 'X(TWITTER)',
-			href: 'https://twitter.com',
+			href: 'https://x.com/aikheandrie',
 			external: true,
 			handle: '@aikheandrei',
 			bioPrefix: 'BIO',
-			bioHighlight: '→ CREATIVE DEV',
-			image: acedia,
+			bioHighlight: '→ ANTI SLOP',
+			image: xIcon,
 			stats: [
-				{ label: 'FOLLOWING', value: '939' },
-				{ label: 'FOLLOWERS', value: '4,426' },
-				{ label: 'LEVEL', value: '99' },
-				{ label: 'RANK', value: 'S' }
+				{ label: 'FOLLOWING', value: '164' },
+				{ label: 'FOLLOWERS', value: '7' },
+				{ label: 'POSTS', value: '20' },
+				{ label: 'LIKES', value: '12' }
 			],
 			tags: ['X', 'SOCIAL'],
 			status: 'ACTIVE...'
 		},
 		{
 			name: 'LINKEDIN',
-			href: 'https://linkedin.com',
+			href: 'https://www.linkedin.com/in/ike-rosacay-5a8b12316/',
 			external: true,
 			handle: 'aikhe-andrei',
 			bioPrefix: 'PROFESSIONAL',
 			bioHighlight: '→ ENG',
-			image: acedia,
+			image: xIcon,
 			stats: [
-				{ label: 'CONNECTS', value: '500+' },
-				{ label: 'POSTS', value: '124' },
+				{ label: 'CONNECTS', value: '268' },
+				{ label: 'POSTS', value: '1' },
 				{ label: 'SKILLS', value: '12' }
 			],
 			tags: ['LINKEDIN', 'WORK'],
-			status: 'HIRED...'
+			status: 'ONLINE...'
 		},
 		{
 			name: 'GITHUB',
-			href: 'https://github.com',
+			href: 'https://github.com/aikhe',
 			external: true,
 			handle: 'aikhe',
-			bioPrefix: 'SOURCE',
-			bioHighlight: '→ OPEN SOURCE',
-			image: acedia,
+			bioPrefix: 'OS',
+			bioHighlight: '→ ARCH & NEOVIM',
+			image: xIcon,
 			stats: [
-				{ label: 'REPOS', value: '86' },
-				{ label: 'STARS', value: '1,204' },
-				{ label: 'PUSHES', value: '1.2K' },
-				{ label: 'FORKS', value: '42' }
+				{ label: 'CONTRIBUTIONS', value: '—' },
+				{ label: 'STARS', value: '—' },
+				{ label: 'REPOS', value: '—' },
+				{ label: 'FOLLOWERS', value: '—' }
 			],
 			tags: ['GITHUB', 'CODE'],
 			status: 'PUSHING...'
 		},
 		{
 			name: 'ABOUT',
-			href: '/',
+			href: 'https://aikhe.pages.dev/about',
 			external: false,
 			handle: '@aikhe',
 			bioPrefix: 'ORIGIN',
 			bioHighlight: '→ HUMAN ENTITY',
-			image: acedia,
+			image: xIcon,
 			stats: [
 				{ label: 'AGE', value: '24' },
 				{ label: 'LOC', value: 'SEA' },
 				{ label: 'EXP', value: '5Y' }
 			],
 			tags: ['ABOUT', 'INTERNAL'],
-			status: 'IDLE...'
+			status: 'WIP...'
 		},
 		{
 			name: 'BLOG',
-			href: '/',
+			href: 'https://acedia.pages.dev/blog',
 			external: false,
 			handle: 'log_entry',
 			bioPrefix: 'DATA',
 			bioHighlight: '→ THOUGHTS',
-			image: acedia,
+			image: xIcon,
 			stats: [
-				{ label: 'ENTRIES', value: '42' },
-				{ label: 'READS', value: '12.4K' },
-				{ label: 'TOPIC', value: 'DEV' }
+				{ label: 'ENTRIES', value: '8' },
+				{ label: 'TOPIC', value: 'CODE\\AI\\ART' }
 			],
 			tags: ['BLOG', 'DATA'],
-			status: 'READING...'
+			status: 'INITIALIZING...'
 		},
 		{
 			name: 'ACEDIA',
-			href: '/',
+			href: 'https://acedia.pages.dev/',
 			external: false,
 			handle: 'null_state',
 			bioPrefix: 'VOID',
 			bioHighlight: '→ EXPERIMENT',
-			image: acedia,
+			image: xIcon,
 			stats: [
 				{ label: 'STATUS', value: 'OFFLINE' },
 				{ label: 'VERSION', value: '0.0.1' }
 			],
 			tags: ['EXPERIMENTAL', 'VOID'],
-			status: 'SHUTTING DOWN...'
+			status: 'IN PROGRESS...'
 		}
-	];
+	]);
+
+	// fetch github stats on mount
+	$effect(() => {
+		const username = 'aikhe';
+
+		(async () => {
+			const [userRes, reposRes, searchRes] = await Promise.all([
+				fetch(`https://api.github.com/users/${username}`),
+				fetch(`https://api.github.com/users/${username}/repos?per_page=100`),
+				fetch(`https://api.github.com/search/commits?q=author:${username}`, {
+					headers: { Accept: 'application/vnd.github.cloak-preview+json' }
+				})
+			]);
+
+			if (!userRes.ok || !reposRes.ok) return;
+
+			const user = await userRes.json();
+			const repos: { stargazers_count: number }[] = await reposRes.json();
+			const totalStars = repos.reduce((sum, r) => sum + r.stargazers_count, 0);
+			const contributions = searchRes.ok ? (await searchRes.json()).total_count ?? '—' : '—';
+
+			socials[GITHUB_INDEX].stats = [
+				{ label: 'CONTRIBUTIONS', value: String(contributions) },
+				{ label: 'STARS', value: String(totalStars) },
+				{ label: 'REPOS', value: String(user.public_repos) },
+				{ label: 'FOLLOWERS', value: String(user.followers) }
+			];
+		})();
+	});
 
 	// glitch palette
 	const smallSymbols = '·.:,;+-';

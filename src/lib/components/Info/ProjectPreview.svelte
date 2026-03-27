@@ -367,7 +367,6 @@
 		min-height: 0;
 		padding: 0.8rem;
 		background: #fff;
-		border-bottom: 1px solid var(--color-overlay-20);
 		position: relative;
 		display: flex;
 		align-items: center;
@@ -398,6 +397,7 @@
 
 		background: var(--color-bg);
 		color: var(--color-overlay-60);
+		border-top: 1px solid var(--color-overlay-20);
 		font-family: 'Geist Mono', monospace;
 		font-weight: 500;
 		letter-spacing: 0.34%;

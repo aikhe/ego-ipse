@@ -35,20 +35,26 @@
     
     // Smooth transitions managed directly by GSAP
     const targetColor = isDimmed ? colorDimmed : colorNormal
+    const targetY = isHovered ? basePos.y + 0.08 : basePos.y
 
     // Proper depth isolation prevents slicing intersections
     mesh.renderOrder = isHovered ? 50 : index
     material.depthTest = !isHovered
     material.opacity = 1
     
-    // Ensure scale is exactly 1
-    mesh.scale.set(1, 1, 1)
-
     // GSAP ensures frame-perfect smoothing and eases
     gsap.to(material.color, {
       r: targetColor.r,
       g: targetColor.g,
       b: targetColor.b,
+      duration: 0.4,
+      ease: 'power2.out',
+      overwrite: 'auto',
+      onUpdate: invalidate
+    })
+
+    gsap.to(mesh.position, {
+      y: targetY,
       duration: 0.4,
       ease: 'power2.out',
       overwrite: 'auto',

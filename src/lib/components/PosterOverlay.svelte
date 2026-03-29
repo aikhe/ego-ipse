@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount, tick } from 'svelte';
   import { fade } from 'svelte/transition';
   import gsap from 'gsap';
 
@@ -137,6 +136,7 @@
   onclick={close} 
   aria-modal="true" 
   role="dialog"
+  tabindex="-1"
 >
   <div 
     class="poster-overlay__container" 
@@ -146,7 +146,7 @@
     onscroll={checkInfiniteScroll}
     onclick={(e) => e.stopPropagation()}
   >
-    {#each duplicatedImages as image, i}
+    {#each duplicatedImages as image, i (i)}
       <div class="poster-overlay__item">
         <img src={image} alt="Poster {(i % images.length) + 1}" draggable="false" />
       </div>
@@ -199,11 +199,11 @@
   .poster-overlay__item {
     flex: 0 0 auto;
     width: auto;
-    height: 100%; /* Perfectly fill the 1vw top/bottom padded container */
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 0.5rem; /* Internal padding / gap enhancement */
+    padding: 0 0.5rem;
   }
 
   .poster-overlay__item img {
@@ -213,7 +213,6 @@
     pointer-events: none;
   }
 
-  /* forced light theme close btn */
   .contact-btn {
     position: fixed;
     top: 2.4rem;
@@ -256,10 +255,9 @@
   }
 
   .contact-btn:hover {
-    background: rgba(0, 0, 0, 0.05); /* Light theme --color-overlay-05 */
+    background: rgba(0, 0, 0, 0.05);
   }
 
-  /* responsive adjustments */
   @media (max-width: 768px) {
     .poster-overlay__container {
       padding: 0 4vw;

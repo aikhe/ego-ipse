@@ -1,0 +1,75 @@
+<script lang="ts">
+  import { T, useThrelte } from '@threlte/core'
+
+  let { index, texture, hovered, width, height, onenter, onleave } = $props<{
+    index: number
+    texture: any
+    hovered: number | null
+    width: number
+    height: number
+    onenter: () => void
+    onleave: () => void
+  }>()
+
+  const basePos = $derived({
+    x: index * 0.9,
+    y: index * 0.8,
+    z: index * -0.4
+  })
+
+  let mesh: any = null
+  let material: any = null
+
+  import * as THREE from 'three'
+  import gsap from 'gsap'
+  const { invalidate } = useThrelte()
+
+  const colorNormal = new THREE.Color(0xffffff)
+  const colorDimmed = new THREE.Color(0x4c4c4c)
+
+  $effect(() => {
+    if (!mesh || !material) return
+
+    const isHovered = hovered === index
+    const isDimmed = hovered !== null && hovered !== index
+    
+    // Smooth transitions managed directly by GSAP
+    const targetColor = isDimmed ? colorDimmed : colorNormal
+
+    // Proper depth isolation prevents slicing intersections
+    mesh.renderOrder = isHovered ? 50 : index
+    material.depthTest = !isHovered
+    material.opacity = 1
+    
+    // Ensure scale is exactly 1
+    mesh.scale.set(1, 1, 1)
+
+    // GSAP ensures frame-perfect smoothing and eases
+    gsap.to(material.color, {
+      r: targetColor.r,
+      g: targetColor.g,
+      b: targetColor.b,
+      duration: 0.4,
+      ease: 'power2.out',
+      overwrite: 'auto',
+      onUpdate: invalidate
+    })
+  })
+</script>
+
+<T.Mesh
+  position={[basePos.x, basePos.y, basePos.z]}
+  oncreate={(ref: any) => { mesh = ref }}
+  onpointerenter={(e: any) => {
+    e.stopPropagation()
+    onenter()
+  }}
+  onpointerleave={onleave}
+>
+  <T.PlaneGeometry args={[width, height]} />
+  <T.MeshBasicMaterial
+    transparent
+    map={texture}
+    oncreate={(ref: any) => { material = ref }}
+  />
+</T.Mesh>

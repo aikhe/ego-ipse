@@ -3,7 +3,7 @@
 	import Socials from '$lib/components/Info/Socials.svelte';
 </script>
 
-<div class="info">
+<div class="info pointer-events-auto">
 	<p class="info__title">CREATIVE PROJECTS I’VE WORKED ON</p>
 	<Projects />
 	<Socials />

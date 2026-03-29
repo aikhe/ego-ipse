@@ -1,4 +1,4 @@
-<div class="hero">
+<div class="hero pointer-events-auto">
 	<h1 class="hero__title">
 		<strong class="title--strong">Aikhe</strong> is a design engineer of the printing and typesetting
 		industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.

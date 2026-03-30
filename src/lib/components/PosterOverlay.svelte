@@ -7,7 +7,6 @@
     images: string[]
   }>()
 
-  // 9 sets for massive infinite buffer preventing fast trackers from ever hitting the logical wall
   let duplicatedImages = $derived([...images, ...images, ...images, ...images, ...images, ...images, ...images, ...images, ...images]);
   const MIDDLE_SET = 4;
 
@@ -15,13 +14,13 @@
   let isDragging = false;
   let hasInteracted = false;
   let setWidth = 0;
-  let wheelTargetX = 0;
   
   // velocity tracking
   let velocity = 0;
   let lastX = 0;
   let lastTime = 0;
   let proxy = { x: 0 };
+  let loadedStates = $state<Record<number, boolean>>({});
 
   function calculateSetWidth() {
     if (!container) return;
@@ -55,7 +54,7 @@
     if (selected !== null && container) {
       hasInteracted = false;
       gsap.killTweensOf(proxy);
-      setTimeout(centerGallery, 10); // Slight delay for DOM layout
+      setTimeout(centerGallery, 10);
     }
   });
 
@@ -196,10 +195,14 @@
   >
     {#each duplicatedImages as image, i (i)}
       <div class="poster-overlay__item">
+        <div class="poster-overlay__skeleton"></div>
         <img 
           src={image} 
           alt="Poster {(i % images.length) + 1}" 
+          class="poster-overlay__image"
+          class:loaded={loadedStates[i]}
           draggable="false" 
+          onload={() => { loadedStates[i] = true }}
         />
       </div>
     {/each}
@@ -253,6 +256,7 @@
   }
 
   .poster-overlay__item {
+    position: relative;
     flex: 0 0 auto;
     width: auto;
     height: 100%;
@@ -262,12 +266,33 @@
     padding: 0 0.5rem;
   }
 
-  .poster-overlay__item img {
+  .poster-overlay__skeleton {
+    position: absolute;
+    height: 100%;
+    aspect-ratio: 2848 / 3690;
+    background: #ffffff;
+    animation: skeleton-pulse 1.8s ease-in-out infinite;
+    z-index: 0;
+  }
+
+  .poster-overlay__image {
     height: 100%;
     width: auto;
     aspect-ratio: 2848 / 3690;
     object-fit: contain;
     pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 1;
+  }
+
+  .poster-overlay__image.loaded {
+    opacity: 1;
+  }
+
+  @keyframes skeleton-pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
   }
 
   .contact-btn {

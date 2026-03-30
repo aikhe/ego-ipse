@@ -7,9 +7,9 @@
     images: string[]
   }>()
 
-  // 5 sets for infinite buffer
-  let duplicatedImages = $derived([...images, ...images, ...images, ...images, ...images]);
-  const MIDDLE_SET = 2;
+  // 9 sets for massive infinite buffer preventing fast trackers from ever hitting the logical wall
+  let duplicatedImages = $derived([...images, ...images, ...images, ...images, ...images, ...images, ...images, ...images, ...images]);
+  const MIDDLE_SET = 4;
 
   let container: HTMLDivElement | null = null;
   let isDragging = false;
@@ -17,38 +17,45 @@
   let setWidth = 0;
   let wheelTargetX = 0;
   
-  // momentum tracking
+  // velocity tracking
   let velocity = 0;
   let lastX = 0;
   let lastTime = 0;
+  let proxy = { x: 0 };
 
   function calculateSetWidth() {
     if (!container) return;
     const items = container.querySelectorAll('.poster-overlay__item');
     if (items.length <= images.length) return;
     
-    // with CSS aspect-ratio defined, DOM box-model is instantly accurate
-    setWidth = (items[images.length] as HTMLElement).offsetLeft - (items[0] as HTMLElement).offsetLeft;
+    const itemWidth = items[0].getBoundingClientRect().width;
+    const gap = parseFloat(window.getComputedStyle(container).gap) || 0;
+    setWidth = (itemWidth + gap) * images.length;
   }
 
   function centerGallery() {
     calculateSetWidth();
-    // only recenter if we are open and user hasn't started manually swiping
-    if (!container || selected === null || hasInteracted) return;
+    if (!container || selected === null || hasInteracted || setWidth === 0) return;
     
     const items = container.querySelectorAll('.poster-overlay__item');
     const targetIndex = (images.length * MIDDLE_SET) + selected;
     const target = items[targetIndex] as HTMLElement;
     
     if (target) {
-      target.scrollIntoView({ behavior: 'auto', inline: 'center' });
+      const containerWidth = container.offsetWidth;
+      const targetWidth = target.offsetWidth;
+      const targetX = target.offsetLeft - (containerWidth / 2) + (targetWidth / 2);
+      
+      container.scrollLeft = targetX;
+      proxy.x = targetX;
     }
   }
 
   $effect(() => {
     if (selected !== null && container) {
-      hasInteracted = false; // reset interaction flag on open
-      setTimeout(centerGallery, 0);
+      hasInteracted = false;
+      gsap.killTweensOf(proxy);
+      setTimeout(centerGallery, 10); // Slight delay for DOM layout
     }
   });
 
@@ -60,77 +67,78 @@
     if (e.key === 'Escape') close();
   }
 
-  function checkInfiniteScroll() {
+  function applyWrap() {
     if (!container || setWidth === 0) return;
     
-    // wrap when not tweening
-    if (!gsap.isTweening(container)) {
-      if (container.scrollLeft < setWidth * 1.5) {
-        container.scrollLeft += setWidth;
-      } else if (container.scrollLeft > setWidth * 3.5) {
-        container.scrollLeft -= setWidth;
-      }
+    const minSafe = setWidth * 3;
+    const maxSafe = setWidth * 6;
+    const current = container.scrollLeft;
+
+    if (current < minSafe || current > maxSafe) {
+      const offset = ((current - minSafe) % setWidth + setWidth) % setWidth;
+      const wrappedX = (setWidth * 4) + offset;
+      
+      container.scrollLeft = wrappedX;
+      proxy.x = wrappedX;
     }
   }
 
-  function onMouseDown(e: MouseEvent) {
+  function onPointerDown(e: PointerEvent) {
     if (!container) return;
     isDragging = true;
     hasInteracted = true;
-    container.style.cursor = 'grabbing';
+    container.setPointerCapture(e.pointerId);
     
-    lastX = e.pageX;
+    lastX = e.clientX;
     lastTime = Date.now();
     velocity = 0;
-    gsap.killTweensOf(container); // stop current scrolls
+    gsap.killTweensOf(proxy);
+    proxy.x = container.scrollLeft;
   }
 
-  function onMouseMove(e: MouseEvent) {
+  function onPointerMove(e: PointerEvent) {
     if (!isDragging || !container) return;
-    e.preventDefault();
     
-    const deltaX = e.pageX - lastX;
-    container.scrollLeft -= deltaX * 1.5;
-
-    // calculate velocity for inertia
+    const x = e.clientX;
     const now = Date.now();
     const dt = now - lastTime;
+    const dx = x - lastX;
+    
     if (dt > 0) {
-      velocity = (e.pageX - lastX) / dt;
+      velocity = dx / dt;
     }
-    lastX = e.pageX;
+
+    container.scrollLeft -= dx;
+    proxy.x = container.scrollLeft;
+    
+    applyWrap();
+
+    lastX = x;
     lastTime = now;
   }
 
-  function onMouseUp() {
+  function onPointerUp(e: PointerEvent) {
     if (!isDragging || !container) return;
     isDragging = false;
-    container.style.cursor = 'grab';
+    container.releasePointerCapture(e.pointerId);
 
-    // apply momentum
-    if (Math.abs(velocity) > 0.05 && setWidth > 0) {
-      const momentumWalk = velocity * 400; // distance multiplier
-      let targetX = container.scrollLeft - momentumWalk;
+    if (Math.abs(velocity) > 0.1) {
+      const momentum = velocity * -280; // Dampened momentum
+      const targetX = container.scrollLeft + momentum;
 
-      // mathematically wrap the target and dom instantly
-      while (targetX > setWidth * 3.5) {
-        targetX -= setWidth;
-        container.scrollLeft -= setWidth;
-      }
-      while (targetX < setWidth * 1.5) {
-        targetX += setWidth;
-        container.scrollLeft += setWidth;
-      }
-
-      gsap.to(container, {
-        scrollLeft: targetX,
+      gsap.to(proxy, {
+        x: targetX,
         duration: 1,
         ease: 'power3.out',
         overwrite: 'auto',
-        onComplete: checkInfiniteScroll
+        onUpdate: () => {
+          if (!container) return;
+          container.scrollLeft = proxy.x;
+          applyWrap();
+        }
       });
     } else {
-      checkInfiniteScroll();
+      applyWrap();
     }
   }
 
@@ -138,54 +146,32 @@
     if (!container || setWidth === 0) return;
     hasInteracted = true;
     
-    // Hijack ALL scroll wheel events (vertical & horizontal, mouse & trackpad)
-    e.preventDefault();
+    // Smooth scroll with higher sensitivity
+    const delta = (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY) * 3.5;
     
-    let isHorizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY);
-    let delta = isHorizontal ? e.deltaX : e.deltaY;
-
-    // Apply multiplier only for vertical mouse wheels to maintain standard scroll speed
-    if (!isHorizontal) {
-       delta *= 4;
-    }
-
-    if (!gsap.isTweening(container)) {
-      wheelTargetX = container.scrollLeft;
+    if (!gsap.isTweening(proxy)) {
+      proxy.x = container.scrollLeft;
     }
     
-    wheelTargetX += delta;
-
-    // wrap target and dom instantly to loop smoothly without browser interference
-    while (wheelTargetX > setWidth * 3.5) {
-      wheelTargetX -= setWidth;
-      container.scrollLeft -= setWidth;
-    }
-    while (wheelTargetX < setWidth * 1.5) {
-      wheelTargetX += setWidth;
-      container.scrollLeft += setWidth;
-    }
-    
-    // Use a snappy tween for trackpads (which have built-in momentum) and longer for mouse wheels
-    gsap.to(container, {
-      scrollLeft: wheelTargetX,
-      duration: isHorizontal ? 0.3 : 0.8,
+    gsap.to(proxy, {
+      x: proxy.x + delta,
+      duration: 1,
       ease: 'power3.out',
       overwrite: 'auto',
-      onComplete: checkInfiniteScroll
+      onUpdate: () => {
+        if (!container) return;
+        container.scrollLeft = proxy.x;
+        applyWrap();
+      }
     });
   }
 
-  function nonPassiveWheel(node: HTMLElement) {
-    node.addEventListener('wheel', onWheel, { passive: false });
-    return {
-      destroy() {
-        node.removeEventListener('wheel', onWheel);
-      }
-    };
-  }
 </script>
 
-<svelte:window onresize={calculateSetWidth} onkeydown={handleKeydown} onmouseup={onMouseUp} onmousemove={onMouseMove} />
+<svelte:window 
+  onresize={calculateSetWidth} 
+  onkeydown={handleKeydown} 
+/>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -200,10 +186,13 @@
   <div 
     class="poster-overlay__container" 
     bind:this={container}
-    onmousedown={onMouseDown}
-    use:nonPassiveWheel
-    onscroll={checkInfiniteScroll}
+    onpointerdown={onPointerDown}
+    onpointermove={onPointerMove}
+    onpointerup={onPointerUp}
+    onpointercancel={onPointerUp}
+    onwheel={onWheel}
     onclick={(e) => e.stopPropagation()}
+    style="touch-action: pan-y;"
   >
     {#each duplicatedImages as image, i (i)}
       <div class="poster-overlay__item">
@@ -215,6 +204,9 @@
       </div>
     {/each}
   </div>
+  
+  <!-- fallback resize calculation image load -->
+  <img src={images[0]} style="display:none;" onload={calculateSetWidth} alt="" aria-hidden="true" />
   
   <button class="poster-overlay__close contact-btn" onclick={close}>
     <span>CLOSE</span>
@@ -236,6 +228,7 @@
   }
 
   .poster-overlay__container {
+    position: relative;
     width: 100%;
     height: 100%;
     display: flex;

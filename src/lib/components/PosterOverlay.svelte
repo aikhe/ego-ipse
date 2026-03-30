@@ -8,7 +8,7 @@
     images: string[]
   }>()
 
-  // 5 sets to guarantee enough buffer for long swipes
+  // 5 sets for infinite buffer
   let duplicatedImages = $derived([...images, ...images, ...images, ...images, ...images]);
   const MIDDLE_SET = 2;
 
@@ -16,7 +16,7 @@
   let isDragging = false;
   let setWidth = 0;
   
-  // Momentum tracking
+  // momentum tracking
   let velocity = 0;
   let lastX = 0;
   let lastTime = 0;
@@ -24,16 +24,16 @@
   $effect(() => {
     if (selected !== null && container) {
       const items = container.querySelectorAll('.poster-overlay__item');
-      // Target the exact selected poster within the exact middle set
+      // target selected poster in middle set
       const targetIndex = (images.length * MIDDLE_SET) + selected;
       const target = items[targetIndex] as HTMLElement;
       
       if (target) {
         setTimeout(() => {
-          // Calculate exact width of one set
+          // calculate set width
           setWidth = (items[images.length] as HTMLElement).offsetLeft - (items[0] as HTMLElement).offsetLeft;
           
-          // Instant jump to correct image
+          // jump to image
           target.scrollIntoView({ behavior: 'auto', inline: 'center' });
         }, 0);
       }
@@ -51,7 +51,7 @@
   function checkInfiniteScroll() {
     if (!container || setWidth === 0) return;
     
-    // Only seamlessly wrap when not actively tweening to avoid visual glitches
+    // wrap when not tweening
     if (!gsap.isTweening(container)) {
       if (container.scrollLeft < setWidth * 1.5) {
         container.scrollLeft += setWidth;
@@ -69,7 +69,7 @@
     lastX = e.pageX;
     lastTime = Date.now();
     velocity = 0;
-    gsap.killTweensOf(container); // Stop current scrolls
+    gsap.killTweensOf(container); // stop current scrolls
   }
 
   function onMouseMove(e: MouseEvent) {
@@ -79,7 +79,7 @@
     const deltaX = e.pageX - lastX;
     container.scrollLeft -= deltaX * 1.5;
 
-    // Calculate velocity for inertia release
+    // calculate velocity for inertia
     const now = Date.now();
     const dt = now - lastTime;
     if (dt > 0) {
@@ -94,9 +94,9 @@
     isDragging = false;
     container.style.cursor = 'grab';
 
-    // Apply swipe momentum if moving fast enough
+    // apply momentum
     if (Math.abs(velocity) > 0.05) {
-      const momentumWalk = velocity * 400; // Multiplier for distance
+      const momentumWalk = velocity * 400; // distance multiplier
       gsap.to(container, {
         scrollLeft: container.scrollLeft - momentumWalk,
         duration: 0.8,
@@ -112,7 +112,7 @@
   function onWheel(e: WheelEvent) {
     if (!container) return;
     
-    // Standard vertical scroll wheel (no horizontal native input)
+    // horizontal scroll via wheel
     if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && e.deltaX === 0) {
       e.preventDefault();
       
@@ -213,7 +213,7 @@
     pointer-events: none;
   }
 
-  /* Contact Button Style for Close Button (Forced Light Theme) */
+  /* forced light theme close btn */
   .contact-btn {
     position: fixed;
     top: 2.4rem;
@@ -259,7 +259,7 @@
     background: rgba(0, 0, 0, 0.05); /* Light theme --color-overlay-05 */
   }
 
-  /* Responsive adjustments */
+  /* responsive adjustments */
   @media (max-width: 768px) {
     .poster-overlay__container {
       padding: 0 4vw;

@@ -34,16 +34,16 @@
     const isHovered = hovered === index
     const isDimmed = hovered !== null && hovered !== index
     
-    // Smooth transitions managed directly by GSAP
+    // smooth transitions via gsap
     const targetColor = isDimmed ? colorDimmed : colorNormal
     const targetY = isHovered ? basePos.y + 0.04 : basePos.y
 
-    // Proper depth isolation prevents slicing intersections
+    // depth isolation to prevent slicing
     mesh.renderOrder = isHovered ? 50 : index
     material.depthTest = !isHovered
     material.opacity = 1
     
-    // GSAP ensures frame-perfect smoothing and eases
+    // gsap for smooth easing
     gsap.to(material.color, {
       r: targetColor.r,
       g: targetColor.g,
@@ -67,7 +67,7 @@
 <T.Mesh
   position={[basePos.x, basePos.y, basePos.z]}
   oncreate={(ref: THREE.Mesh) => { mesh = ref }}
-  onpointerenter={(e: any) => {
+  onpointerenter={(e: { stopPropagation: () => void }) => {
     e.stopPropagation()
     document.body.style.cursor = 'pointer'
     onenter()
@@ -76,7 +76,7 @@
     document.body.style.cursor = 'auto'
     onleave()
   }}
-  onclick={(e: any) => {
+  onclick={(e: { stopPropagation: () => void }) => {
     e.stopPropagation()
     onclick?.()
   }}

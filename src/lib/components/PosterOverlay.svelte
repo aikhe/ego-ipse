@@ -13,29 +13,42 @@
 
   let container: HTMLDivElement | null = null;
   let isDragging = false;
+  let hasInteracted = false;
   let setWidth = 0;
+  let wheelTargetX = 0;
   
   // momentum tracking
   let velocity = 0;
   let lastX = 0;
   let lastTime = 0;
 
+  function calculateSetWidth() {
+    if (!container) return;
+    const items = container.querySelectorAll('.poster-overlay__item');
+    if (items.length <= images.length) return;
+    
+    // with CSS aspect-ratio defined, DOM box-model is instantly accurate
+    setWidth = (items[images.length] as HTMLElement).offsetLeft - (items[0] as HTMLElement).offsetLeft;
+  }
+
+  function centerGallery() {
+    calculateSetWidth();
+    // only recenter if we are open and user hasn't started manually swiping
+    if (!container || selected === null || hasInteracted) return;
+    
+    const items = container.querySelectorAll('.poster-overlay__item');
+    const targetIndex = (images.length * MIDDLE_SET) + selected;
+    const target = items[targetIndex] as HTMLElement;
+    
+    if (target) {
+      target.scrollIntoView({ behavior: 'auto', inline: 'center' });
+    }
+  }
+
   $effect(() => {
     if (selected !== null && container) {
-      const items = container.querySelectorAll('.poster-overlay__item');
-      // target selected poster in middle set
-      const targetIndex = (images.length * MIDDLE_SET) + selected;
-      const target = items[targetIndex] as HTMLElement;
-      
-      if (target) {
-        setTimeout(() => {
-          // calculate set width
-          setWidth = (items[images.length] as HTMLElement).offsetLeft - (items[0] as HTMLElement).offsetLeft;
-          
-          // jump to image
-          target.scrollIntoView({ behavior: 'auto', inline: 'center' });
-        }, 0);
-      }
+      hasInteracted = false; // reset interaction flag on open
+      setTimeout(centerGallery, 0);
     }
   });
 
@@ -63,6 +76,7 @@
   function onMouseDown(e: MouseEvent) {
     if (!container) return;
     isDragging = true;
+    hasInteracted = true;
     container.style.cursor = 'grabbing';
     
     lastX = e.pageX;
@@ -94,11 +108,23 @@
     container.style.cursor = 'grab';
 
     // apply momentum
-    if (Math.abs(velocity) > 0.05) {
+    if (Math.abs(velocity) > 0.05 && setWidth > 0) {
       const momentumWalk = velocity * 400; // distance multiplier
+      let targetX = container.scrollLeft - momentumWalk;
+
+      // mathematically wrap the target and dom instantly
+      while (targetX > setWidth * 3.5) {
+        targetX -= setWidth;
+        container.scrollLeft -= setWidth;
+      }
+      while (targetX < setWidth * 1.5) {
+        targetX += setWidth;
+        container.scrollLeft += setWidth;
+      }
+
       gsap.to(container, {
-        scrollLeft: container.scrollLeft - momentumWalk,
-        duration: 0.8,
+        scrollLeft: targetX,
+        duration: 1,
         ease: 'power3.out',
         overwrite: 'auto',
         onComplete: checkInfiniteScroll
@@ -109,16 +135,32 @@
   }
 
   function onWheel(e: WheelEvent) {
-    if (!container) return;
+    if (!container || setWidth === 0) return;
+    hasInteracted = true;
     
-    // horizontal scroll via wheel
+    // horizontal scroll via vertical mouse wheel
     if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && e.deltaX === 0) {
       e.preventDefault();
+
+      if (!gsap.isTweening(container)) {
+        wheelTargetX = container.scrollLeft;
+      }
+      wheelTargetX += (e.deltaY * 4);
+
+      // wrap target and dom instantly to loop smoothly
+      while (wheelTargetX > setWidth * 3.5) {
+        wheelTargetX -= setWidth;
+        container.scrollLeft -= setWidth;
+      }
+      while (wheelTargetX < setWidth * 1.5) {
+        wheelTargetX += setWidth;
+        container.scrollLeft += setWidth;
+      }
       
       gsap.to(container, {
-        scrollLeft: container.scrollLeft + (e.deltaY * 3),
-        duration: 0.5,
-        ease: 'power2.out',
+        scrollLeft: wheelTargetX,
+        duration: 0.8,
+        ease: 'power3.out',
         overwrite: 'auto',
         onComplete: checkInfiniteScroll
       });
@@ -126,7 +168,7 @@
   }
 </script>
 
-<svelte:window onkeydown={handleKeydown} onmouseup={onMouseUp} onmousemove={onMouseMove} />
+<svelte:window onresize={calculateSetWidth} onkeydown={handleKeydown} onmouseup={onMouseUp} onmousemove={onMouseMove} />
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -148,7 +190,11 @@
   >
     {#each duplicatedImages as image, i (i)}
       <div class="poster-overlay__item">
-        <img src={image} alt="Poster {(i % images.length) + 1}" draggable="false" />
+        <img 
+          src={image} 
+          alt="Poster {(i % images.length) + 1}" 
+          draggable="false" 
+        />
       </div>
     {/each}
   </div>
@@ -209,6 +255,7 @@
   .poster-overlay__item img {
     height: 100%;
     width: auto;
+    aspect-ratio: 2848 / 3690;
     object-fit: contain;
     pointer-events: none;
   }

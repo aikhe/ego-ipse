@@ -138,33 +138,50 @@
     if (!container || setWidth === 0) return;
     hasInteracted = true;
     
-    // horizontal scroll via vertical mouse wheel
-    if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && e.deltaX === 0) {
-      e.preventDefault();
+    // Hijack ALL scroll wheel events (vertical & horizontal, mouse & trackpad)
+    e.preventDefault();
+    
+    let isHorizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY);
+    let delta = isHorizontal ? e.deltaX : e.deltaY;
 
-      if (!gsap.isTweening(container)) {
-        wheelTargetX = container.scrollLeft;
-      }
-      wheelTargetX += (e.deltaY * 4);
-
-      // wrap target and dom instantly to loop smoothly
-      while (wheelTargetX > setWidth * 3.5) {
-        wheelTargetX -= setWidth;
-        container.scrollLeft -= setWidth;
-      }
-      while (wheelTargetX < setWidth * 1.5) {
-        wheelTargetX += setWidth;
-        container.scrollLeft += setWidth;
-      }
-      
-      gsap.to(container, {
-        scrollLeft: wheelTargetX,
-        duration: 0.8,
-        ease: 'power3.out',
-        overwrite: 'auto',
-        onComplete: checkInfiniteScroll
-      });
+    // Apply multiplier only for vertical mouse wheels to maintain standard scroll speed
+    if (!isHorizontal) {
+       delta *= 4;
     }
+
+    if (!gsap.isTweening(container)) {
+      wheelTargetX = container.scrollLeft;
+    }
+    
+    wheelTargetX += delta;
+
+    // wrap target and dom instantly to loop smoothly without browser interference
+    while (wheelTargetX > setWidth * 3.5) {
+      wheelTargetX -= setWidth;
+      container.scrollLeft -= setWidth;
+    }
+    while (wheelTargetX < setWidth * 1.5) {
+      wheelTargetX += setWidth;
+      container.scrollLeft += setWidth;
+    }
+    
+    // Use a snappy tween for trackpads (which have built-in momentum) and longer for mouse wheels
+    gsap.to(container, {
+      scrollLeft: wheelTargetX,
+      duration: isHorizontal ? 0.3 : 0.8,
+      ease: 'power3.out',
+      overwrite: 'auto',
+      onComplete: checkInfiniteScroll
+    });
+  }
+
+  function nonPassiveWheel(node: HTMLElement) {
+    node.addEventListener('wheel', onWheel, { passive: false });
+    return {
+      destroy() {
+        node.removeEventListener('wheel', onWheel);
+      }
+    };
   }
 </script>
 
@@ -184,7 +201,7 @@
     class="poster-overlay__container" 
     bind:this={container}
     onmousedown={onMouseDown}
-    onwheel={onWheel}
+    use:nonPassiveWheel
     onscroll={checkInfiniteScroll}
     onclick={(e) => e.stopPropagation()}
   >

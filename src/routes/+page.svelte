@@ -1,7 +1,8 @@
 <script lang="ts">
-  import Hero from '$lib/layouts/Hero.svelte';
-  import Info from '$lib/layouts/Info.svelte';
-  import PosterOverlay from '$lib/components/PosterOverlay.svelte';
+  import Hero from '$lib/components/Sections/Hero.svelte';
+  import InfoSection from '$lib/components/Sections/InfoSection.svelte';
+  import PosterOverlay from '$lib/components/Poster/PosterOverlay.svelte';
+  import Scene from '$lib/components/Poster/Scene.svelte'
 
   import poster1 from '$lib/assets/posters/1.png'
   import poster2 from '$lib/assets/posters/2.png'
@@ -9,7 +10,6 @@
   import poster4 from '$lib/assets/posters/4.png'
 
   import { Canvas } from '@threlte/core'
-  import Scene from './Scene.svelte'
   import * as THREE from 'three'
 
   let selectedPoster = $state<number | null>(null);
@@ -17,7 +17,7 @@
 
 <section class="section-container relative z-20 pointer-events-none">
   <Hero />
-  <Info />
+  <InfoSection />
 </section>
 
 <div class="fixed inset-0 z-1">

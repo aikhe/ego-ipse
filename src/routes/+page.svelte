@@ -1,6 +1,5 @@
 <script lang="ts">
-  import Hero from '$lib/components/Sections/Hero.svelte';
-  import InfoSection from '$lib/components/Sections/InfoSection.svelte';
+  import Hero from '$lib/layouts/Hero.svelte';
   import PosterOverlay from '$lib/components/Poster/PosterOverlay.svelte';
   import Scene from '$lib/components/Poster/Scene.svelte'
 
@@ -17,7 +16,6 @@
 
 <section class="section-container relative z-20 pointer-events-none">
   <Hero />
-  <InfoSection />
 </section>
 
 <div class="fixed inset-0 z-1">

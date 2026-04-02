@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import gsap from 'gsap';
+	import { runTileReveal } from '$lib/utils/tiles';
 
 	interface Social {
 		name: string;
@@ -32,61 +33,6 @@
 	const COLS = 20;
 	const ROWS = 20;
 
-	// build shuffled tile list
-	function shuffledTiles() {
-		const tiles = Array.from({ length: COLS * ROWS }, (_, i) => [i % COLS, Math.floor(i / COLS)]);
-		for (let i = tiles.length - 1; i > 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1));
-			[tiles[i], tiles[j]] = [tiles[j], tiles[i]];
-		}
-		return tiles;
-	}
-
-	function runTileReveal(reveal: boolean, duration: number, startAt: gsap.Position) {
-		if (!canvas) return;
-		canvas.width = canvas.offsetWidth;
-		canvas.height = canvas.offsetHeight;
-		const ctx = canvas.getContext('2d')!;
-		const tw = canvas.width / COLS;
-		const th = canvas.height / ROWS;
-		const tiles = shuffledTiles();
-		const total = tiles.length;
-
-		const themeColor =
-			getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
-
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		if (reveal) {
-			ctx.fillStyle = themeColor;
-			ctx.fillRect(0, 0, canvas.width, canvas.height);
-		}
-
-		const proxy = { t: 0 };
-		let drawn = 0;
-
-		tl!.to(
-			proxy,
-			{
-				t: 1,
-				duration,
-				ease: 'power2.inOut',
-				onUpdate() {
-					const target = Math.floor(proxy.t * total);
-					while (drawn < target) {
-						const [c, r] = tiles[drawn];
-						if (reveal) {
-							ctx.clearRect(c * tw, r * th, tw + 0.5, th + 0.5);
-						} else {
-							ctx.fillStyle = themeColor;
-							ctx.fillRect(c * tw, r * th, tw + 0.5, th + 0.5);
-						}
-						drawn++;
-					}
-				}
-			},
-			startAt
-		);
-	}
 
 	$effect(() => {
 		if (container) {
@@ -151,8 +97,9 @@
 			);
 		}
 
-		// tile reveal on placeholder
-		runTileReveal(true, 0.6, '<0.15');
+		if (canvas) {
+			runTileReveal(canvas, tl, COLS, ROWS, true, 0.6, '<0.15');
+		}
 	}
 
 	function hide() {
@@ -170,7 +117,9 @@
 			});
 		}
 
-		runTileReveal(false, 0.25, '<');
+		if (canvas && tl) {
+			runTileReveal(canvas, tl, COLS, ROWS, false, 0.25, '<');
+		}
 
 		// collapse container
 		tl.to(
@@ -269,7 +218,6 @@
 		opacity: 0;
 		pointer-events: none;
 		z-index: 999;
-		box-sizing: border-box;
 		transform-origin: bottom left;
 		backdrop-filter: blur(4px);
 	}
@@ -303,7 +251,6 @@
 		grid-template-columns: 1fr 1fr;
 		min-height: 12.5rem;
 		padding: 1rem;
-		box-sizing: border-box;
 		gap: 1rem;
 	}
 
@@ -315,7 +262,6 @@
 	}
 
 	.social-card__user {
-		margin-bottom: 0rem;
 		display: flex;
 		flex-direction: column;
 		row-gap: 0.24rem;
@@ -426,7 +372,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		box-sizing: border-box;
 	}
 
 	.social-card__img {

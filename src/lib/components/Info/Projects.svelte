@@ -3,7 +3,6 @@
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
 
-	import IconArrow from './IconArrow.svelte';
 	import ProjectPreview from './ProjectPreview.svelte';
 
 	import katha from '$lib/assets/projects/katha.png';
@@ -335,8 +334,6 @@
 						collapseExpand();
 						gsap.to(reticle, { opacity: 0, duration: 0.3, ease: 'power3.out' });
 					}, EXIT_DELAY);
-				} else {
-					// timers already cleared above
 				}
 			});
 		});
@@ -382,7 +379,24 @@
 			>
 				<div class="project--bg"></div>
 				<span class="project--name">{project.name}</span>
-				<span class="arrow"><IconArrow /></span>
+				<svg
+					data-testid="geist-icon"
+					height={12}
+					width={12}
+					stroke-linejoin="miter"
+					style="color: currentcolor;"
+					viewBox="0 0 16 16"
+					class="arrow"
+				>
+					<path
+						fill-rule="evenodd"
+						clip-rule="evenodd"
+						d="M5.75001 2H5.00001V3.5H5.75001H11.4393L2.21968 12.7197L1.68935 13.25L2.75001 14.3107L3.28034 13.7803L12.4988 4.56182V11H13.9988V2H5.75001Z"
+						fill="currentColor"
+						stroke="currentColor"
+						stroke-width="0.4"
+					></path>
+				</svg>
 			</a>
 		{/each}
 		<button class="project--more">MORE ...</button>

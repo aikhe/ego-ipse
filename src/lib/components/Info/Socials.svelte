@@ -7,6 +7,7 @@
 	import aboutIcon from '$lib/assets/socials/about.png';
 	import blogIcon from '$lib/assets/socials/blog.png';
 	import acediaIcon from '$lib/assets/socials/acedia.png';
+	import { startGlitch as runGlitch } from '$lib/utils/glitch';
 
 	interface Social {
 		name: string;
@@ -152,9 +153,6 @@
 		})();
 	});
 
-	// glitch palette
-	const smallSymbols = '·.:,;+-';
-	const largeSymbols = 'urilQZXW';
 
 	let displayTexts = $state<string[]>(socials.map((s) => s.name));
 	let intervals: (ReturnType<typeof setInterval> | null)[] = socials.map(() => null);
@@ -171,45 +169,20 @@
 	const activeSocial = $derived(hoveredIndex !== null ? socials[hoveredIndex] : null);
 
 	function startGlitch(index: number) {
-		const original = socials[index].name;
-		let frames = 0;
-		const revealSpeed = 1; // 1 frame per character reveal
-		const totalFrames = original.length * revealSpeed + 10; // slightly shorter tail
-
-		// pre-calculate random resolution delays for each character to keep randomness
-		const resolveDelays = original.split('').map(() => Math.floor(Math.random() * 4)); // max 4 frames delay instead of 6
-
 		hoveredIndex = index;
 		isSocialRevealed = false;
 
 		if (intervals[index]) clearInterval(intervals[index]);
 
-		intervals[index] = setInterval(() => {
-			const charsToShow = Math.min(original.length, Math.floor(frames / revealSpeed) + 1);
-
-			displayTexts[index] = original
-				.split('')
-				.map((_, i) => {
-					if (i >= charsToShow) return ''; // character not yet revealed
-
-					const appearedFrame = i * revealSpeed;
-					const progress = frames - appearedFrame - resolveDelays[i];
-
-					if (progress > 5) return original[i]; // resolves faster
-					if (progress > 2) return largeSymbols[Math.floor(Math.random() * largeSymbols.length)];
-					return smallSymbols[Math.floor(Math.random() * smallSymbols.length)];
-				})
-				.join('');
-
-			if (frames > totalFrames) {
-				if (intervals[index]) clearInterval(intervals[index]);
-				displayTexts[index] = original;
+		intervals[index] = runGlitch({
+			text: socials[index].name,
+			onUpdate: (val) => (displayTexts[index] = val),
+			onComplete: () => {
 				isSocialRevealed = true;
 				summonBox(index);
 				summonLines(index);
 			}
-			frames++;
-		}, 20); // 20ms per frame for a slightly faster overall tick
+		});
 	}
 
 	function summonBox(index: number) {

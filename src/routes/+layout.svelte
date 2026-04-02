@@ -2,6 +2,7 @@
 	import '../styles/main.css';
 	import favicon from '$lib/assets/favicon.ico';
 	import logo from '$lib/assets/logo.svg';
+	import { startGlitch } from '$lib/utils/glitch';
 
 	import type { LayoutProps } from './$types';
 
@@ -9,56 +10,22 @@
 	let theme = $state('dark');
 	let showGrid = $state(false);
 	let time = $state('--:--:--');
+	let themeDisplayText = $state('LIGHT');
+	let glitchInterval: ReturnType<typeof setInterval> | null = null;
 
 	function toggleTheme() {
 		theme = theme === 'dark' ? 'light' : 'dark';
 	}
 
-	// glitch animation logic
-	const smallSymbols = '·.:,;+-';
-	const largeSymbols = 'urilQZXW';
-	let themeDisplayText = $state('LIGHT');
-	let glitchInterval: ReturnType<typeof setInterval> | null = null;
-
-	function startGlitch() {
-		const original = theme.toUpperCase();
-		let frames = 0;
-		const revealSpeed = 3;
-		const totalFrames = original.length * revealSpeed + 15;
-		const resolveDelays = original.split('').map(() => Math.floor(Math.random() * 5));
-
-		if (glitchInterval) clearInterval(glitchInterval);
-
-		glitchInterval = setInterval(() => {
-			const charsToShow = Math.min(original.length, Math.floor(frames / revealSpeed) + 1);
-
-			themeDisplayText = original
-				.split('')
-				.map((_: string, i: number) => {
-					if (i >= charsToShow) return '';
-
-					const appearedFrame = i * revealSpeed;
-					const progress = frames - appearedFrame - resolveDelays[i];
-
-					if (progress > 8) return original[i];
-					if (progress > 4) return largeSymbols[Math.floor(Math.random() * largeSymbols.length)];
-					return smallSymbols[Math.floor(Math.random() * smallSymbols.length)];
-				})
-				.join('');
-
-			if (frames > totalFrames) {
-				if (glitchInterval) clearInterval(glitchInterval);
-				glitchInterval = null;
-				themeDisplayText = original;
-			}
-			frames++;
-		}, 20);
-	}
-
 	$effect(() => {
 		document.documentElement.setAttribute('data-theme', theme);
-		// when the theme changes
-		startGlitch();
+		if (glitchInterval) clearInterval(glitchInterval);
+		glitchInterval = startGlitch({
+			text: theme.toUpperCase(),
+			revealSpeed: 3,
+			tailFrames: 15,
+			onUpdate: (t) => (themeDisplayText = t)
+		});
 	});
 
 	function handleKeydown(event: KeyboardEvent) {
@@ -206,16 +173,10 @@
 		justify-content: center;
 	}
 
-	.contact-btn::before,
-	.contact-btn::after {
+	.contact-btn::before {
 		content: '';
 		position: absolute;
-		border-style: solid;
-		border-color: var(--color-text-muted);
 		pointer-events: none;
-	}
-
-	.contact-btn::before {
 		inset: -1px;
 		background:
 			linear-gradient(to right, var(--color-text) 1px, transparent 1px) 0 0,

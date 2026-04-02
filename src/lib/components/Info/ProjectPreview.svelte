@@ -1,109 +1,67 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import gsap from 'gsap';
+	import { runTileReveal } from '$lib/utils/tiles';
 
-	export let project: {
-		name: string;
-		section: string;
-		date: string;
-		tags: readonly string[];
-		id: string;
-		image?: string;
-	} | null = null;
-	export let visible = false;
-	export let posX = 0;
-	export let posY = 0;
-	export let width = 260;
-	export let height = 380;
+	interface Props {
+		project?: {
+			name: string;
+			section: string;
+			date: string;
+			tags: readonly string[];
+			id: string;
+			image?: string;
+		} | null;
+		visible?: boolean;
+		posX?: number;
+		posY?: number;
+		width?: number;
+		height?: number;
+	}
 
-	let container: HTMLDivElement;
-	let content: HTMLDivElement;
-	let canvas: HTMLCanvasElement;
+	let {
+		project = null,
+		visible = false,
+		posX = 0,
+		posY = 0,
+		width = 260,
+		height = 380
+	}: Props = $props();
+
+	let container = $state<HTMLDivElement>();
+	let content = $state<HTMLDivElement>();
+	let canvas = $state<HTMLCanvasElement>();
 	let tl: gsap.core.Timeline | null = null;
-	let lastProjectName = '';
+	let lastProjectName = $state('');
 
 	const COLS = 20;
 	const ROWS = 28;
 
-	// build shuffled tile list
-	function shuffledTiles() {
-		const tiles = Array.from({ length: COLS * ROWS }, (_, i) => [i % COLS, Math.floor(i / COLS)]);
-		for (let i = tiles.length - 1; i > 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1));
-			[tiles[i], tiles[j]] = [tiles[j], tiles[i]];
-		}
-		return tiles;
-	}
-
-	function runTileReveal(reveal: boolean, duration: number, startAt: gsap.Position) {
-		if (!canvas) return;
-		// sync pixel size to rendered size
-		canvas.width = canvas.offsetWidth;
-		canvas.height = canvas.offsetHeight;
-		const ctx = canvas.getContext('2d')!;
-		const tw = canvas.width / COLS;
-		const th = canvas.height / ROWS;
-		const tiles = shuffledTiles();
-		const total = tiles.length;
-
-		const themeColor =
-			getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
-
-		// setup canvas state for reveal or hide
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		if (reveal) {
-			ctx.fillStyle = themeColor;
-			ctx.fillRect(0, 0, canvas.width, canvas.height);
-		}
-
-		const proxy = { t: 0 };
-		let drawn = 0;
-
-		tl!.to(
-			proxy,
-			{
-				t: 1,
-				duration,
-				ease: 'power2.inOut',
-				onUpdate() {
-					const target = Math.floor(proxy.t * total);
-					while (drawn < target) {
-						const [c, r] = tiles[drawn];
-						if (reveal) {
-							ctx.clearRect(c * tw, r * th, tw + 0.5, th + 0.5);
-						} else {
-							ctx.fillStyle = themeColor;
-							ctx.fillRect(c * tw, r * th, tw + 0.5, th + 0.5);
-						}
-						drawn++;
-					}
+	$effect(() => {
+		if (container) {
+			const shouldShow = visible && project;
+			if (shouldShow && project) {
+				if (project.name !== lastProjectName) {
+					lastProjectName = project.name;
+					show();
 				}
-			},
-			startAt
-		);
-	}
-
-	$: if (container) {
-		const shouldShow = visible && project;
-		if (shouldShow && project) {
-			if (project.name !== lastProjectName) {
-				lastProjectName = project.name;
-				show();
+			} else {
+				lastProjectName = '';
+				hide();
 			}
-		} else {
-			lastProjectName = '';
-			hide();
 		}
-	}
+	});
 
-	$: if (container && (posX || posY)) {
-		gsap.to(container, {
-			left: posX,
-			top: posY,
-			duration: 0.4,
-			ease: 'power3.out'
-		});
-	}
+	$effect(() => {
+		if (container && (posX || posY)) {
+			gsap.to(container, {
+				left: posX,
+				top: posY,
+				duration: 0.4,
+				ease: 'power3.out'
+			});
+		}
+	});
 
 	async function show() {
 		await tick();
@@ -155,8 +113,9 @@
 			);
 		}
 
-		// run tile reveal
-		runTileReveal(true, 0.7, '<0.15');
+		if (canvas) {
+			runTileReveal(canvas, tl, COLS, ROWS, true, 0.7, '<0.15');
+		}
 	}
 
 	function hide() {
@@ -174,12 +133,13 @@
 			});
 		}
 
-		// run tile cover
-		runTileReveal(false, 0.25, '<');
+		if (canvas && tl) {
+			runTileReveal(canvas, tl, COLS, ROWS, false, 0.25, '<');
+		}
 
 		// collapse container
 		tl.to(
-			container,
+			container!,
 			{
 				opacity: 0,
 				scaleY: 0,
@@ -241,7 +201,6 @@
 		pointer-events: none;
 		z-index: 200;
 		backdrop-filter: blur(4px);
-		box-sizing: border-box;
 	}
 
 	.corner-accents {
@@ -272,7 +231,6 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
-		box-sizing: border-box;
 		position: relative;
 		z-index: 1;
 	}
@@ -347,7 +305,6 @@
 		display: flex;
 		flex-direction: column;
 		min-height: 0;
-		box-sizing: border-box;
 	}
 
 	.preview-inner {
@@ -363,13 +320,10 @@
 		width: 100%;
 		flex: 1;
 		min-height: 0;
-		/* padding: 0.8rem; */
-		/* background: #fff; */
 		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		box-sizing: border-box;
 	}
 
 	.project-image {

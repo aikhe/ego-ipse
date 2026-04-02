@@ -15,7 +15,6 @@
     transform: (t) => {
       t.anisotropy = 16
       t.generateMipmaps = true
-      // t.minFilter = THREE.LinearMipmapLinearFilter
       t.colorSpace = 'srgb'
       return t
     }

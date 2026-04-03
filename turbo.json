@@ -24,6 +24,9 @@
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "prepare": {
+      "cache": false
     }
   }
 }

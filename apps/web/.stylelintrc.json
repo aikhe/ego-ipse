@@ -1,0 +1,3 @@
+{
+  "extends": ["@ego-ipse/stylelint-config"]
+}

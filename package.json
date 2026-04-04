@@ -1,30 +1,30 @@
 {
-	"name": "root",
-	"private": true,
-	"scripts": {
-		"build": "turbo build",
-		"build:turbopack": "turbo build:turbopack",
-		"dev": "turbo dev",
-		"dev:turbopack": "turbo dev:turbopack",
-		"check": "bun run prettier; turbo lint",
-		"format": "bun run prettier:fix; turbo lint:fix",
-		"prettier": "prettier \"**/*.{js,mjs,ts,tsx,json,yml,css,svelte,md,html}\" --check --cache --cache-strategy=content --cache-location=.prettiercache",
-		"prettier:fix": "bun run prettier -- --write",
-		"start": "turbo start"
-	},
-	"devDependencies": {
-		"prettier": "^3.7.4",
-		"prettier-plugin-svelte": "^3.5.1",
-		"prettier-plugin-tailwindcss": "^0.7.2",
-		"turbo": "^2.9.3",
-		"typescript": "5.9.2"
-	},
-	"engines": {
-		"node": ">=18"
-	},
-	"packageManager": "bun@1.3.5",
-	"workspaces": [
-		"apps/*",
-		"packages/*"
-	]
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "build:turbopack": "turbo build:turbopack",
+    "dev": "turbo dev",
+    "dev:turbopack": "turbo dev:turbopack",
+    "check": "bun run prettier; turbo lint",
+    "format": "bun run prettier:fix; turbo lint:fix",
+    "prettier": "prettier \"**/*.{js,mjs,ts,tsx,json,yml,css,svelte,md,html}\" --check --cache --cache-strategy=content --cache-location=.prettiercache",
+    "prettier:fix": "bun run prettier -- --write",
+    "start": "turbo start"
+  },
+  "devDependencies": {
+    "prettier": "^3.7.4",
+    "prettier-plugin-svelte": "^3.5.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "turbo": "^2.9.3",
+    "typescript": "5.9.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "bun@1.3.5",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }

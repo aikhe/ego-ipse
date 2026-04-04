@@ -1,0 +1,23 @@
+@font-face {
+	font-family: 'GeistPixel Square';
+	src: url('../../lib/assets/fonts/GeistPixel-Square.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'GeistPixel Line';
+	src: url('../../lib/assets/fonts/GeistPixel-Line.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Advine-Pixel';
+	src: url('../../lib/assets/fonts/Advine-Pixel.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}

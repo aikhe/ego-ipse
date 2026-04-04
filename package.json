@@ -1,52 +1,30 @@
 {
-	"name": "ego-ipse",
-	"version": "0.0.1",
-	"devDependencies": {
-		"@eslint/compat": "^2.0.2",
-		"@eslint/js": "^9.39.2",
-		"@sveltejs/adapter-cloudflare": "^7.2.6",
-		"@sveltejs/kit": "^2.50.2",
-		"@sveltejs/vite-plugin-svelte": "^6.2.4",
-		"@tailwindcss/vite": "^4.1.18",
-		"@types/node": "^24",
-		"@types/three": "^0.183.1",
-		"@vitest/browser-playwright": "^4.0.18",
-		"eslint": "^9.39.2",
-		"eslint-config-prettier": "^10.1.8",
-		"eslint-plugin-svelte": "^3.14.0",
-		"globals": "^17.3.0",
-		"playwright": "^1.58.1",
-		"prettier": "^3.8.1",
-		"prettier-plugin-svelte": "^3.4.1",
-		"prettier-plugin-tailwindcss": "^0.7.2",
-		"svelte": "^5.51.0",
-		"svelte-check": "^4.3.6",
-		"tailwindcss": "^4.1.18",
-		"typescript": "^5.9.3",
-		"typescript-eslint": "^8.54.0",
-		"vite": "^7.3.1",
-		"vitest": "^4.0.18",
-		"vitest-browser-svelte": "^2.0.2",
-		"wrangler": "^4.63.0"
-	},
+	"name": "root",
 	"private": true,
 	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build",
-		"preview": "wrangler pages dev .svelte-kit/cloudflare --port 4173",
-		"prepare": "svelte-kit sync || echo ''",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"lint": "prettier --check . && eslint .",
-		"format": "prettier --write .",
-		"test:unit": "vitest",
-		"test": "npm run test:unit -- --run",
-		"gen": "wrangler types"
+		"build": "turbo build",
+		"build:turbopack": "turbo build:turbopack",
+		"dev": "turbo dev",
+		"dev:turbopack": "turbo dev:turbopack",
+		"check": "bun run prettier; turbo lint",
+		"format": "bun run prettier:fix; turbo lint:fix",
+		"prettier": "prettier \"**/*.{js,mjs,ts,tsx,json,yml,css,svelte,md,html}\" --check --cache --cache-strategy=content --cache-location=.prettiercache",
+		"prettier:fix": "bun run prettier -- --write",
+		"start": "turbo start"
 	},
-	"type": "module",
-	"dependencies": {
-		"@threlte/core": "^8.4.1",
-		"@threlte/extras": "^9.8.1",
-		"gsap": "^3.14.2"
-	}
+	"devDependencies": {
+		"prettier": "^3.7.4",
+		"prettier-plugin-svelte": "^3.5.1",
+		"prettier-plugin-tailwindcss": "^0.7.2",
+		"turbo": "^2.9.3",
+		"typescript": "5.9.2"
+	},
+	"engines": {
+		"node": ">=18"
+	},
+	"packageManager": "bun@1.3.5",
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	]
 }

@@ -80,14 +80,14 @@
 
 {#if showGrid}
   <div class="grid-overlay section-container">
-    {#each Array(12) as _, i (i)}
+    {#each Array.from(Array(12).keys()) as i (i)}
       <div class="grid-column"></div>
     {/each}
   </div>
 {/if}
 
 <div class="grid-background section-container">
-  {#each Array(12) as _, i (i)}
+  {#each Array.from(Array(12).keys()) as i (i)}
     <div class="bg-grid-column"></div>
   {/each}
 </div>

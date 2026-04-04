@@ -3,5 +3,5 @@
   "name": "ego-ipse",
   "compatibility_date": "2026-02-24",
   "compatibility_flags": ["nodejs_als"],
-  "pages_build_output_dir": ".svelte-kit/cloudflare"
+  "pages_build_output_dir": ".svelte-kit/cloudflare",
 }

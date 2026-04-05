@@ -11,7 +11,7 @@
     "prettier": "prettier \"**/*.{js,mjs,ts,tsx,json,yml,css,svelte,md,html}\" --check --cache --cache-strategy=content --cache-location=.prettiercache",
     "prettier:fix": "bun run prettier -- --write",
     "start": "turbo start",
-    "prepare": "turbo prepare"
+    "prepare": "npx turbo prepare"
   },
   "devDependencies": {
     "prettier": "^3.7.4",

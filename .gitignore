@@ -52,3 +52,7 @@ Thumbs.db
 
 # Agent
 .agent/
+
+# Lockfiles
+bun.lock
+bun.lockb

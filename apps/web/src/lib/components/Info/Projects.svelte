@@ -446,38 +446,36 @@
 
   .info__projects {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     gap: 0 1.2rem;
+    grid-template-columns: 1fr 1fr;
   }
 
   .project--item {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
-    height: 48px;
-    position: relative;
-
-    font-weight: 400;
-    font-size: 1.2rem;
-    letter-spacing: 0.34%;
-    color: var(--color-text);
-    text-decoration: none;
-
     border-bottom: 1px solid var(--color-overlay-20);
+    color: var(--color-text);
+    display: flex;
+    font-size: 1.2rem;
+    font-weight: 400;
+    height: 48px;
+    justify-content: space-between;
+    letter-spacing: 0.34%;
+    position: relative;
+    text-decoration: none;
   }
 
   .project--bg {
-    position: absolute;
-    inset: 0;
     background: linear-gradient(
       90deg,
       transparent 20%,
       var(--color-accent-blue) 70%,
       var(--color-accent-cyan) 100%
     );
+    inset: 0;
     opacity: 0;
-    z-index: 0;
     pointer-events: none;
+    position: absolute;
+    z-index: 0;
   }
 
   .project--item:nth-child(-n + 2) {
@@ -485,9 +483,9 @@
   }
 
   .project--item span {
+    flex-shrink: 0;
     position: relative;
     z-index: 1;
-    flex-shrink: 0;
   }
 
   .arrow {
@@ -496,20 +494,20 @@
 
   /* shared reticle base */
   .reticle {
-    position: fixed;
-    top: 0;
     left: 0;
     pointer-events: none;
+    position: fixed;
+    top: 0;
     z-index: 999;
   }
 
   .reticle-borders,
   .reticle-box {
-    position: absolute;
-    inset: 0;
-    display: flex;
     align-items: center;
+    display: flex;
+    inset: 0;
     justify-content: center;
+    position: absolute;
   }
 
   /* 1px corner brackets via css gradients */
@@ -543,36 +541,31 @@
   }
 
   .reticle-box::after {
-    content: '';
-    width: 0.43rem;
-    height: 0.43rem;
     background: var(--color-text);
+    content: '';
+    height: 0.43rem;
+    width: 0.43rem;
   }
 
   .project--more {
-    height: 48px;
+    align-items: center;
     background: var(--color-overlay-02);
     border: 1px solid var(--color-overlay-20);
-    margin-top: -1px;
-
     color: var(--color-text);
-    font-family: 'Geist Mono', monospace;
-    font-weight: 400;
-    letter-spacing: 0.34%;
-    font-size: 0.875rem;
-    line-height: 18px;
-
     cursor: pointer;
-    position: relative;
     display: flex;
-    align-items: center;
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.875rem;
+    font-weight: 400;
+    height: 48px;
+    letter-spacing: 0.34%;
+    line-height: 18px;
+    margin-top: -1px;
     padding-left: 1rem;
+    position: relative;
   }
 
   .project--more::before {
-    content: '';
-    position: absolute;
-    inset: -1px;
     background:
       linear-gradient(to right, var(--color-text) 1px, transparent 1px) 0 0,
       linear-gradient(to bottom, var(--color-text) 1px, transparent 1px) 0 0,
@@ -584,7 +577,10 @@
       linear-gradient(to top, var(--color-text) 1px, transparent 1px) 100% 100%;
     background-repeat: no-repeat;
     background-size: 8px 8px;
+    content: '';
+    inset: -1px;
     pointer-events: none;
+    position: absolute;
   }
 
   .project--more:hover {
@@ -592,29 +588,29 @@
   }
 
   .random-box {
+    background: var(--color-text);
+    height: 0.43rem;
+    opacity: 0;
+    pointer-events: none;
     position: absolute;
     width: 0.43rem;
-    height: 0.43rem;
-    background: var(--color-text);
-    pointer-events: none;
     z-index: 100;
-    opacity: 0;
   }
 
   .connector-svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
     height: 100%;
-    pointer-events: none;
+    inset: 0;
     overflow: visible;
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
     z-index: 50;
   }
 
   .connector-svg polyline {
     fill: none;
+    opacity: 0;
     stroke: var(--color-overlay-40);
     stroke-width: 1px;
-    opacity: 0;
   }
 </style>

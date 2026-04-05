@@ -33,12 +33,11 @@
 
 <style>
   section {
-    height: calc(100vh - 4.8rem);
-
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 1.2rem;
     align-items: end;
+    display: grid;
+    gap: 1.2rem;
+    grid-template-columns: repeat(12, 1fr);
+    height: calc(100vh - 4.8rem);
     padding-bottom: 2rem;
   }
 </style>

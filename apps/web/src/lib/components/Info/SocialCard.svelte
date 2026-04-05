@@ -215,31 +215,28 @@
 
 <style>
   .social-card {
-    position: absolute;
-    bottom: calc(100% - 1rem);
-    right: 0;
-    width: calc(50% - 0.6rem); /* 3 grid columns */
-    height: auto;
+    backdrop-filter: blur(4px);
     background: var(--color-bg);
     border: 1px solid var(--color-overlay-20);
+    bottom: calc(100% - 1rem);
+    height: auto;
     opacity: 0;
     pointer-events: none;
-    z-index: 999;
+    position: absolute;
+    right: 0;
     transform-origin: bottom left;
-    backdrop-filter: blur(4px);
+    width: calc(50% - 0.6rem); /* 3 grid columns */
+    z-index: 999;
   }
 
   .social-card__accents {
-    position: absolute;
     inset: -1px;
     pointer-events: none;
+    position: absolute;
     z-index: 5;
   }
 
   .social-card__accents::before {
-    content: '';
-    position: absolute;
-    inset: 0;
     background:
       linear-gradient(to right, var(--color-text) 1px, transparent 1px) 0 0,
       linear-gradient(to bottom, var(--color-text) 1px, transparent 1px) 0 0,
@@ -251,21 +248,24 @@
       linear-gradient(to top, var(--color-text) 1px, transparent 1px) 100% 100%;
     background-repeat: no-repeat;
     background-size: 10px 10px;
+    content: '';
+    inset: 0;
+    position: absolute;
   }
 
   .social-card__inner {
     display: grid;
+    gap: 1rem;
     grid-template-columns: 1fr 1fr;
     min-height: 12.5rem;
     padding: 1rem;
-    gap: 1rem;
   }
 
   .social-card__side--left {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     font-family: 'Geist Mono', monospace;
+    justify-content: space-between;
   }
 
   .social-card__user {
@@ -276,20 +276,20 @@
 
   .social-card__handle {
     color: var(--color-text);
-    margin: 0;
     font-family: 'Geist Mono', monospace;
-    letter-spacing: 0.034em;
     font-size: 0.8rem;
     font-weight: 400;
+    letter-spacing: 0.034em;
+    margin: 0;
   }
 
   .social-card__bio {
     color: var(--color-overlay-60);
-    margin: 0.1rem 0 0 0;
     font-family: 'Geist Mono', monospace;
-    letter-spacing: 0.034em;
     font-size: 0.8rem;
     font-weight: 400;
+    letter-spacing: 0.034em;
+    margin: 0.1rem 0 0;
     text-wrap: nowrap;
   }
 
@@ -307,19 +307,19 @@
 
   .social-card__stat {
     display: flex;
-    justify-content: flex-start;
-    gap: 1.86rem;
     font-family: 'Geist Mono', monospace;
-    letter-spacing: 0.034em;
     font-size: 0.8rem;
     font-weight: 400;
+    gap: 1.86rem;
+    justify-content: flex-start;
+    letter-spacing: 0.034em;
     line-height: 1.2;
   }
 
   .social-card__stat-label {
     color: var(--color-overlay-60);
-    width: 85px;
     flex-shrink: 0;
+    width: 85px;
   }
 
   .social-card__stat-val {
@@ -328,10 +328,10 @@
   }
 
   .social-card__bottom {
-    margin-top: auto;
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
+    margin-top: auto;
   }
 
   .social-card__tags {
@@ -342,82 +342,85 @@
   .social-card__tag {
     color: var(--color-text);
     font-family: 'Geist Mono', monospace;
-    letter-spacing: 0.034em;
-    font-weight: 400;
     font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.034em;
     white-space: nowrap;
   }
 
   .social-card__status {
-    width: 100%;
-    padding: 0.24rem;
     background: var(--color-overlay-02);
     border: 1px solid var(--color-overlay-20);
     color: var(--color-overlay-60);
+    cursor: default;
     font-family: 'Geist Mono', monospace;
-    letter-spacing: 0.034em;
-    font-weight: 400;
     font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.034em;
+    padding: 0.24rem;
     text-align: center;
     transition: background 0.2s ease;
-    cursor: default;
+    width: 100%;
   }
 
   .social-card__side--right {
-    display: flex;
     align-items: center;
+    display: flex;
     justify-content: center;
   }
 
   .social-card__preview {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    border: 1px dashed var(--color-overlay-60);
-    position: relative;
-    background: var(--color-bg);
-    overflow: visible;
-    display: flex;
     align-items: center;
+    aspect-ratio: 1 / 1;
+    background: var(--color-bg);
+    border: 1px dashed var(--color-overlay-60);
+    display: flex;
     justify-content: center;
+    overflow: visible;
+    position: relative;
+    width: 100%;
   }
 
   .social-card__img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
     display: block;
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
   }
 
   .social-card__dot {
+    background: var(--color-text);
+    height: 4px;
     position: absolute;
     width: 4px;
-    height: 4px;
-    background: var(--color-text);
     z-index: 100;
   }
 
   .social-card__dot--tl {
-    top: -1px;
     left: -1px;
-  }
-  .social-card__dot--tr {
     top: -1px;
-    right: -1px;
   }
+
+  .social-card__dot--tr {
+    right: -1px;
+    top: -1px;
+  }
+
   .social-card__dot--bl {
     bottom: -1px;
     left: -1px;
   }
+
   .social-card__dot--br {
     bottom: -1px;
     right: -1px;
   }
 
   .social-card__canvas {
-    position: absolute;
-    inset: 0;
-    width: 100%;
     height: 100%;
+    inset: 0;
     pointer-events: none;
+    position: absolute;
+    width: 100%;
   }
 </style>

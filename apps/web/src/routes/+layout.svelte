@@ -97,20 +97,18 @@
 
 <style>
   header {
-    z-index: 2;
-    height: 4.8rem;
-
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 1.2rem;
     align-items: center;
-    white-space: nowrap;
-
-    font-family: 'Geist Mono', monospace;
-    font-weight: 500;
-    letter-spacing: 0.34%;
-    font-size: 0.875rem;
     color: var(--color-text-muted);
+    display: grid;
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.875rem;
+    font-weight: 500;
+    gap: 1.2rem;
+    grid-template-columns: repeat(12, 1fr);
+    height: 4.8rem;
+    letter-spacing: 0.34%;
+    white-space: nowrap;
+    z-index: 2;
   }
 
   header > * {
@@ -118,8 +116,8 @@
   }
 
   .logo {
-    grid-column: 1;
     filter: brightness(0) invert(var(--logo-invert, 0));
+    grid-column: 1;
   }
 
   .time {
@@ -139,16 +137,16 @@
   }
 
   .theme-toggle {
-    grid-column: 9;
     background: none;
     border: none;
     color: var(--color-text-muted);
+    cursor: pointer;
     font-family: 'Geist Mono', monospace;
     font-size: 0.875rem;
     font-weight: 500;
-    cursor: pointer;
-    text-align: left;
+    grid-column: 9;
     padding: 0;
+    text-align: left;
   }
 
   .theme-toggle:hover {
@@ -156,26 +154,20 @@
   }
 
   .contact-btn {
-    grid-column: 12 / span 1;
-    justify-self: flex-end;
-    position: relative;
-
-    background: var(--color-overlay-02);
-    color: var(--color-text);
-    border: 1px solid var(--color-overlay-20);
-    padding: 6px 12px;
-    cursor: pointer;
-
-    display: flex;
     align-items: center;
+    background: var(--color-overlay-02);
+    border: 1px solid var(--color-overlay-20);
+    color: var(--color-text);
+    cursor: pointer;
+    display: flex;
+    grid-column: 12 / span 1;
     justify-content: center;
+    justify-self: flex-end;
+    padding: 6px 12px;
+    position: relative;
   }
 
   .contact-btn::before {
-    content: '';
-    position: absolute;
-    pointer-events: none;
-    inset: -1px;
     background:
       linear-gradient(to right, var(--color-text) 1px, transparent 1px) 0 0,
       linear-gradient(to bottom, var(--color-text) 1px, transparent 1px) 0 0,
@@ -187,6 +179,10 @@
       linear-gradient(to top, var(--color-text) 1px, transparent 1px) 100% 100%;
     background-repeat: no-repeat;
     background-size: 8px 8px;
+    content: '';
+    inset: -1px;
+    pointer-events: none;
+    position: absolute;
   }
 
   .contact-btn:hover {
@@ -194,16 +190,13 @@
   }
 
   .grid-overlay {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin-inline: auto;
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
     gap: 1.2rem;
+    grid-template-columns: repeat(12, 1fr);
+    inset: 0;
+    margin-inline: auto;
     pointer-events: none;
+    position: absolute;
     z-index: 1;
   }
 
@@ -212,16 +205,13 @@
   }
 
   .grid-background {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin-inline: auto;
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
     gap: 1.2rem;
+    grid-template-columns: repeat(12, 1fr);
+    inset: 0;
+    margin-inline: auto;
     pointer-events: none;
+    position: absolute;
     z-index: -99;
   }
 
@@ -244,20 +234,21 @@
   }
 
   .stripe-gutter {
+    background-color: var(--color-overlay-10);
+    bottom: 0;
+    mask-image: url('$lib/assets/stripe.svg');
+    mask-repeat: repeat;
+    mask-size: 7px 7px;
+    pointer-events: none;
     position: fixed;
     top: 0;
-    bottom: 0;
+
     /* match the gutter of .section-container */
     width: max(
       calc((100vw - var(--container-width)) / 2),
       calc((100vw - var(--container-max-width)) / 2)
     );
     z-index: -999;
-    pointer-events: none;
-    background-color: var(--color-overlay-10);
-    mask-image: url('$lib/assets/stripe.svg');
-    mask-repeat: repeat;
-    mask-size: 7px 7px;
   }
 
   .stripe-gutter--left {

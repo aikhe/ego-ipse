@@ -333,8 +333,8 @@
 
   .socials__grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     gap: 1.2rem;
+    grid-template-columns: 1fr 1fr;
   }
 
   .socials__col {
@@ -343,31 +343,31 @@
   }
 
   .socials__link {
+    color: var(--color-text);
+    display: block;
     font-family: 'Geist Mono', monospace;
+    font-size: 0.875rem;
     font-weight: 400;
     letter-spacing: 0.34%;
-    font-size: 0.875rem;
     line-height: 18px;
-    position: relative;
-    display: block;
-    width: 100%;
     overflow: hidden;
-    color: var(--color-text);
+    position: relative;
     text-decoration: none;
-    z-index: 1;
     transition: color 0.1s ease;
+    width: 100%;
+    z-index: 1;
   }
 
   .socials__link::before {
+    background-color: var(--color-text);
     content: '';
+    height: 100%;
+    left: 0;
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--color-text);
     transform: translateY(100%);
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
     z-index: -1;
   }
 
@@ -380,31 +380,31 @@
   }
 
   .socials__box {
-    position: absolute;
-    width: 0.43rem;
-    height: 0.43rem;
     background: var(--color-text-inv);
-    pointer-events: none;
-    opacity: 0;
-    z-index: 2;
-    top: 0;
+    height: 0.43rem;
     left: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    width: 0.43rem;
+    z-index: 2;
   }
 
   .socials__connector {
-    position: absolute;
-    inset: 0;
-    width: 100%;
     height: 100%;
-    pointer-events: none;
+    inset: 0;
     overflow: visible;
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
     z-index: 50;
   }
 
   .socials__connector polyline {
     fill: none;
+    opacity: 0;
     stroke: var(--color-overlay-40);
     stroke-width: 1px;
-    opacity: 0;
   }
 </style>

@@ -26,60 +26,59 @@
 
 <style>
   .hero {
-    grid-column: 1 / span 10;
-    grid-row: 1;
     display: flex;
     flex-direction: column;
     gap: 2.4rem;
+    grid-column: 1 / span 10;
+    grid-row: 1;
   }
 
   .hero__title {
     font-family: 'GeistPixel Square', sans-serif;
     font-size: 2rem;
-    line-height: 34px;
     letter-spacing: 0.34%;
+    line-height: 34px;
     width: 38ch;
   }
 
   .title--strong {
-    font-family: 'Advine-Pixel', sans-serif;
+    font-family: Advine-Pixel, sans-serif;
     font-size: 4rem;
     letter-spacing: 4%;
   }
 
   .hero__description {
+    color: var(--color-text-muted);
     font-family: 'Geist Mono', monospace;
+    font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: 0.34%;
-    font-size: 0.875rem;
     line-height: 16px;
     width: 48ch;
-    color: var(--color-text-muted);
   }
 
   .description--strong {
-    font-weight: 500;
     color: var(--color-text);
+    font-weight: 500;
   }
 
   .info {
-    grid-column: 7 / span 6;
-    grid-row: 1;
     display: flex;
     flex-direction: column;
     gap: 0.88rem;
+    grid-column: 7 / span 6;
+    grid-row: 1;
     position: relative;
   }
 
   .info__title {
-    font-family: 'Geist Mono', monospace;
-    font-weight: 500;
-    letter-spacing: 0.34%;
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
-
-    display: flex;
     align-items: center;
+    color: var(--color-text-muted);
+    display: flex;
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.875rem;
+    font-weight: 500;
     gap: 0.5rem;
+    letter-spacing: 0.34%;
   }
 </style>

@@ -234,33 +234,32 @@
 
 <style>
   .poster-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(12px);
-    display: flex;
     align-items: center;
-    justify-content: center;
+    backdrop-filter: blur(12px);
+    background: rgb(255 255 255 / 8%);
     cursor: zoom-out;
+    display: flex;
+    inset: 0;
+    justify-content: center;
+    position: fixed;
     user-select: none;
+    z-index: 1000;
   }
 
   .poster-overlay__container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-behavior: auto;
-    padding: 1vw;
-    gap: 0.5rem;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
     align-items: center;
     cursor: grab;
+    display: flex;
+    gap: 0.5rem;
+    height: 100%;
+    overflow: auto hidden;
+    -ms-overflow-style: none;
+    padding: 1vw;
+    position: relative;
+    scroll-behavior: auto;
+    scrollbar-width: none;
     user-select: none;
+    width: 100%;
   }
 
   .poster-overlay__container:active {
@@ -272,33 +271,33 @@
   }
 
   .poster-overlay__item {
-    position: relative;
-    flex: 0 0 auto;
-    width: auto;
-    height: 100%;
-    display: flex;
     align-items: center;
+    display: flex;
+    flex: 0 0 auto;
+    height: 100%;
     justify-content: center;
     padding: 0 0.5rem;
+    position: relative;
+    width: auto;
   }
 
   .poster-overlay__skeleton {
-    position: absolute;
-    height: 100%;
-    aspect-ratio: 2848 / 3690;
-    background: #ffffff;
     animation: skeleton-pulse 1.8s ease-in-out infinite;
+    aspect-ratio: 2848 / 3690;
+    background: #fff;
+    height: 100%;
+    position: absolute;
     z-index: 0;
   }
 
   .poster-overlay__image {
-    height: 100%;
-    width: auto;
     aspect-ratio: 2848 / 3690;
+    height: 100%;
     object-fit: contain;
-    pointer-events: none;
     opacity: 0;
+    pointer-events: none;
     transition: opacity 0.4s ease;
+    width: auto;
     z-index: 1;
   }
 
@@ -311,38 +310,34 @@
     100% {
       opacity: 0.4;
     }
+
     50% {
       opacity: 0.8;
     }
   }
 
   .contact-btn {
-    position: fixed;
-    top: 2.4rem;
-    right: 2.4rem;
-    background: rgba(0, 0, 0, 0.02);
+    align-items: center;
+    background: rgb(0 0 0 / 2%);
+    border: 1px solid rgb(0 0 0 / 30%);
     color: #080807;
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    padding: 6px 12px;
     cursor: pointer;
     display: flex;
-    align-items: center;
-    justify-content: center;
-
     font-family: 'Geist Mono', monospace;
     font-size: 0.875rem;
     font-weight: 500;
+    justify-content: center;
     letter-spacing: 0.34%;
     line-height: normal;
-
-    z-index: 1001;
+    padding: 6px 12px;
+    position: fixed;
+    right: 2.4rem;
+    top: 2.4rem;
     transition: background 0.2s;
+    z-index: 1001;
   }
 
   .contact-btn::before {
-    content: '';
-    position: absolute;
-    inset: -1px;
     background:
       linear-gradient(to right, #080807 1px, transparent 1px) 0 0,
       linear-gradient(to bottom, #080807 1px, transparent 1px) 0 0,
@@ -354,25 +349,30 @@
       linear-gradient(to top, #080807 1px, transparent 1px) 100% 100%;
     background-repeat: no-repeat;
     background-size: 8px 8px;
+    content: '';
+    inset: -1px;
     pointer-events: none;
+    position: absolute;
   }
 
   .contact-btn:hover {
-    background: rgba(0, 0, 0, 0.05);
+    background: rgb(0 0 0 / 5%);
   }
 
   @media (max-width: 768px) {
     .poster-overlay__container {
-      padding: 0 4vw;
       gap: 1rem;
+      padding: 0 4vw;
     }
+
     .poster-overlay__item {
       height: 70vh;
       padding: 0 0.5rem;
     }
+
     .contact-btn {
-      top: 1.5rem;
       right: 1.5rem;
+      top: 1.5rem;
     }
   }
 </style>

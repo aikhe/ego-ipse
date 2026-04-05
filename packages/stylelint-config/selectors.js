@@ -1,6 +1,6 @@
-// Enforces certain selectors to be only in camelCase notation
-// These are for id selectors and classname selectors
-export const ONLY_ALLOW_CAMEL_CASE_SELECTORS = [
-  /^(?:[a-z]+(?:[A-Z][a-z]*)*)$/,
-  { message: s => `Expected '${s}' to be in camelCase` },
+// enforces BEM naming: block-name__element--modifier
+// allows lowercase with hyphens, double underscores for elements, double hyphens for modifiers
+export const ONLY_ALLOW_BEM_SELECTORS = [
+  /^[a-z][a-z0-9]*(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)*(--[a-z0-9]+(-[a-z0-9]+)*)?$/,
+  { message: s => `Expected '${s}' to follow BEM (block__element--modifier)` },
 ];

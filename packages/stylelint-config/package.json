@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "devDependencies": {
+    "postcss-html": "^1.8.1",
     "stylelint": "^17.6.0",
     "stylelint-config-standard": "^40.0.0",
     "stylelint-order": "^8.1.1"

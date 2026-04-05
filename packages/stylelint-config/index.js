@@ -1,4 +1,4 @@
-import { ONLY_ALLOW_CAMEL_CASE_SELECTORS } from './selectors.js';
+import { ONLY_ALLOW_BEM_SELECTORS } from './selectors.js';
 import { CUSTOM_AT_RULES } from './tailwind.js';
 
 /** @type {import('stylelint').Config} */
@@ -13,10 +13,10 @@ export default {
     '**/node_modules/**',
   ],
   rules: {
-    // Enforces Element Class Names to be camelCase
-    'selector-class-pattern': ONLY_ALLOW_CAMEL_CASE_SELECTORS,
-    // Enforces Element IDs to be camelCase
-    'selector-id-pattern': ONLY_ALLOW_CAMEL_CASE_SELECTORS,
+    // enforces class names to follow BEM
+    'selector-class-pattern': ONLY_ALLOW_BEM_SELECTORS,
+    // enforces IDs to follow BEM
+    'selector-id-pattern': ONLY_ALLOW_BEM_SELECTORS,
     // Allow Tailwind-based CSS Rules
     'at-rule-no-unknown': [true, { ignoreAtRules: CUSTOM_AT_RULES }],
     // Allow the Global CSS Selector
@@ -37,4 +37,10 @@ export default {
 
     // 'nodejs/one-utility-class-per-line': true,
   },
+  overrides: [
+    {
+      files: ['**/*.svelte'],
+      customSyntax: 'postcss-html',
+    },
+  ],
 };

@@ -1,13 +1,16 @@
 <script lang="ts">
-  import SocialCard from './SocialCard.svelte';
+  import { resolve } from '$app/paths';
   import gsap from 'gsap';
+
+  import { startGlitch as runGlitch } from '$lib/utils/glitch';
+
+  import SocialCard from './SocialCard.svelte';
   import xIcon from '$lib/assets/socials/X.png';
   import linkedinIcon from '$lib/assets/socials/linkedin.png';
   import githubIcon from '$lib/assets/socials/github.png';
   import aboutIcon from '$lib/assets/socials/about.png';
   import blogIcon from '$lib/assets/socials/blog.png';
   import acediaIcon from '$lib/assets/socials/acedia.png';
-  import { startGlitch as runGlitch } from '$lib/utils/glitch';
 
   interface Social {
     name: string;
@@ -286,7 +289,7 @@
     <div class="socials__col">
       {#each socials.slice(0, 3) as social, i (social.name)}
         <a
-          href={social.href}
+          href={resolve(social.href)}
           rel={social.external ? 'external' : undefined}
           class="socials__link"
           onmouseenter={() => startGlitch(i)}

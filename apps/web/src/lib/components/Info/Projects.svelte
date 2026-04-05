@@ -403,7 +403,7 @@
   <div class="info__projects">
     {#each projects as project, i (i + project.name)}
       <a
-        href={project.external ? project.href : resolve(project.href)}
+        href={resolve(project.href)}
         rel={project.external ? 'external' : undefined}
         class="project--item"
         bind:this={projectItems[i]}

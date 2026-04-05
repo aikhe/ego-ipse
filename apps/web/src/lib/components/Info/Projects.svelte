@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { resolve } from '$app/paths';
   import { onMount } from 'svelte';
   import gsap from 'gsap';
 
@@ -403,7 +402,7 @@
   <div class="info__projects">
     {#each projects as project, i (i + project.name)}
       <a
-        href={resolve(project.href)}
+        href={project.href}
         rel={project.external ? 'external' : undefined}
         class="project--item"
         bind:this={projectItems[i]}

@@ -17,6 +17,7 @@
       "default": "./react-internal.js"
     },
     "./svelte": {
+      "types": "./react-internal.d.ts",
       "default": "./svelte.js"
     }
   },

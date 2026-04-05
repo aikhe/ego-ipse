@@ -9,6 +9,7 @@ const gitignorePath = path.resolve(import.meta.dirname, '.gitignore');
 export default defineConfig(includeIgnoreFile(gitignorePath), ...svelteConfig, {
   languageOptions: {
     parserOptions: {
+      tsconfigRootDir: import.meta.dirname,
       svelteConfig: svelteConfigObj,
     },
   },

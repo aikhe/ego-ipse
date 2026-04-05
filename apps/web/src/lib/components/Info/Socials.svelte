@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { resolve } from '$app/paths';
   import gsap from 'gsap';
 
   import { startGlitch as runGlitch } from '$lib/utils/glitch';
@@ -289,7 +288,7 @@
     <div class="socials__col">
       {#each socials.slice(0, 3) as social, i (social.name)}
         <a
-          href={resolve(social.href)}
+          href={social.href}
           rel={social.external ? 'external' : undefined}
           class="socials__link"
           onmouseenter={() => startGlitch(i)}

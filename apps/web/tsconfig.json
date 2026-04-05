@@ -1,6 +1,6 @@
 {
   "extends": [
-    "@repo/typescript-config/base.json",
+    "@ego-ipse/typescript-config/base.json",
     "./.svelte-kit/tsconfig.json"
   ],
   "compilerOptions": {

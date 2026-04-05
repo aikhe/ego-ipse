@@ -4,7 +4,7 @@
 }
 
 .section-container {
+  margin-inline: auto;
   max-width: var(--container-max-width);
   width: var(--container-width);
-  margin-inline: auto;
 }

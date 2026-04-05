@@ -2,7 +2,7 @@ import path from 'node:path';
 import { includeIgnoreFile } from '@eslint/compat';
 import { defineConfig } from 'eslint/config';
 import svelteConfigObj from './svelte.config.js';
-import { svelteConfig } from '@repo/eslint-config/svelte';
+import { svelteConfig } from '@ego-ipse/eslint-config/svelte';
 
 const gitignorePath = path.resolve(import.meta.dirname, '.gitignore');
 

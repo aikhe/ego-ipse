@@ -6,9 +6,14 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "sanity build",
+    "check-types": "tsc --noEmit",
     "deploy": "sanity deploy",
     "deploy-graphql": "sanity graphql deploy",
     "dev": "sanity dev",
+    "format": "prettier --write .",
+    "lint": "node --run lint:js",
+    "lint:fix": "eslint \"**/*.{js,mjs,ts,tsx}\" --fix",
+    "lint:js": "eslint \"**/*.{js,mjs,ts,tsx}\"",
     "start": "sanity start"
   },
   "keywords": [
@@ -22,6 +27,8 @@
     "styled-components": "^6.1.18"
   },
   "devDependencies": {
+    "@ego-ipse/eslint-config": "workspace:*",
+    "@ego-ipse/typescript-config": "workspace:*",
     "@sanity/eslint-config-studio": "^6.0.0",
     "@types/react": "^19.2.14",
     "eslint": "^9.28",

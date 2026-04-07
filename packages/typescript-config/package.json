@@ -6,7 +6,11 @@
   "publishConfig": {
     "access": "public"
   },
+  "main": "base.json",
   "files": [
     "base.json"
-  ]
+  ],
+  "exports": {
+    "./base.json": "./base.json"
+  }
 }

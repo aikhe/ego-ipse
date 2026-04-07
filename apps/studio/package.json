@@ -1,5 +1,5 @@
 {
-  "name": "ego-ipse",
+  "name": "@ego-ipse/studio",
   "private": true,
   "version": "1.0.0",
   "main": "package.json",
@@ -33,7 +33,7 @@
     "@types/react": "^19.2.14",
     "eslint": "^9.28",
     "prettier": "^3.5",
-    "typescript": "^5.8"
+    "typescript": "^5.9.3"
   },
   "prettier": {
     "bracketSpacing": false,

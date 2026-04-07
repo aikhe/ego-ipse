@@ -93,6 +93,7 @@
   let showPreview = $state(false);
   let previewX = $state(0);
   let previewY = $state(0);
+  let visualActiveProject = $state<string | null>(null);
   let lineCoords = { x1: 0, y1: 0, px: 0, py: 0, x2: 0, y2: 0 };
   let activeLineCoords = { startX: 0, startY: 0, topX: 0, topY: 0, botX: 0, botY: 0 };
 
@@ -113,10 +114,24 @@
 
       // Handle closing/retracting existing project visuals
       if (oldName) {
+        // 1. Animate out the old button's styles immediately for smooth transition
+        const oldIndex = projects.findIndex(p => p.name === oldName);
+        if (oldIndex !== -1) {
+          const oldItem = projectItems[oldIndex];
+          if (oldItem && (!activeProject || oldName !== activeProject.name)) {
+            const bg = oldItem.querySelector('.project--bg');
+            const arrow = oldItem.querySelector('.arrow');
+            gsap.killTweensOf([bg, oldItem, arrow]);
+            gsap.to(bg, { opacity: 0, duration: 0.3, ease: 'power3.out' });
+            gsap.to(oldItem, { padding: '0', zIndex: 1, duration: 0.3, ease: 'power3.out' });
+            gsap.to(arrow, { opacity: 0.8, duration: 0.3, ease: 'power3.out' });
+          }
+        }
+
         gsap.killTweensOf([activeButtonBox, activeLineCoords, activeLineTop, activeLineBottom]);
         const tl = gsap.timeline();
         
-        // 1. Lines retract back to their current startX/Y (the random box)
+        // 2. Lines retract back to their current startX/Y (the random box)
         await tl.to(activeLineCoords, {
           topX: activeLineCoords.startX,
           topY: activeLineCoords.startY,
@@ -130,23 +145,19 @@
           }
         });
 
-        // 2. Then the box fades out
+        // 3. Then the box fades out
         await tl.to(activeButtonBox, { opacity: 0, duration: 0.3, ease: 'power2.in' });
         gsap.set([activeLineTop, activeLineBottom], { opacity: 0 });
 
-        // 3. Finally, animate out the old button's styles
-        const oldIndex = projects.findIndex(p => p.name === oldName);
-        if (oldIndex !== -1) {
-          const oldItem = projectItems[oldIndex];
-          if (oldItem && (!activeProject || oldName !== activeProject.name)) {
-            const bg = oldItem.querySelector('.project--bg');
-            const arrow = oldItem.querySelector('.arrow');
-            gsap.killTweensOf([bg, oldItem, arrow]);
-            gsap.to(bg, { opacity: 0, duration: 0.3 });
-            gsap.to(oldItem, { padding: '0', zIndex: 1, duration: 0.3 });
-            gsap.to(arrow, { opacity: 0.8, duration: 0.3 });
-          }
+        // 4. Now it's safe to remove the visual active class
+        if (!activeProject || oldName !== activeProject.name) {
+          visualActiveProject = null;
         }
+      }
+
+      // Set visual active immediately when activating
+      if (activeProject) {
+        visualActiveProject = activeProject.name;
       }
 
       // Sync active item state immediately if it exists
@@ -608,7 +619,7 @@
       <button
         type="button"
         class="project--item"
-        class:is-active={activeProject?.name === project.name}
+        class:is-active={visualActiveProject === project.name}
         bind:this={projectItems[i]}
         onmouseenter={() => {
           currentItem = projectItems[i];
@@ -619,7 +630,7 @@
       >
         <div
           class="project--bg"
-          class:is-active={activeProject?.name === project.name}
+          class:is-active={visualActiveProject === project.name}
         ></div>
         <span class="project--name">{project.name}</span>
         <svg
@@ -630,7 +641,7 @@
           style="color: currentcolor;"
           viewBox="0 0 16 16"
           class="arrow"
-          class:is-active={activeProject?.name === project.name}
+          class:is-active={visualActiveProject === project.name}
         >
           <path
             fill-rule="evenodd"
@@ -695,7 +706,7 @@
   }
 
   .project--bg.is-active {
-    opacity: 1 !important;
+    opacity: 1;
   }
 
   .project--item:nth-child(-n + 2) {
@@ -709,7 +720,7 @@
   }
 
   .project--item.is-active {
-    padding: 0 0.6rem !important;
+    padding: 0 0.6rem;
     z-index: 20;
   }
 
@@ -719,7 +730,7 @@
   }
 
   .arrow.is-active {
-    opacity: 0 !important;
+    opacity: 0;
   }
 
   /* shared reticle base */
@@ -728,7 +739,7 @@
     pointer-events: none;
     position: fixed;
     top: 0;
-    z-index: 999;
+    z-index: 3000;
   }
 
   .reticle-borders,
@@ -838,7 +849,7 @@
     pointer-events: none;
     position: absolute;
     width: 100%;
-    z-index: 50;
+    z-index: 2000;
   }
 
   .connector-svg polyline {

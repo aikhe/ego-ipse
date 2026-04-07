@@ -96,12 +96,16 @@
     document.body.style.cursor = 'pointer';
     onenter();
   }}
+  onpointerdown={(e: { nativeEvent: { stopPropagation: () => void } }) => {
+    e.nativeEvent.stopPropagation();
+  }}
   onpointerleave={() => {
     document.body.style.cursor = 'auto';
     onleave();
   }}
-  onclick={(e: { stopPropagation: () => void }) => {
+  onclick={(e: { stopPropagation: () => void; nativeEvent: { stopPropagation: () => void } }) => {
     e.stopPropagation();
+    e.nativeEvent.stopPropagation();
     onclick?.();
   }}
 >

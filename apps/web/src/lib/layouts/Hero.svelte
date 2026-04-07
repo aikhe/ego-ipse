@@ -8,13 +8,13 @@
   function handleDeselect(e: MouseEvent) {
     if (!selectedProject) return;
     const target = e.target as HTMLElement;
-    if (!target.closest('.project-view') && !target.closest('.info')) {
+    if (!target.closest('.project-view') && !target.closest('.info') && !target.closest('.poster-overlay')) {
       selectedProject = null;
     }
   }
 </script>
 
-<svelte:window onmousedown={handleDeselect} />
+<svelte:window onpointerdown={handleDeselect} />
 
 <div style="display: contents">
   {#if selectedProject}

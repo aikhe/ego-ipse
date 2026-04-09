@@ -23,7 +23,8 @@
   const width = 3;
   const height = (3690 / 2848) * width;
 
-  let { onposterclick } = $props<{
+  let { isShifted = false, onposterclick } = $props<{
+    isShifted?: boolean;
     onposterclick?: (index: number) => void;
   }>();
 
@@ -45,6 +46,7 @@
       index={i}
       {texture}
       {hovered}
+      {isShifted}
       {width}
       {height}
       onenter={() => (hovered = i)}

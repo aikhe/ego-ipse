@@ -3,21 +3,37 @@
   import * as THREE from 'three';
   import gsap from 'gsap';
 
-  let { index, texture, hovered, width, height, onenter, onleave, onclick } =
-    $props<{
-      index: number;
-      texture: THREE.Texture;
-      hovered: number | null;
-      width: number;
-      height: number;
-      onenter: () => void;
-      onleave: () => void;
-      onclick?: () => void;
-    }>();
+  let {
+    index,
+    texture,
+    hovered,
+    isShifted,
+    width,
+    height,
+    onenter,
+    onleave,
+    onclick,
+  } = $props<{
+    index: number;
+    texture: THREE.Texture;
+    hovered: number | null;
+    isShifted: boolean;
+    width: number;
+    height: number;
+    onenter: () => void;
+    onleave: () => void;
+    onclick?: () => void;
+  }>();
 
   const basePos = $derived({
     x: index * 0.9,
     y: index * 0.8,
+    z: index * -0.4,
+  });
+
+  const shiftedPos = $derived({
+    x: index * 0.9 + 6,
+    y: index * 0.8 + 2.1,
     z: index * -0.4,
   });
 
@@ -37,14 +53,16 @@
 
     // smooth transitions via gsap
     const targetColor = isDimmed ? colorDimmed : colorNormal;
-    const targetY = isHovered ? basePos.y + 0.04 : basePos.y;
+    const currentBaseY = isShifted ? shiftedPos.y : basePos.y;
+    const targetY = isHovered ? currentBaseY + 0.04 : currentBaseY;
+    const targetX = isShifted ? shiftedPos.x : basePos.x;
 
     // depth isolation to prevent slicing
     mesh.renderOrder = isHovered ? 50 : index;
     material.depthTest = !isHovered;
     material.opacity = 1;
 
-    // gsap for smooth easing
+    // gsap for color
     gsap.to(material.color, {
       r: targetColor.r,
       g: targetColor.g,
@@ -55,10 +73,13 @@
       onUpdate: invalidate,
     });
 
+    // position animation with poker card scrambling feel
     gsap.to(mesh.position, {
+      x: targetX,
       y: targetY,
-      duration: 0.4,
-      ease: 'power2.out',
+      duration: 1.8,
+      delay: index * 0.06,
+      ease: 'elastic.out(1, 0.8)',
       overwrite: 'auto',
       onUpdate: invalidate,
     });

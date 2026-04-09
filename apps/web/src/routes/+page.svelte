@@ -12,15 +12,19 @@
   import * as THREE from 'three';
 
   let selectedPoster = $state<number | null>(null);
+  let selectedProject = $state<any>(null);
 </script>
 
 <section class="section-container pointer-events-none relative z-20">
-  <Hero />
+  <Hero bind:selectedProject />
 </section>
 
 <div class="fixed inset-0 z-1">
   <Canvas dpr={1} toneMapping={THREE.NoToneMapping}>
-    <Scene onposterclick={i => (selectedPoster = i)} />
+    <Scene 
+      isShifted={!!selectedProject} 
+      onposterclick={i => (selectedPoster = i)} 
+    />
   </Canvas>
 </div>
 

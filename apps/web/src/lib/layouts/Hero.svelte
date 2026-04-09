@@ -3,7 +3,7 @@
   import Socials from '$lib/components/Info/Socials.svelte';
   import ProjectView from '$lib/components/Info/ProjectView.svelte';
 
-  let selectedProject = $state<any>(null);
+  let { selectedProjectSize = 0, selectedProject = $bindable(null) } = $props();
   
   function handleDeselect(e: MouseEvent) {
     if (!selectedProject) return;

@@ -1,25 +1,32 @@
 <script lang="ts">
   import Projects from '$lib/components/Info/Projects.svelte';
   import Socials from '$lib/components/Info/Socials.svelte';
+  import ProjectView from '$lib/components/Info/ProjectView.svelte';
+
+  let selectedProject = $state<any>(null);
 </script>
 
 <div style="display: contents">
-  <div class="hero pointer-events-auto">
-    <h1 class="hero__title">
-      <strong class="title--strong">Aikhe</strong> is a design engineer of the printing
-      and typesetting industry. Lorem Ipsum has been the industry's standard dummy
-      text ever since the 1500s.
-    </h1>
-    <p class="hero__description">
-      <strong class="description--strong">CONTRARY TO POPULAR BELIEF,</strong> LOREM
-      IPSUM IS NOT SIMPLY RANDOM TEXT. IT HAS ROOTS IN A PIECE OF CLASSICAL LATIN
-      LITERATURE FROM 45 BC.
-    </p>
-  </div>
+  {#if selectedProject}
+    <ProjectView project={selectedProject} />
+  {:else}
+    <div class="hero pointer-events-auto">
+      <h1 class="hero__title">
+        <strong class="title--strong">Aikhe</strong> is a design engineer of the printing
+        and typesetting industry. Lorem Ipsum has been the industry's standard dummy
+        text ever since the 1500s.
+      </h1>
+      <p class="hero__description">
+        <strong class="description--strong">CONTRARY TO POPULAR BELIEF,</strong> LOREM
+        IPSUM IS NOT SIMPLY RANDOM TEXT. IT HAS ROOTS IN A PIECE OF CLASSICAL LATIN
+        LITERATURE FROM 45 BC.
+      </p>
+    </div>
+  {/if}
 
   <div class="info pointer-events-auto">
     <p class="info__title">CREATIVE PROJECTS I’VE WORKED ON</p>
-    <Projects />
+    <Projects activeProject={selectedProject} onselect={(p: any) => (selectedProject = p)} />
     <Socials />
   </div>
 </div>

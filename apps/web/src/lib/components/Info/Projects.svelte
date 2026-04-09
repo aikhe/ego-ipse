@@ -73,6 +73,10 @@
     },
   ] as const;
 
+  type Project = (typeof projects)[number];
+  let { onselect = (p: Project) => {}, activeProject = $bindable(null) } =
+    $props();
+
   let projectItems = $state<HTMLButtonElement[]>([]);
   let reticle: HTMLDivElement;
   let reticleBorders: HTMLDivElement;
@@ -91,6 +95,51 @@
   const DWELL = 400;
   const EXIT_DELAY = 100;
   const BOX_DELAY = 300;
+
+  // sticky active state effect
+  $effect(() => {
+    if (!activeProject) {
+      return;
+    }
+
+    const index = projects.findIndex(p => p.name === activeProject.name);
+    if (index === -1) return;
+
+    const item = projectItems[index];
+    if (!item) return;
+
+    const rect = item.getBoundingClientRect();
+
+    // force active visuals - clear inline styles to let CSS take over
+    const bg = item.querySelector('.project--bg');
+    const arrow = item.querySelector('.arrow');
+    gsap.killTweensOf([bg, item, arrow]);
+    gsap.set([bg, item, arrow], { clearProps: 'all' });
+
+    // Move expand reticle back to active one if not hovering anything else
+    if (!currentItem) {
+      gsap.to(expandReticle, {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+        width: rect.width,
+        height: rect.height,
+        opacity: 1,
+        duration: 0.5,
+        ease: 'power3.out',
+      });
+    }
+
+    // Cleanup others
+    projectItems.forEach(otherItem => {
+      if (otherItem === item) return;
+      const otherBg = otherItem.querySelector('.project--bg');
+      const otherArrow = otherItem.querySelector('.arrow');
+      gsap.killTweensOf([otherBg, otherItem, otherArrow]);
+      gsap.to(otherBg, { opacity: 0, duration: 0.2 });
+      gsap.to(otherItem, { padding: '0', zIndex: 1, duration: 0.2 });
+      gsap.to(otherArrow, { opacity: 0.8, duration: 0.2 });
+    });
+  });
 
   onMount(() => {
     // cursor reticle: spins freely, follows mouse
@@ -134,19 +183,37 @@
       projectItems.some(item => item.contains(el as Node));
 
     const collapseExpand = () => {
-      expanded = false;
       clearTimeout(dwellTimer!);
       clearTimeout(boxSpawnTimer!);
 
       gsap.killTweensOf([randomBox, buttonBox, connectorLine]);
 
-      gsap.to(expandReticle, {
-        width: 0,
-        height: 0,
-        opacity: 0,
-        duration: 0.4,
-        ease: 'power3.inOut',
-      });
+      if (activeProject) {
+        const index = projects.findIndex(p => p.name === activeProject.name);
+        if (index !== -1) {
+          const item = projectItems[index];
+          const rect = item.getBoundingClientRect();
+          gsap.to(expandReticle, {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2,
+            width: rect.width,
+            height: rect.height,
+            opacity: 1,
+            duration: 0.5,
+            ease: 'power3.inOut',
+          });
+        }
+      } else {
+        expanded = false;
+        gsap.to(expandReticle, {
+          width: 0,
+          height: 0,
+          opacity: 0,
+          duration: 0.4,
+          ease: 'power3.inOut',
+        });
+      }
+
       gsap.to([randomBox, buttonBox], { opacity: 0, duration: 0.3 });
       gsap.to(connectorLine, { opacity: 0, duration: 0.3 });
       showPreview = false;
@@ -157,7 +224,6 @@
       const sectionRect = infoSection.getBoundingClientRect();
       const itemRect = currentItem.getBoundingClientRect();
 
-      // calculate button box position
       const btnMinX = itemRect.width * 0.4;
       const btnMaxX = itemRect.width * 0.9;
       const btnRelX = btnMinX + Math.random() * (btnMaxX - btnMinX - 16);
@@ -169,27 +235,19 @@
         8 +
         (Math.random() * 10 - 5);
 
-      // spread is roughly 30% of section width
       const spread = sectionRect.width * 0.3;
       let outX = btnFinalX + (Math.random() * spread - spread / 2);
 
-      // constrain outx based on card width to prevent overflow
       const currentProj = projects[projectItems.indexOf(currentItem)];
       const cardWidth = currentProj?.width || 260;
       const margin = 20;
 
       const minOutX = cardWidth / 2 + margin;
       const maxOutX = sectionRect.width - cardWidth / 2 - margin;
-
-      if (minOutX > maxOutX) {
-        outX = sectionRect.width / 2;
-      } else {
-        outX = Math.max(minOutX, Math.min(outX, maxOutX));
-      }
+      outX = Math.max(minOutX, Math.min(outX, maxOutX));
 
       const outY = -40 - Math.random() * 120;
 
-      // box 1: above the section
       gsap.to(randomBox, {
         opacity: 0,
         duration: 0.1,
@@ -204,7 +262,6 @@
         },
       });
 
-      // box 2: inside the current button
       gsap.to(buttonBox, {
         opacity: 0,
         duration: 0.1,
@@ -218,17 +275,15 @@
           });
         },
       });
-      // update connector line
-      const boxSize = 0.43 * 16; // 0.43rem in px
+
+      const boxSize = 0.43 * 16;
       const outCX = outX + boxSize / 2;
       const outCY = outY + boxSize / 2;
       const btnCX = btnFinalX + boxSize / 2;
       const btnCY = btnFinalY + boxSize / 2;
-
       const pivotX = outCX + (btnCX - outCX) * 0.5;
       const pivotY = outCY;
 
-      // update preview data and visibility
       previewX = outCX;
       previewY = outCY;
       if (currentItem) {
@@ -239,47 +294,11 @@
         }
       }
 
-      gsap.to(connectorLine, {
-        opacity: 1,
-        duration: 0.3,
-      });
-
-      // animate points via proxy for smooth transition
-      const pointsAttr = connectorLine.getAttribute('points');
-      const currentPoints =
-        pointsAttr && pointsAttr !== '0,0 0,0 0,0'
-          ? pointsAttr.split(' ').map(p => p.split(',').map(Number))
-          : [
-              [outCX, outCY],
-              [outCX, outCY],
-              [outCX, outCY],
-            ];
-
-      const lineData = {
-        p1x: currentPoints[0]?.[0] ?? outCX,
-        p1y: currentPoints[0]?.[1] ?? outCY,
-        p2x: currentPoints[1]?.[0] ?? outCX,
-        p2y: currentPoints[1]?.[1] ?? outCY,
-        p3x: currentPoints[2]?.[0] ?? outCX,
-        p3y: currentPoints[2]?.[1] ?? outCY,
-      };
-
-      gsap.to(lineData, {
-        p1x: outCX,
-        p1y: outCY,
-        p2x: pivotX,
-        p2y: pivotY,
-        p3x: btnCX,
-        p3y: btnCY,
-        duration: 0.4,
-        ease: 'power3.out',
-        onUpdate: () => {
-          connectorLine.setAttribute(
-            'points',
-            `${lineData.p1x},${lineData.p1y} ${lineData.p2x},${lineData.p2y} ${lineData.p3x},${lineData.p3y}`
-          );
-        },
-      });
+      gsap.to(connectorLine, { opacity: 1, duration: 0.3 });
+      connectorLine.setAttribute(
+        'points',
+        `${outCX},${outCY} ${pivotX},${pivotY} ${btnCX},${btnCY}`
+      );
     };
 
     projectItems.forEach(item => {
@@ -293,19 +312,22 @@
         gsap.killTweensOf([bg, arrow, item]);
         currentItem = item;
 
-        // slide expand reticle to new button if already active
-        if (expanded) {
+        if (expanded || activeProject) {
+          expanded = true;
           const rect = item.getBoundingClientRect();
           gsap.to(expandReticle, {
             x: rect.left + rect.width / 2,
             y: rect.top + rect.height / 2,
             width: rect.width,
             height: rect.height,
+            opacity: 1,
             duration: 0.5,
             ease: 'power3.inOut',
           });
           clearTimeout(boxSpawnTimer!);
-          boxSpawnTimer = setTimeout(showRandomBox, BOX_DELAY);
+          if (projects[projectItems.indexOf(item)] !== activeProject) {
+            boxSpawnTimer = setTimeout(showRandomBox, BOX_DELAY);
+          }
         }
 
         gsap.to(bg, { opacity: 1, duration: 0.3, ease: 'power3.out' });
@@ -317,29 +339,30 @@
         });
         gsap.to(arrow, { opacity: 0, duration: 0.2, ease: 'power3.out' });
 
-        // cursor reticle and dwell when not expanded
-        if (!expanded) {
+        if (
+          !expanded &&
+          projects[projectItems.indexOf(item)] !== activeProject
+        ) {
           if (!isItem(e.relatedTarget)) {
-            // fresh hover: snap reticle and fade in
             const rect = item.getBoundingClientRect();
             gsap.set(reticle, { x: rect.right, y: rect.top + rect.height / 2 });
             gsap.to(reticle, { opacity: 1, duration: 0.3, ease: 'power3.out' });
           }
-
           dwellTimer = setTimeout(() => {
             expanded = true;
             const rect = item.getBoundingClientRect();
-            const cx = rect.left + rect.width / 2;
-            const cy = rect.top + rect.height / 2;
-
-            gsap.to(reticle, { opacity: 0, duration: 0.2, ease: 'power3.out' });
-            gsap.set(expandReticle, { x: cx, y: cy, width: 0, height: 0 });
+            gsap.to(reticle, { opacity: 0, duration: 0.2 });
+            gsap.set(expandReticle, {
+              x: rect.left + rect.width / 2,
+              y: rect.top + rect.height / 2,
+              width: 0,
+              height: 0,
+            });
             gsap.to(expandReticle, {
               width: rect.width,
               height: rect.height,
               opacity: 1,
               duration: 0.5,
-              ease: 'power3.out',
             });
             showRandomBox();
           }, DWELL);
@@ -355,29 +378,43 @@
         clearTimeout(dwellTimer!);
         clearTimeout(boxSpawnTimer!);
         gsap.killTweensOf([bg, arrow, item]);
-        gsap.to(bg, { opacity: 0, duration: 0.3, ease: 'power3.out' });
-        gsap.to(item, {
-          zIndex: 1,
-          padding: '0',
-          duration: 0.3,
-          ease: 'power3.out',
-        });
-        gsap.to(arrow, { opacity: 0.8, duration: 0.3, ease: 'power3.out' });
+
+        const isCurrentActive =
+          projects[projectItems.indexOf(item)] === activeProject;
+        if (!isCurrentActive) {
+          gsap.to(bg, { opacity: 0, duration: 0.3 });
+          gsap.to(item, { zIndex: 1, padding: '0', duration: 0.3 });
+          gsap.to(arrow, { opacity: 0.8, duration: 0.3 });
+        }
 
         if (!isItem(e.relatedTarget)) {
-          // delay collapse so reticle lingers briefly
+          currentItem = null;
           collapseTimer = setTimeout(() => {
             collapseExpand();
-            gsap.to(reticle, { opacity: 0, duration: 0.3, ease: 'power3.out' });
+            gsap.to(reticle, { opacity: 0, duration: 0.3 });
           }, EXIT_DELAY);
         }
       });
+
       item.addEventListener('click', () => {
+        const index = projectItems.indexOf(item);
+        if (index === -1) return;
+        const project = projects[index];
+        activeProject = project;
+        onselect(project);
+
         if (showPreview) {
-          gsap.to([randomBox, buttonBox], { opacity: 0, duration: 0.3 });
-          gsap.to(connectorLine, { opacity: 0, duration: 0.3 });
+          gsap.to([randomBox, buttonBox, connectorLine], {
+            opacity: 0,
+            duration: 0.3,
+          });
           showPreview = false;
         }
+
+        gsap.killTweensOf([bg, arrow, item]);
+        gsap.to(bg, { opacity: 1, duration: 0.2 });
+        gsap.to(item, { padding: '0 0.6rem', zIndex: 20, duration: 0.2 });
+        gsap.to(arrow, { opacity: 0, duration: 0.1 });
       });
     });
   });
@@ -411,6 +448,7 @@
       <button
         type="button"
         class="project--item"
+        class:is-active={activeProject?.name === project.name}
         bind:this={projectItems[i]}
         onmouseenter={() => {
           currentItem = projectItems[i];
@@ -419,7 +457,10 @@
           currentItem = null;
         }}
       >
-        <div class="project--bg"></div>
+        <div
+          class="project--bg"
+          class:is-active={activeProject?.name === project.name}
+        ></div>
         <span class="project--name">{project.name}</span>
         <svg
           data-testid="geist-icon"
@@ -429,6 +470,7 @@
           style="color: currentcolor;"
           viewBox="0 0 16 16"
           class="arrow"
+          class:is-active={activeProject?.name === project.name}
         >
           <path
             fill-rule="evenodd"
@@ -481,14 +523,19 @@
     background: linear-gradient(
       90deg,
       transparent 20%,
-      var(--color-accent-blue) 70%,
-      var(--color-accent-cyan) 100%
+      var(--color-text-muted) 70%,
+      var(--color-text) 100%
     );
     inset: 0;
     opacity: 0;
     pointer-events: none;
     position: absolute;
+    transition: opacity 0.3s ease;
     z-index: 0;
+  }
+
+  .project--bg.is-active {
+    opacity: 1 !important;
   }
 
   .project--item:nth-child(-n + 2) {
@@ -501,8 +548,18 @@
     z-index: 1;
   }
 
+  .project--item.is-active {
+    padding: 0 0.6rem !important;
+    z-index: 20;
+  }
+
   .arrow {
     opacity: 0.8;
+    transition: opacity 0.2s ease;
+  }
+
+  .arrow.is-active {
+    opacity: 0 !important;
   }
 
   /* shared reticle base */

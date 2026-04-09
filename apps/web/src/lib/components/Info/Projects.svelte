@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, untrack } from 'svelte';
   import gsap from 'gsap';
 
   import ProjectPreview from './ProjectPreview.svelte';
@@ -90,6 +90,7 @@
   let showPreview = $state(false);
   let previewX = $state(0);
   let previewY = $state(0);
+  let lineCoords = { x1: 0, y1: 0, px: 0, py: 0, x2: 0, y2: 0 };
 
   const SIZE = 32;
   const DWELL = 400;
@@ -116,28 +117,31 @@
     gsap.killTweensOf([bg, item, arrow]);
     gsap.set([bg, item, arrow], { clearProps: 'all' });
 
-    // Move expand reticle back to active one if not hovering anything else
-    if (!currentItem) {
-      gsap.to(expandReticle, {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2,
-        width: rect.width,
-        height: rect.height,
-        opacity: 1,
-        duration: 0.5,
-        ease: 'power3.out',
-      });
-    }
+    untrack(() => {
+      // Move expand reticle back to active one if not hovering anything else
+      if (!currentItem) {
+        gsap.to(expandReticle, {
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2,
+          width: rect.width,
+          height: rect.height,
+          opacity: 1,
+          duration: 0.5,
+          ease: 'power3.out',
+          overwrite: 'auto',
+        });
+      }
 
-    // Cleanup others
-    projectItems.forEach(otherItem => {
-      if (otherItem === item) return;
-      const otherBg = otherItem.querySelector('.project--bg');
-      const otherArrow = otherItem.querySelector('.arrow');
-      gsap.killTweensOf([otherBg, otherItem, otherArrow]);
-      gsap.to(otherBg, { opacity: 0, duration: 0.2 });
-      gsap.to(otherItem, { padding: '0', zIndex: 1, duration: 0.2 });
-      gsap.to(otherArrow, { opacity: 0.8, duration: 0.2 });
+      // Cleanup others
+      projectItems.forEach(otherItem => {
+        if (otherItem === item || otherItem === currentItem) return;
+        const otherBg = otherItem.querySelector('.project--bg');
+        const otherArrow = otherItem.querySelector('.arrow');
+        gsap.killTweensOf([otherBg, otherItem, otherArrow]);
+        gsap.to(otherBg, { opacity: 0, duration: 0.2 });
+        gsap.to(otherItem, { padding: '0', zIndex: 1, duration: 0.2 });
+        gsap.to(otherArrow, { opacity: 0.8, duration: 0.2 });
+      });
     });
   });
 
@@ -186,7 +190,7 @@
       clearTimeout(dwellTimer!);
       clearTimeout(boxSpawnTimer!);
 
-      gsap.killTweensOf([randomBox, buttonBox, connectorLine]);
+      gsap.killTweensOf([randomBox, buttonBox, connectorLine, lineCoords]);
 
       if (activeProject) {
         const index = projects.findIndex(p => p.name === activeProject.name);
@@ -214,8 +218,7 @@
         });
       }
 
-      gsap.to([randomBox, buttonBox], { opacity: 0, duration: 0.3 });
-      gsap.to(connectorLine, { opacity: 0, duration: 0.3 });
+      gsap.to([randomBox, buttonBox, connectorLine], { opacity: 0, duration: 0.5, ease: 'power2.inOut' });
       showPreview = false;
     };
 
@@ -248,44 +251,71 @@
 
       const outY = -40 - Math.random() * 120;
 
-      gsap.to(randomBox, {
-        opacity: 0,
-        duration: 0.1,
-        onComplete: () => {
-          gsap.to(randomBox, {
-            left: outX,
-            top: outY,
-            opacity: 1,
-            duration: 0.4,
-            ease: 'power3.out',
-          });
+      const boxSize = 0.43 * 16;
+      const halfBox = boxSize / 2;
+      const tX1 = outX + halfBox;
+      const tY1 = outY + halfBox;
+      const tX2 = btnFinalX + halfBox;
+      const tY2 = btnFinalY + halfBox;
+      const tPX = tX1 + (tX2 - tX1) * 0.5;
+      const tPY = tY1;
+
+      previewX = tX1;
+      previewY = tY1;
+
+      if (lineCoords.x1 === 0 && lineCoords.y1 === 0) {
+        lineCoords = { x1: tX1, y1: tY1, px: tPX, py: tPY, x2: tX2, y2: tY2 };
+        gsap.set(randomBox, { left: outX, top: outY });
+        gsap.set(buttonBox, { left: btnFinalX, top: btnFinalY });
+        connectorLine.setAttribute(
+          'points',
+          `${tX1},${tY1} ${tPX},${tPY} ${tX2},${tY2}`
+        );
+      }
+
+      gsap.to(lineCoords, {
+        x1: tX1,
+        y1: tY1,
+        px: tPX,
+        py: tPY,
+        x2: tX2,
+        y2: tY2,
+        duration: 0.45,
+        ease: 'power3.out',
+        overwrite: 'auto',
+        onUpdate: () => {
+          connectorLine.setAttribute(
+            'points',
+            `${lineCoords.x1},${lineCoords.y1} ${lineCoords.px},${lineCoords.py} ${lineCoords.x2},${lineCoords.y2}`
+          );
         },
+      });
+
+      gsap.to(randomBox, {
+        left: outX,
+        top: outY,
+        duration: 0.6,
+        delay: 0.05,
+        ease: 'power3.out',
+        overwrite: 'auto',
       });
 
       gsap.to(buttonBox, {
-        opacity: 0,
-        duration: 0.1,
-        onComplete: () => {
-          gsap.to(buttonBox, {
-            left: btnFinalX,
-            top: btnFinalY,
-            opacity: 1,
-            duration: 0.4,
-            ease: 'power3.out',
-          });
-        },
+        left: btnFinalX,
+        top: btnFinalY,
+        duration: 0.6,
+        delay: 0.05,
+        ease: 'power3.out',
+        overwrite: 'auto',
       });
 
-      const boxSize = 0.43 * 16;
-      const outCX = outX + boxSize / 2;
-      const outCY = outY + boxSize / 2;
-      const btnCX = btnFinalX + boxSize / 2;
-      const btnCY = btnFinalY + boxSize / 2;
-      const pivotX = outCX + (btnCX - outCX) * 0.5;
-      const pivotY = outCY;
+      gsap.to([randomBox, buttonBox, connectorLine], {
+        opacity: 1,
+        duration: 0.6,
+        ease: 'power2.out',
+        overwrite: 'auto',
+      });
 
-      previewX = outCX;
-      previewY = outCY;
       if (currentItem) {
         const index = projectItems.indexOf(currentItem);
         if (index !== -1) {
@@ -293,12 +323,6 @@
           showPreview = true;
         }
       }
-
-      gsap.to(connectorLine, { opacity: 1, duration: 0.3 });
-      connectorLine.setAttribute(
-        'points',
-        `${outCX},${outCY} ${pivotX},${pivotY} ${btnCX},${btnCY}`
-      );
     };
 
     projectItems.forEach(item => {
@@ -323,10 +347,13 @@
             opacity: 1,
             duration: 0.5,
             ease: 'power3.inOut',
+            overwrite: 'auto',
           });
           clearTimeout(boxSpawnTimer!);
-          if (projects[projectItems.indexOf(item)] !== activeProject) {
+          if (projects[projectItems.indexOf(item)]?.name !== activeProject?.name) {
             boxSpawnTimer = setTimeout(showRandomBox, BOX_DELAY);
+          } else {
+            if (showPreview) collapseExpand();
           }
         }
 
@@ -341,7 +368,7 @@
 
         if (
           !expanded &&
-          projects[projectItems.indexOf(item)] !== activeProject
+          projects[projectItems.indexOf(item)]?.name !== activeProject?.name
         ) {
           if (!isItem(e.relatedTarget)) {
             const rect = item.getBoundingClientRect();
@@ -380,7 +407,7 @@
         gsap.killTweensOf([bg, arrow, item]);
 
         const isCurrentActive =
-          projects[projectItems.indexOf(item)] === activeProject;
+          projects[projectItems.indexOf(item)]?.name === activeProject?.name;
         if (!isCurrentActive) {
           gsap.to(bg, { opacity: 0, duration: 0.3 });
           gsap.to(item, { zIndex: 1, padding: '0', duration: 0.3 });
@@ -406,7 +433,8 @@
         if (showPreview) {
           gsap.to([randomBox, buttonBox, connectorLine], {
             opacity: 0,
-            duration: 0.3,
+            duration: 0.5,
+            ease: 'power2.inOut',
           });
           showPreview = false;
         }

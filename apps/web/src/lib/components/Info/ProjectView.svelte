@@ -18,10 +18,10 @@
   {#if project}
     <div class="project-content">
       <!-- Content will be added here later -->
-      <div class="placeholder">
-        <h2>{project.name}</h2>
-        <p>{project.section}</p>
-      </div>
+      <!-- <div class="placeholder"> -->
+      <!--   <h2>{project.name}</h2> -->
+      <!--   <p>{project.section}</p> -->
+      <!-- </div> -->
     </div>
   {/if}
 </div>

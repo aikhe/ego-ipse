@@ -73,7 +73,7 @@
     },
   ] as const;
 
-  let projectItems = $state<HTMLAnchorElement[]>([]);
+  let projectItems = $state<HTMLButtonElement[]>([]);
   let reticle: HTMLDivElement;
   let reticleBorders: HTMLDivElement;
   let expandReticle: HTMLDivElement;
@@ -81,7 +81,7 @@
   let randomBox: HTMLDivElement;
   let buttonBox: HTMLDivElement;
   let connectorLine: SVGPolylineElement;
-  let currentItem = $state<HTMLAnchorElement | null>(null);
+  let currentItem = $state<HTMLButtonElement | null>(null);
   let currentProject = $state<(typeof projects)[number] | null>(null);
   let showPreview = $state(false);
   let previewX = $state(0);
@@ -372,6 +372,13 @@
           }, EXIT_DELAY);
         }
       });
+      item.addEventListener('click', () => {
+        if (showPreview) {
+          gsap.to([randomBox, buttonBox], { opacity: 0, duration: 0.3 });
+          gsap.to(connectorLine, { opacity: 0, duration: 0.3 });
+          showPreview = false;
+        }
+      });
     });
   });
 </script>
@@ -401,9 +408,8 @@
   </svg>
   <div class="info__projects">
     {#each projects as project, i (i + project.name)}
-      <a
-        href={project.href}
-        rel={project.external ? 'external' : undefined}
+      <button
+        type="button"
         class="project--item"
         bind:this={projectItems[i]}
         onmouseenter={() => {
@@ -433,7 +439,7 @@
             stroke-width="0.4"
           ></path>
         </svg>
-      </a>
+      </button>
     {/each}
     <button class="project--more">MORE ...</button>
   </div>
@@ -452,16 +458,23 @@
 
   .project--item {
     align-items: center;
+    background: none;
+    border: none;
     border-bottom: 1px solid var(--color-overlay-20);
     color: var(--color-text);
+    cursor: pointer;
     display: flex;
+    font-family: inherit;
     font-size: 1.2rem;
     font-weight: 400;
     height: 48px;
     justify-content: space-between;
     letter-spacing: 0.34%;
+    padding: 0;
     position: relative;
+    text-align: left;
     text-decoration: none;
+    width: 100%;
   }
 
   .project--bg {

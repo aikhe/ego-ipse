@@ -350,6 +350,7 @@
 
     const showRandomBox = () => {
       if (!infoSection || !randomBox || !buttonBox || !currentItem) return;
+      if (activeProject && projects[projectItems.indexOf(currentItem)]?.name === activeProject.name) return;
       const sectionRect = infoSection.getBoundingClientRect();
       const itemRect = currentItem.getBoundingClientRect();
 
@@ -476,7 +477,8 @@
             overwrite: 'auto',
           });
           clearTimeout(boxSpawnTimer!);
-          if (projects[projectItems.indexOf(item)]?.name !== activeProject?.name) {
+          const isButtonActive = activeProject && projects[projectItems.indexOf(item)]?.name === activeProject.name;
+          if (!isButtonActive) {
             boxSpawnTimer = setTimeout(showRandomBox, BOX_DELAY);
           } else {
             if (showPreview) collapseExpand();
@@ -494,7 +496,7 @@
 
         if (
           !expanded &&
-          projects[projectItems.indexOf(item)]?.name !== activeProject?.name
+          (projects[projectItems.indexOf(item)]?.name !== activeProject?.name)
         ) {
           if (!isItem(e.relatedTarget)) {
             const rect = item.getBoundingClientRect();
@@ -517,7 +519,8 @@
               opacity: 1,
               duration: 0.5,
             });
-            showRandomBox();
+            const stillNotActive = !activeProject || projects[projectItems.indexOf(item)]?.name !== activeProject.name;
+            if (stillNotActive) showRandomBox();
           }, DWELL);
         }
       });

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, untrack } from 'svelte';
+  import { onMount, untrack, tick } from 'svelte';
   import gsap from 'gsap';
 
   import ProjectPreview from './ProjectPreview.svelte';
@@ -84,13 +84,17 @@
   let infoSection: HTMLDivElement;
   let randomBox: HTMLDivElement;
   let buttonBox: HTMLDivElement;
+  let activeButtonBox: HTMLDivElement;
   let connectorLine: SVGPolylineElement;
+  let activeLineTop: SVGPolylineElement;
+  let activeLineBottom: SVGPolylineElement;
   let currentItem = $state<HTMLButtonElement | null>(null);
   let currentProject = $state<(typeof projects)[number] | null>(null);
   let showPreview = $state(false);
   let previewX = $state(0);
   let previewY = $state(0);
   let lineCoords = { x1: 0, y1: 0, px: 0, py: 0, x2: 0, y2: 0 };
+  let activeLineCoords = { startX: 0, startY: 0, topX: 0, topY: 0, botX: 0, botY: 0 };
 
   const SIZE = 32;
   const DWELL = 400;
@@ -100,6 +104,30 @@
   // sticky active state effect
   $effect(() => {
     if (!activeProject) {
+      untrack(() => {
+        projectItems.forEach(item => {
+          if (!item || item === currentItem) return;
+          const bg = item.querySelector('.project--bg');
+          const arrow = item.querySelector('.arrow');
+          gsap.killTweensOf([bg, item, arrow]);
+          gsap.to(bg, { opacity: 0, duration: 0.2 });
+          gsap.to(item, { padding: '0', zIndex: 1, duration: 0.2 });
+          gsap.to(arrow, { opacity: 0.8, duration: 0.2 });
+        });
+
+        gsap.to([activeButtonBox, activeLineTop, activeLineBottom], { opacity: 0, duration: 0.3, ease: 'power2.inOut' });
+
+        if (!currentItem) {
+          gsap.to(expandReticle, {
+            width: 0,
+            height: 0,
+            opacity: 0,
+            duration: 0.4,
+            ease: 'power2.inOut',
+            overwrite: 'auto',
+          });
+        }
+      });
       return;
     }
 
@@ -131,6 +159,77 @@
           overwrite: 'auto',
         });
       }
+
+      const drawActiveLines = async () => {
+        await tick();
+        const pv = document.querySelector('.project-view');
+        if (!pv || !infoSection || !activeButtonBox || !activeLineTop || !activeLineBottom) return;
+
+        const sectionRect = infoSection.getBoundingClientRect();
+        const itemRect = item.getBoundingClientRect();
+        const pvRect = pv.getBoundingClientRect();
+
+        const btnMinX = itemRect.width * 0.4;
+        const btnMaxX = itemRect.width * 0.9;
+        const btnRelX = btnMinX + Math.random() * (btnMaxX - btnMinX - 16);
+        const btnFinalX = itemRect.left - sectionRect.left + btnRelX;
+        const btnFinalY = itemRect.top - sectionRect.top + itemRect.height / 2 - 8 + (Math.random() * 10 - 5);
+
+        const halfBox = (0.43 * 16) / 2;
+        const startX = btnFinalX + halfBox;
+        const startY = btnFinalY + halfBox;
+
+        const topTargetX = pvRect.right - sectionRect.left;
+        const topTargetY = pvRect.top - sectionRect.top;
+        const botTargetX = pvRect.right - sectionRect.left;
+        const botTargetY = pvRect.bottom - sectionRect.top;
+
+        if (activeLineCoords.startX === 0) {
+          activeLineCoords.startX = startX;
+          activeLineCoords.startY = startY;
+          activeLineCoords.topX = startX;
+          activeLineCoords.topY = startY;
+          activeLineCoords.botX = startX;
+          activeLineCoords.botY = startY;
+          
+          gsap.set(activeButtonBox, { left: btnFinalX, top: btnFinalY });
+          activeLineTop.setAttribute('points', `${startX},${startY} ${startX},${startY}`);
+          activeLineBottom.setAttribute('points', `${startX},${startY} ${startX},${startY}`);
+        }
+
+        gsap.killTweensOf([activeButtonBox, activeLineCoords, activeLineTop, activeLineBottom]);
+
+        gsap.to(activeLineCoords, {
+          startX: startX,
+          startY: startY,
+          topX: topTargetX,
+          topY: topTargetY,
+          botX: botTargetX,
+          botY: botTargetY,
+          duration: 0.45,
+          ease: 'power3.out',
+          onUpdate: () => {
+            activeLineTop.setAttribute('points', `${activeLineCoords.startX},${activeLineCoords.startY} ${activeLineCoords.topX},${activeLineCoords.topY}`);
+            activeLineBottom.setAttribute('points', `${activeLineCoords.startX},${activeLineCoords.startY} ${activeLineCoords.botX},${activeLineCoords.botY}`);
+          }
+        });
+
+        gsap.to(activeButtonBox, {
+          left: btnFinalX,
+          top: btnFinalY,
+          duration: 0.6,
+          delay: 0.05,
+          ease: 'power3.out',
+        });
+
+        gsap.to([activeButtonBox, activeLineTop, activeLineBottom], {
+          opacity: 1,
+          duration: 0.6,
+          ease: 'power2.out',
+        });
+      };
+
+      drawActiveLines();
 
       // Cleanup others
       projectItems.forEach(otherItem => {
@@ -470,7 +569,10 @@
   <div class="random-box" bind:this={buttonBox}></div>
   <svg class="connector-svg">
     <polyline bind:this={connectorLine} points="0,0 0,0 0,0" />
+    <polyline bind:this={activeLineTop} class="active-line" points="0,0 0,0" />
+    <polyline bind:this={activeLineBottom} class="active-line" points="0,0 0,0" />
   </svg>
+  <div class="random-box is-active" bind:this={activeButtonBox}></div>
   <div class="info__projects">
     {#each projects as project, i (i + project.name)}
       <button
@@ -695,6 +797,10 @@
     z-index: 100;
   }
 
+  .random-box.is-active {
+    background: var(--color-bg);
+  }
+
   .connector-svg {
     height: 100%;
     inset: 0;
@@ -710,5 +816,9 @@
     opacity: 0;
     stroke: var(--color-overlay-40);
     stroke-width: 1px;
+  }
+
+  .connector-svg .active-line {
+    stroke: var(--color-overlay-60);
   }
 </style>

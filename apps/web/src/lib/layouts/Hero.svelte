@@ -4,7 +4,17 @@
   import ProjectView from '$lib/components/Info/ProjectView.svelte';
 
   let selectedProject = $state<any>(null);
+  
+  function handleDeselect(e: MouseEvent) {
+    if (!selectedProject) return;
+    const target = e.target as HTMLElement;
+    if (!target.closest('.project-view') && !target.closest('.info')) {
+      selectedProject = null;
+    }
+  }
 </script>
+
+<svelte:window onmousedown={handleDeselect} />
 
 <div style="display: contents">
   {#if selectedProject}

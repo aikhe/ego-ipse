@@ -100,23 +100,87 @@
   const DWELL = 400;
   const EXIT_DELAY = 100;
   const BOX_DELAY = 300;
+  let lastActiveName = "";
 
   // sticky active state effect
   $effect(() => {
-    if (!activeProject) {
-      untrack(() => {
-        projectItems.forEach(item => {
-          if (!item || item === currentItem) return;
+    const currentName = activeProject?.name || "";
+    if (currentName === lastActiveName) return;
+
+    untrack(async () => {
+      const oldName = lastActiveName;
+      lastActiveName = currentName;
+
+      // Handle closing/retracting existing project visuals
+      if (oldName) {
+        gsap.killTweensOf([activeButtonBox, activeLineCoords, activeLineTop, activeLineBottom]);
+        const tl = gsap.timeline();
+        
+        // 1. Lines retract back to their current startX/Y (the random box)
+        await tl.to(activeLineCoords, {
+          topX: activeLineCoords.startX,
+          topY: activeLineCoords.startY,
+          botX: activeLineCoords.startX,
+          botY: activeLineCoords.startY,
+          duration: 0.4,
+          ease: 'power3.in',
+          onUpdate: () => {
+            activeLineTop.setAttribute('points', `${activeLineCoords.startX},${activeLineCoords.startY} ${activeLineCoords.topX},${activeLineCoords.topY}`);
+            activeLineBottom.setAttribute('points', `${activeLineCoords.startX},${activeLineCoords.startY} ${activeLineCoords.botX},${activeLineCoords.botY}`);
+          }
+        });
+
+        // 2. Then the box fades out
+        await tl.to(activeButtonBox, { opacity: 0, duration: 0.3, ease: 'power2.in' });
+        gsap.set([activeLineTop, activeLineBottom], { opacity: 0 });
+
+        // 3. Finally, animate out the old button's styles
+        const oldIndex = projects.findIndex(p => p.name === oldName);
+        if (oldIndex !== -1) {
+          const oldItem = projectItems[oldIndex];
+          if (oldItem && (!activeProject || oldName !== activeProject.name)) {
+            const bg = oldItem.querySelector('.project--bg');
+            const arrow = oldItem.querySelector('.arrow');
+            gsap.killTweensOf([bg, oldItem, arrow]);
+            gsap.to(bg, { opacity: 0, duration: 0.3 });
+            gsap.to(oldItem, { padding: '0', zIndex: 1, duration: 0.3 });
+            gsap.to(arrow, { opacity: 0.8, duration: 0.3 });
+          }
+        }
+      }
+
+      // Sync active item state immediately if it exists
+      if (activeProject) {
+        const idx = projects.findIndex(p => p.name === activeProject.name);
+        if (idx !== -1) {
+          const item = projectItems[idx];
+          if (item) {
+            const bg = item.querySelector('.project--bg');
+            const arrow = item.querySelector('.arrow');
+            gsap.killTweensOf([bg, item, arrow]);
+            gsap.set([bg, item, arrow], { clearProps: 'all' });
+          }
+        }
+      }
+
+      // Generic cleanup for non-active, non-hovered items
+      projectItems.forEach(item => {
+        if (!item) return;
+        const name = projects[projectItems.indexOf(item)]?.name;
+        const isCurrentlyActive = activeProject?.name === name;
+        const isHovered = item === currentItem;
+        
+        if (!isCurrentlyActive && !isHovered && name !== oldName) {
           const bg = item.querySelector('.project--bg');
           const arrow = item.querySelector('.arrow');
           gsap.killTweensOf([bg, item, arrow]);
           gsap.to(bg, { opacity: 0, duration: 0.2 });
           gsap.to(item, { padding: '0', zIndex: 1, duration: 0.2 });
           gsap.to(arrow, { opacity: 0.8, duration: 0.2 });
-        });
+        }
+      });
 
-        gsap.to([activeButtonBox, activeLineTop, activeLineBottom], { opacity: 0, duration: 0.3, ease: 'power2.inOut' });
-
+      if (!activeProject) {
         if (!currentItem) {
           gsap.to(expandReticle, {
             width: 0,
@@ -127,26 +191,15 @@
             overwrite: 'auto',
           });
         }
-      });
-      return;
-    }
+        return;
+      }
 
-    const index = projects.findIndex(p => p.name === activeProject.name);
-    if (index === -1) return;
+      const index = projects.findIndex(p => p.name === activeProject.name);
+      if (index === -1) return;
+      const item = projectItems[index];
+      if (!item) return;
 
-    const item = projectItems[index];
-    if (!item) return;
-
-    const rect = item.getBoundingClientRect();
-
-    // force active visuals - clear inline styles to let CSS take over
-    const bg = item.querySelector('.project--bg');
-    const arrow = item.querySelector('.arrow');
-    gsap.killTweensOf([bg, item, arrow]);
-    gsap.set([bg, item, arrow], { clearProps: 'all' });
-
-    untrack(() => {
-      // Move expand reticle back to active one if not hovering anything else
+      const rect = item.getBoundingClientRect();
       if (!currentItem) {
         gsap.to(expandReticle, {
           x: rect.left + rect.width / 2,
@@ -160,87 +213,61 @@
         });
       }
 
-      const drawActiveLines = async () => {
-        await tick();
-        const pv = document.querySelector('.project-view');
-        if (!pv || !infoSection || !activeButtonBox || !activeLineTop || !activeLineBottom) return;
+      await tick();
+      const pv = document.querySelector('.project-view');
+      if (!pv || !infoSection || !activeButtonBox || !activeLineTop || !activeLineBottom) return;
 
-        const sectionRect = infoSection.getBoundingClientRect();
-        const itemRect = item.getBoundingClientRect();
-        const pvRect = pv.getBoundingClientRect();
+      const sectionRect = infoSection.getBoundingClientRect();
+      const itemRect = item.getBoundingClientRect();
+      const pvRect = pv.getBoundingClientRect();
 
-        const btnMinX = itemRect.width * 0.4;
-        const btnMaxX = itemRect.width * 0.9;
-        const btnRelX = btnMinX + Math.random() * (btnMaxX - btnMinX - 16);
-        const btnFinalX = itemRect.left - sectionRect.left + btnRelX;
-        const btnFinalY = itemRect.top - sectionRect.top + itemRect.height / 2 - 8 + (Math.random() * 10 - 5);
+      const btnMinX = itemRect.width * 0.4;
+      const btnMaxX = itemRect.width * 0.9;
+      const btnRelX = btnMinX + Math.random() * (btnMaxX - btnMinX - 16);
+      const btnFinalX = itemRect.left - sectionRect.left + btnRelX;
+      const btnFinalY = itemRect.top - sectionRect.top + itemRect.height / 2 - 8 + (Math.random() * 10 - 5);
 
-        const halfBox = (0.43 * 16) / 2;
-        const startX = btnFinalX + halfBox;
-        const startY = btnFinalY + halfBox;
+      const halfBox = (0.43 * 16) / 2;
+      const startX = btnFinalX + halfBox;
+      const startY = btnFinalY + halfBox;
+      
+      const topTargetX = pvRect.right - sectionRect.left;
+      const topTargetY = pvRect.top - sectionRect.top;
+      const botTargetX = pvRect.right - sectionRect.left;
+      const botTargetY = pvRect.bottom - sectionRect.top;
 
-        const topTargetX = pvRect.right - sectionRect.left;
-        const topTargetY = pvRect.top - sectionRect.top;
-        const botTargetX = pvRect.right - sectionRect.left;
-        const botTargetY = pvRect.bottom - sectionRect.top;
+      // Prepare drawing state
+      activeLineCoords.startX = startX;
+      activeLineCoords.startY = startY;
+      activeLineCoords.topX = startX;
+      activeLineCoords.topY = startY;
+      activeLineCoords.botX = startX;
+      activeLineCoords.botY = startY;
 
-        if (activeLineCoords.startX === 0) {
-          activeLineCoords.startX = startX;
-          activeLineCoords.startY = startY;
-          activeLineCoords.topX = startX;
-          activeLineCoords.topY = startY;
-          activeLineCoords.botX = startX;
-          activeLineCoords.botY = startY;
-          
-          gsap.set(activeButtonBox, { left: btnFinalX, top: btnFinalY });
-          activeLineTop.setAttribute('points', `${startX},${startY} ${startX},${startY}`);
-          activeLineBottom.setAttribute('points', `${startX},${startY} ${startX},${startY}`);
+      activeLineTop.setAttribute('points', `${startX},${startY} ${startX},${startY}`);
+      activeLineBottom.setAttribute('points', `${startX},${startY} ${startX},${startY}`);
+      
+      const inTl = gsap.timeline();
+      
+      // 1. New box fades in
+      gsap.set(activeButtonBox, { left: btnFinalX, top: btnFinalY, opacity: 0 });
+      inTl.to(activeButtonBox, { opacity: 1, duration: 0.4, ease: 'power2.out' });
+
+      // 2. New lines grow from randomized startX/Y
+      inTl.to(activeLineCoords, {
+        topX: topTargetX,
+        topY: topTargetY,
+        botX: botTargetX,
+        botY: botTargetY,
+        duration: 0.5,
+        ease: 'power3.out',
+        onUpdate: () => {
+          activeLineTop.setAttribute('points', `${activeLineCoords.startX},${activeLineCoords.startY} ${activeLineCoords.topX},${activeLineCoords.topY}`);
+          activeLineBottom.setAttribute('points', `${activeLineCoords.startX},${activeLineCoords.startY} ${activeLineCoords.botX},${activeLineCoords.botY}`);
         }
+      }, "-=0.2");
 
-        gsap.killTweensOf([activeButtonBox, activeLineCoords, activeLineTop, activeLineBottom]);
-
-        gsap.to(activeLineCoords, {
-          startX: startX,
-          startY: startY,
-          topX: topTargetX,
-          topY: topTargetY,
-          botX: botTargetX,
-          botY: botTargetY,
-          duration: 0.45,
-          ease: 'power3.out',
-          onUpdate: () => {
-            activeLineTop.setAttribute('points', `${activeLineCoords.startX},${activeLineCoords.startY} ${activeLineCoords.topX},${activeLineCoords.topY}`);
-            activeLineBottom.setAttribute('points', `${activeLineCoords.startX},${activeLineCoords.startY} ${activeLineCoords.botX},${activeLineCoords.botY}`);
-          }
-        });
-
-        gsap.to(activeButtonBox, {
-          left: btnFinalX,
-          top: btnFinalY,
-          duration: 0.6,
-          delay: 0.05,
-          ease: 'power3.out',
-        });
-
-        gsap.to([activeButtonBox, activeLineTop, activeLineBottom], {
-          opacity: 1,
-          duration: 0.6,
-          ease: 'power2.out',
-        });
-      };
-
-      drawActiveLines();
-
-      // Cleanup others
-      projectItems.forEach(otherItem => {
-        if (otherItem === item || otherItem === currentItem) return;
-        const otherBg = otherItem.querySelector('.project--bg');
-        const otherArrow = otherItem.querySelector('.arrow');
-        gsap.killTweensOf([otherBg, otherItem, otherArrow]);
-        gsap.to(otherBg, { opacity: 0, duration: 0.2 });
-        gsap.to(otherItem, { padding: '0', zIndex: 1, duration: 0.2 });
-        gsap.to(otherArrow, { opacity: 0.8, duration: 0.2 });
-      });
+      inTl.to([activeLineTop, activeLineBottom], { opacity: 1, duration: 0.3 }, "<");
     });
   });
 

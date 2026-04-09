@@ -50,9 +50,6 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Agent
-.agent/
-
 # Lockfiles
 bun.lock
 bun.lockb

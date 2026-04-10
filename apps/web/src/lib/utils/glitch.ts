@@ -2,7 +2,8 @@
 // shared between theme toggle & social link hovers
 
 const SMALL_SYMBOLS = '·.:,;+-';
-const LARGE_SYMBOLS = 'urilQZXW';
+// const LARGE_SYMBOLS = 'urilQZXW';
+const LARGE_SYMBOLS = 'uriltkh';
 
 interface GlitchOptions {
   text: string;

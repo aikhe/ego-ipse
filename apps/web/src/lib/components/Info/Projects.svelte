@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, untrack, tick } from 'svelte';
   import gsap from 'gsap';
-  import type { Project } from '$lib/types/project';
+  import { startGlitch } from '$lib/utils/glitch';
 
   import ProjectPreview from './ProjectPreview.svelte';
 
@@ -77,6 +77,10 @@
 
   let { onselect = () => {}, activeProject = $bindable(null) } =
     $props();
+
+  // Glitch text state per project
+  let glitchTexts = $state<string[]>(projects.map(p => p.name));
+  let glitchIntervals: (ReturnType<typeof setInterval> | null)[] = projects.map(() => null);
 
   let projectItems = $state<HTMLButtonElement[]>([]);
   let reticle: HTMLDivElement;
@@ -650,6 +654,15 @@
         activeProject = project;
         onselect(project);
 
+        // Glitch the project name on click
+        if (glitchIntervals[index]) clearInterval(glitchIntervals[index]!);
+        glitchIntervals[index] = startGlitch({
+          text: project.name,
+          revealSpeed: 2,
+          tailFrames: 12,
+          onUpdate: t => { glitchTexts[index] = t; },
+        });
+
         if (showPreview) {
           gsap.to([randomBox, buttonBox, connectorLine], {
             opacity: 0,
@@ -716,7 +729,7 @@
           class="project--bg"
           class:is-active={visualActiveProject === project.name}
         ></div>
-        <span class="project--name">{project.name}</span>
+        <span class="project--name">{glitchTexts[i]}</span>
         <svg
           data-testid="geist-icon"
           height={12}

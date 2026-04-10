@@ -44,6 +44,7 @@
   {#each $textures as texture, i (i)}
     <Poster
       index={i}
+      totalLength={posters.length}
       {texture}
       {hovered}
       {isShifted}

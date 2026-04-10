@@ -8,6 +8,7 @@
     texture,
     hovered,
     isShifted,
+    totalLength,
     width,
     height,
     onenter,
@@ -18,6 +19,7 @@
     texture: THREE.Texture;
     hovered: number | null;
     isShifted: boolean;
+    totalLength: number;
     width: number;
     height: number;
     onenter: () => void;
@@ -45,17 +47,46 @@
   const colorNormal = new THREE.Color(0xffffff);
   const colorDimmed = new THREE.Color(0x888888);
 
+  let prevIsShifted = isShifted;
+
   $effect(() => {
     if (!mesh || !material) return;
 
     const isHovered = hovered === index;
     const isDimmed = hovered !== null && hovered !== index;
 
+    // Update previous shifting state
+    const shifting = isShifted !== prevIsShifted;
+    const shiftDelay = isShifted ? (totalLength - 1 - index) * 0.04 : index * 0.04;
+    const delay = shifting ? shiftDelay : 0;
+    
+    prevIsShifted = isShifted;
+
+    let hoverOffsetX = 0;
+    let hoverLiftY = 0;
+
+    if (hovered !== null) {
+      if (isHovered) {
+        hoverLiftY = 0.18; // Increase hovered card vertical lift
+      } else {
+        const distance = index - hovered;
+        const absDist = Math.abs(distance);
+        const sign = Math.sign(distance);
+        
+        // Decay based on distance (spreading horizontally)
+        const pushX = 0.18 / absDist;
+        hoverOffsetX = sign * pushX;
+
+        // Wave effect: adjacent cards lift UP (diminishing based on distance)
+        hoverLiftY = 0.1 / absDist;
+      }
+    }
+
     // smooth transitions via gsap
     const targetColor = isDimmed ? colorDimmed : colorNormal;
     const currentBaseY = isShifted ? shiftedPos.y : basePos.y;
-    const targetY = isHovered ? currentBaseY + 0.04 : currentBaseY;
-    const targetX = isShifted ? shiftedPos.x : basePos.x;
+    const targetY = currentBaseY + hoverLiftY;
+    const targetX = (isShifted ? shiftedPos.x : basePos.x) + hoverOffsetX;
 
     // depth isolation to prevent slicing
     mesh.renderOrder = isHovered ? 50 : index;
@@ -73,13 +104,14 @@
       onUpdate: invalidate,
     });
 
-    // position animation with poker card scrambling feel
+    // position animation — faster for hover, slower for shift
+    const duration = shifting ? 0.8 : 0.5;
     gsap.to(mesh.position, {
       x: targetX,
       y: targetY,
-      duration: 1.8,
-      delay: index * 0.06,
-      ease: 'elastic.out(1, 0.8)',
+      duration,
+      delay: delay,
+      ease: 'power3.out',
       overwrite: 'auto',
       onUpdate: invalidate,
     });

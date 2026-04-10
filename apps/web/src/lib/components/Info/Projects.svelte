@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, untrack, tick } from 'svelte';
   import gsap from 'gsap';
+  import type { Project } from '$lib/types/project';
 
   import ProjectPreview from './ProjectPreview.svelte';
 
@@ -42,8 +43,8 @@
       date: '11.2025',
       tags: ['VSS', 'TUI'],
       id: '2025',
-      width: 280,
-      height: 410,
+      width: 400,
+      height: 360,
       image: success,
       external: false,
     },
@@ -73,8 +74,8 @@
     },
   ] as const;
 
-  type Project = (typeof projects)[number];
-  let { onselect = (p: Project) => {}, activeProject = $bindable(null) } =
+
+  let { onselect = () => {}, activeProject = $bindable(null) } =
     $props();
 
   let projectItems = $state<HTMLButtonElement[]>([]);
@@ -95,17 +96,24 @@
   let previewY = $state(0);
   let visualActiveProject = $state<string | null>(null);
   let lineCoords = { x1: 0, y1: 0, px: 0, py: 0, x2: 0, y2: 0 };
-  let activeLineCoords = { startX: 0, startY: 0, topX: 0, topY: 0, botX: 0, botY: 0 };
+  let activeLineCoords = {
+    startX: 0,
+    startY: 0,
+    topX: 0,
+    topY: 0,
+    botX: 0,
+    botY: 0,
+  };
 
   const SIZE = 32;
   const DWELL = 400;
   const EXIT_DELAY = 100;
   const BOX_DELAY = 300;
-  let lastActiveName = "";
+  let lastActiveName = '';
 
   // sticky active state effect
   $effect(() => {
-    const currentName = activeProject?.name || "";
+    const currentName = activeProject?.name || '';
     if (currentName === lastActiveName) return;
 
     untrack(async () => {
@@ -123,14 +131,24 @@
             const arrow = oldItem.querySelector('.arrow');
             gsap.killTweensOf([bg, oldItem, arrow]);
             gsap.to(bg, { opacity: 0, duration: 0.3, ease: 'power3.out' });
-            gsap.to(oldItem, { padding: '0', zIndex: 1, duration: 0.3, ease: 'power3.out' });
+            gsap.to(oldItem, {
+              padding: '0',
+              zIndex: 1,
+              duration: 0.3,
+              ease: 'power3.out',
+            });
             gsap.to(arrow, { opacity: 0.8, duration: 0.3, ease: 'power3.out' });
           }
         }
 
-        gsap.killTweensOf([activeButtonBox, activeLineCoords, activeLineTop, activeLineBottom]);
+        gsap.killTweensOf([
+          activeButtonBox,
+          activeLineCoords,
+          activeLineTop,
+          activeLineBottom,
+        ]);
         const tl = gsap.timeline();
-        
+
         // 2. Lines retract back to their current startX/Y (the random box)
         await tl.to(activeLineCoords, {
           topX: activeLineCoords.startX,
@@ -140,13 +158,23 @@
           duration: 0.4,
           ease: 'power3.in',
           onUpdate: () => {
-            activeLineTop.setAttribute('points', `${activeLineCoords.startX},${activeLineCoords.startY} ${activeLineCoords.topX},${activeLineCoords.topY}`);
-            activeLineBottom.setAttribute('points', `${activeLineCoords.startX},${activeLineCoords.startY} ${activeLineCoords.botX},${activeLineCoords.botY}`);
-          }
+            activeLineTop.setAttribute(
+              'points',
+              `${activeLineCoords.startX},${activeLineCoords.startY} ${activeLineCoords.topX},${activeLineCoords.topY}`
+            );
+            activeLineBottom.setAttribute(
+              'points',
+              `${activeLineCoords.startX},${activeLineCoords.startY} ${activeLineCoords.botX},${activeLineCoords.botY}`
+            );
+          },
         });
 
         // 3. Then the box fades out
-        await tl.to(activeButtonBox, { opacity: 0, duration: 0.3, ease: 'power2.in' });
+        await tl.to(activeButtonBox, {
+          opacity: 0,
+          duration: 0.3,
+          ease: 'power2.in',
+        });
         gsap.set([activeLineTop, activeLineBottom], { opacity: 0 });
 
         // 4. Now it's safe to remove the visual active class
@@ -180,7 +208,7 @@
         const name = projects[projectItems.indexOf(item)]?.name;
         const isCurrentlyActive = activeProject?.name === name;
         const isHovered = item === currentItem;
-        
+
         if (!isCurrentlyActive && !isHovered && name !== oldName) {
           const bg = item.querySelector('.project--bg');
           const arrow = item.querySelector('.arrow');
@@ -226,7 +254,14 @@
 
       await tick();
       const pv = document.querySelector('.project-view');
-      if (!pv || !infoSection || !activeButtonBox || !activeLineTop || !activeLineBottom) return;
+      if (
+        !pv ||
+        !infoSection ||
+        !activeButtonBox ||
+        !activeLineTop ||
+        !activeLineBottom
+      )
+        return;
 
       const sectionRect = infoSection.getBoundingClientRect();
       const itemRect = item.getBoundingClientRect();
@@ -236,12 +271,17 @@
       const btnMaxX = itemRect.width * 0.9;
       const btnRelX = btnMinX + Math.random() * (btnMaxX - btnMinX - 16);
       const btnFinalX = itemRect.left - sectionRect.left + btnRelX;
-      const btnFinalY = itemRect.top - sectionRect.top + itemRect.height / 2 - 8 + (Math.random() * 10 - 5);
+      const btnFinalY =
+        itemRect.top -
+        sectionRect.top +
+        itemRect.height / 2 -
+        8 +
+        (Math.random() * 10 - 5);
 
       const halfBox = (0.43 * 16) / 2;
       const startX = btnFinalX + halfBox;
       const startY = btnFinalY + halfBox;
-      
+
       const topTargetX = pvRect.right - sectionRect.left;
       const topTargetY = pvRect.top - sectionRect.top;
       const botTargetX = pvRect.right - sectionRect.left;
@@ -255,30 +295,58 @@
       activeLineCoords.botX = startX;
       activeLineCoords.botY = startY;
 
-      activeLineTop.setAttribute('points', `${startX},${startY} ${startX},${startY}`);
-      activeLineBottom.setAttribute('points', `${startX},${startY} ${startX},${startY}`);
-      
+      activeLineTop.setAttribute(
+        'points',
+        `${startX},${startY} ${startX},${startY}`
+      );
+      activeLineBottom.setAttribute(
+        'points',
+        `${startX},${startY} ${startX},${startY}`
+      );
+
       const inTl = gsap.timeline();
-      
+
       // 1. New box fades in
-      gsap.set(activeButtonBox, { left: btnFinalX, top: btnFinalY, opacity: 0 });
-      inTl.to(activeButtonBox, { opacity: 1, duration: 0.4, ease: 'power2.out' });
+      gsap.set(activeButtonBox, {
+        left: btnFinalX,
+        top: btnFinalY,
+        opacity: 0,
+      });
+      inTl.to(activeButtonBox, {
+        opacity: 1,
+        duration: 0.4,
+        ease: 'power2.out',
+      });
 
       // 2. New lines grow from randomized startX/Y
-      inTl.to(activeLineCoords, {
-        topX: topTargetX,
-        topY: topTargetY,
-        botX: botTargetX,
-        botY: botTargetY,
-        duration: 0.5,
-        ease: 'power3.out',
-        onUpdate: () => {
-          activeLineTop.setAttribute('points', `${activeLineCoords.startX},${activeLineCoords.startY} ${activeLineCoords.topX},${activeLineCoords.topY}`);
-          activeLineBottom.setAttribute('points', `${activeLineCoords.startX},${activeLineCoords.startY} ${activeLineCoords.botX},${activeLineCoords.botY}`);
-        }
-      }, "-=0.2");
+      inTl.to(
+        activeLineCoords,
+        {
+          topX: topTargetX,
+          topY: topTargetY,
+          botX: botTargetX,
+          botY: botTargetY,
+          duration: 0.5,
+          ease: 'power3.out',
+          onUpdate: () => {
+            activeLineTop.setAttribute(
+              'points',
+              `${activeLineCoords.startX},${activeLineCoords.startY} ${activeLineCoords.topX},${activeLineCoords.topY}`
+            );
+            activeLineBottom.setAttribute(
+              'points',
+              `${activeLineCoords.startX},${activeLineCoords.startY} ${activeLineCoords.botX},${activeLineCoords.botY}`
+            );
+          },
+        },
+        '-=0.2'
+      );
 
-      inTl.to([activeLineTop, activeLineBottom], { opacity: 1, duration: 0.3 }, "<");
+      inTl.to(
+        [activeLineTop, activeLineBottom],
+        { opacity: 1, duration: 0.3 },
+        '<'
+      );
     });
   });
 
@@ -355,13 +423,21 @@
         });
       }
 
-      gsap.to([randomBox, buttonBox, connectorLine], { opacity: 0, duration: 0.5, ease: 'power2.inOut' });
+      gsap.to([randomBox, buttonBox, connectorLine], {
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power2.inOut',
+      });
       showPreview = false;
     };
 
     const showRandomBox = () => {
       if (!infoSection || !randomBox || !buttonBox || !currentItem) return;
-      if (activeProject && projects[projectItems.indexOf(currentItem)]?.name === activeProject.name) return;
+      if (
+        activeProject &&
+        projects[projectItems.indexOf(currentItem)]?.name === activeProject.name
+      )
+        return;
       const sectionRect = infoSection.getBoundingClientRect();
       const itemRect = currentItem.getBoundingClientRect();
 
@@ -488,7 +564,9 @@
             overwrite: 'auto',
           });
           clearTimeout(boxSpawnTimer!);
-          const isButtonActive = activeProject && projects[projectItems.indexOf(item)]?.name === activeProject.name;
+          const isButtonActive =
+            activeProject &&
+            projects[projectItems.indexOf(item)]?.name === activeProject.name;
           if (!isButtonActive) {
             boxSpawnTimer = setTimeout(showRandomBox, BOX_DELAY);
           } else {
@@ -507,7 +585,7 @@
 
         if (
           !expanded &&
-          (projects[projectItems.indexOf(item)]?.name !== activeProject?.name)
+          projects[projectItems.indexOf(item)]?.name !== activeProject?.name
         ) {
           if (!isItem(e.relatedTarget)) {
             const rect = item.getBoundingClientRect();
@@ -530,7 +608,9 @@
               opacity: 1,
               duration: 0.5,
             });
-            const stillNotActive = !activeProject || projects[projectItems.indexOf(item)]?.name !== activeProject.name;
+            const stillNotActive =
+              !activeProject ||
+              projects[projectItems.indexOf(item)]?.name !== activeProject.name;
             if (stillNotActive) showRandomBox();
           }, DWELL);
         }
@@ -611,7 +691,11 @@
   <svg class="connector-svg">
     <polyline bind:this={connectorLine} points="0,0 0,0 0,0" />
     <polyline bind:this={activeLineTop} class="active-line" points="0,0 0,0" />
-    <polyline bind:this={activeLineBottom} class="active-line" points="0,0 0,0" />
+    <polyline
+      bind:this={activeLineBottom}
+      class="active-line"
+      points="0,0 0,0"
+    />
   </svg>
   <div class="random-box is-active" bind:this={activeButtonBox}></div>
   <div class="info__projects">

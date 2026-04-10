@@ -11,8 +11,10 @@
   import { Canvas } from '@threlte/core';
   import * as THREE from 'three';
 
+  import type { Project } from '$lib/types/project';
+
   let selectedPoster = $state<number | null>(null);
-  let selectedProject = $state<any>(null);
+  let selectedProject = $state<Project | null>(null);
 </script>
 
 <section class="section-container pointer-events-none relative z-20">

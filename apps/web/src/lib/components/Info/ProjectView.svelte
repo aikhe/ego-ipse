@@ -1,13 +1,8 @@
 <script lang="ts">
+  import type { Project } from '$lib/types/project';
+
   interface Props {
-    project: {
-      name: string;
-      section: string;
-      date: string;
-      tags: readonly string[];
-      id: string;
-      image?: string;
-    } | null;
+    project: Project | null;
   }
 
   let { project }: Props = $props();
@@ -64,7 +59,7 @@
     background-repeat: no-repeat;
     background-size: 12px 12px;
     content: '';
-    inset: 0px -1px;
+    inset: 0 -1px;
     position: absolute;
   }
 
@@ -75,25 +70,25 @@
     width: 100%;
   }
 
-  /* .placeholder { */
-  /*   display: flex; */
-  /*   flex-direction: column; */
-  /*   gap: 1rem; */
-  /*   padding-top: 2rem; */
-  /* } */
-  /**/
-  /* h2 { */
-  /*   font-size: 3rem; */
-  /*   font-weight: 600; */
-  /*   letter-spacing: -0.02em; */
-  /*   margin: 0; */
-  /*   text-transform: uppercase; */
-  /* } */
-  /**/
-  /* p { */
-  /*   color: var(--color-text-muted); */
-  /*   font-family: 'Geist Mono', monospace; */
-  /*   font-size: 1rem; */
-  /*   margin: 0; */
-  /* } */
+  /* .placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 2rem;
+  }
+
+  h2 {
+    font-size: 3rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  p {
+    color: var(--color-text-muted);
+    font-family: 'Geist Mono', monospace;
+    font-size: 1rem;
+    margin: 0;
+  } */
 </style>

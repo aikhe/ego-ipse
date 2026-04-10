@@ -3,7 +3,9 @@
   import Socials from '$lib/components/Info/Socials.svelte';
   import ProjectView from '$lib/components/Info/ProjectView.svelte';
 
-  let { selectedProjectSize = 0, selectedProject = $bindable(null) } = $props();
+  import type { Project } from '$lib/types/project';
+
+  let { selectedProject = $bindable(null) } = $props();
   
   function handleDeselect(e: MouseEvent) {
     if (!selectedProject) return;
@@ -36,7 +38,7 @@
 
   <div class="info pointer-events-auto">
     <p class="info__title">CREATIVE PROJECTS I’VE WORKED ON</p>
-    <Projects activeProject={selectedProject} onselect={(p: any) => (selectedProject = p)} />
+    <Projects activeProject={selectedProject} onselect={(p: Project) => (selectedProject = p)} />
     <Socials />
   </div>
 </div>

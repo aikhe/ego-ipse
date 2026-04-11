@@ -1,6 +1,7 @@
 {
   "name": "root",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "turbo build",
     "build:turbopack": "turbo build:turbopack",

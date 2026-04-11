@@ -74,13 +74,13 @@
     },
   ] as const;
 
-
-  let { onselect = () => {}, activeProject = $bindable(null) } =
-    $props();
+  let { onselect = () => {}, activeProject = $bindable(null) } = $props();
 
   // Glitch text state per project
   let glitchTexts = $state<string[]>(projects.map(p => p.name));
-  let glitchIntervals: (ReturnType<typeof setInterval> | null)[] = projects.map(() => null);
+  let glitchIntervals: (ReturnType<typeof setInterval> | null)[] = projects.map(
+    () => null
+  );
 
   let projectItems = $state<HTMLButtonElement[]>([]);
   let reticle: HTMLDivElement;
@@ -660,7 +660,9 @@
           text: project.name,
           revealSpeed: 2,
           tailFrames: 12,
-          onUpdate: t => { glitchTexts[index] = t; },
+          onUpdate: t => {
+            glitchTexts[index] = t;
+          },
         });
 
         if (showPreview) {

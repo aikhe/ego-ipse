@@ -23,9 +23,9 @@
 
 <div class="scene-container fixed inset-0 z-1">
   <Canvas dpr={1} toneMapping={THREE.NoToneMapping}>
-    <Scene 
-      isShifted={!!selectedProject} 
-      onposterclick={i => (selectedPoster = i)} 
+    <Scene
+      isShifted={!!selectedProject}
+      onposterclick={i => (selectedPoster = i)}
     />
   </Canvas>
 </div>

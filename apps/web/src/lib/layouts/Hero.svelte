@@ -6,11 +6,15 @@
   import type { Project } from '$lib/types/project';
 
   let { selectedProject = $bindable(null) } = $props();
-  
+
   function handleDeselect(e: MouseEvent) {
     if (!selectedProject) return;
     const target = e.target as HTMLElement;
-    if (!target.closest('.project-view') && !target.closest('.info') && !target.closest('.poster-overlay')) {
+    if (
+      !target.closest('.project-view') &&
+      !target.closest('.info') &&
+      !target.closest('.poster-overlay')
+    ) {
       selectedProject = null;
     }
   }
@@ -38,7 +42,10 @@
 
   <div class="info pointer-events-auto">
     <p class="info__title">CREATIVE PROJECTS I’VE WORKED ON</p>
-    <Projects activeProject={selectedProject} onselect={(p: Project) => (selectedProject = p)} />
+    <Projects
+      activeProject={selectedProject}
+      onselect={(p: Project) => (selectedProject = p)}
+    />
     <Socials />
   </div>
 </div>

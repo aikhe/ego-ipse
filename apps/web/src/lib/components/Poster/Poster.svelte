@@ -57,9 +57,11 @@
 
     // Update previous shifting state
     const shifting = isShifted !== prevIsShifted;
-    const shiftDelay = isShifted ? (totalLength - 1 - index) * 0.04 : index * 0.04;
+    const shiftDelay = isShifted
+      ? (totalLength - 1 - index) * 0.04
+      : index * 0.04;
     const delay = shifting ? shiftDelay : 0;
-    
+
     prevIsShifted = isShifted;
 
     let hoverOffsetX = 0;
@@ -72,7 +74,7 @@
         const distance = index - hovered;
         const absDist = Math.abs(distance);
         const sign = Math.sign(distance);
-        
+
         // Decay based on distance (spreading horizontally)
         const pushX = 0.18 / absDist;
         hoverOffsetX = sign * pushX;
@@ -135,7 +137,10 @@
     document.body.style.cursor = 'auto';
     onleave();
   }}
-  onclick={(e: { stopPropagation: () => void; nativeEvent: { stopPropagation: () => void } }) => {
+  onclick={(e: {
+    stopPropagation: () => void;
+    nativeEvent: { stopPropagation: () => void };
+  }) => {
     e.stopPropagation();
     e.nativeEvent.stopPropagation();
     onclick?.();

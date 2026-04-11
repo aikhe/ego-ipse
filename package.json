@@ -11,9 +11,12 @@
     "prettier": "prettier \"**/*.{js,mjs,ts,tsx,json,yml,css,svelte,md,html}\" --check --cache --cache-strategy=content --cache-location=.prettiercache",
     "prettier:fix": "bun run prettier -- --write",
     "start": "turbo start",
-    "prepare": "npx turbo prepare"
+    "prepare": "husky"
   },
   "devDependencies": {
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
+    "husky": "^9.1.7",
     "prettier": "^3.7.4",
     "prettier-plugin-svelte": "^3.5.1",
     "prettier-plugin-tailwindcss": "^0.7.2",

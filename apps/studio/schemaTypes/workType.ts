@@ -30,6 +30,105 @@ export default defineType({
       ],
     }),
     defineField({
+      title: 'Duration',
+      name: 'duration',
+      type: 'object',
+      fields: [
+        defineField({
+          title: 'Start Date',
+          name: 'start',
+          type: 'date',
+          options: {
+            dateFormat: 'YYYY-MM-DD',
+          },
+          validation: (Rule) => Rule.required().error('Start date is required'),
+        }),
+        defineField({
+          title: 'End Date',
+          name: 'end',
+          type: 'date',
+          options: {
+            dateFormat: 'YYYY-MM-DD',
+          },
+          description: 'Leave blank if still ongoing (Present)',
+        }),
+      ],
+      validation: (Rule) => Rule.required().error('Duration is required'),
+    }),
+    defineField({
+      title: 'Brief Description',
+      name: 'brief',
+      type: 'string',
+      description: 'Short summary for previews (SEO/Cards)',
+      validation: (Rule) => [
+        Rule.required().error('Brief description is required'),
+        Rule.min(10).error('Too short'),
+        Rule.max(160).error('Brief description cannot exceed 160 characters'),
+        Rule.custom((value) => {
+          if (value && value.trim().length === 0) return 'Cannot be only whitespace'
+          return true
+        }),
+      ],
+    }),
+    defineField({
+      title: 'Project Type',
+      name: 'projectType',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Web', value: 'web'},
+          {title: 'Mobile', value: 'mobile'},
+          {title: '3D', value: '3d'},
+          {title: 'Design', value: 'design'},
+          {title: 'Experiment', value: 'experiment'},
+        ],
+      },
+      validation: (Rule) => Rule.required().error('Project type is required'),
+    }),
+    defineField({
+      title: 'Tech Stack',
+      name: 'techStack',
+      type: 'array',
+      of: [{type: 'string'}],
+      validation: (Rule) => [
+        Rule.required().error('Tech stack is required'),
+        Rule.min(1).error('At least one technology required'),
+        Rule.unique().error('No duplicates allowed'),
+      ],
+    }),
+    defineField({
+      title: 'Project URL',
+      name: 'url',
+      type: 'url',
+      validation: (Rule) =>
+        Rule.uri({
+          scheme: ['http', 'https'],
+        }).error('Must be a valid URL (http/https)'),
+    }),
+    defineField({
+      title: 'GitHub Repository',
+      name: 'githubUrl',
+      type: 'url',
+      validation: (Rule) =>
+        Rule.uri({
+          scheme: ['http', 'https'],
+        }).error('Must be a valid URL (http/https)'),
+    }),
+    defineField({
+      title: 'Category',
+      name: 'category',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'aikhe', value: 'aikhe'},
+          {title: 'acedia', value: 'acedia'},
+          {title: 'elapse', value: 'elapse'},
+          {title: 'miscs', value: 'miscs'},
+        ],
+      },
+      validation: (Rule) => Rule.required().error('Category is required'),
+    }),
+    defineField({
       title: 'Description',
       name: 'description',
       type: 'text',
@@ -133,20 +232,6 @@ export default defineType({
             : true
         }),
       ],
-    }),
-    defineField({
-      title: 'Category',
-      name: 'category',
-      type: 'string',
-      options: {
-        list: [
-          {title: 'aikhe', value: 'aikhe'},
-          {title: 'acedia', value: 'acedia'},
-          {title: 'elapse', value: 'elapse'},
-          {title: 'miscs', value: 'miscs'},
-        ],
-      },
-      validation: (Rule) => Rule.required().error('Tags is required'),
     }),
   ],
 })

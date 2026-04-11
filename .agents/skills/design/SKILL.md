@@ -16,16 +16,20 @@ This skill ensures that all UI implementations adhere to the project's premium a
 ## How to use it
 
 ### 1. Style Awareness
+
 Always refer to the existing design system in `apps/web/src/styles`:
+
 - **Colors (`_colors.css`)**: Use `var(--color-bg)`, `var(--color-text)`, and `var(--color-primary)`. Use `--color-overlay-xx` for depth.
 - **Typography (`_typography.css`)**: Use `Geist` (200 weight, 0.34% tracking) for main text. Use `GeistPixel` or `Advine-Pixel` for custom branding.
 - **Layout (`_containers.css`)**: Wrap hero and section content in `.section-container` (max-width 1920px).
 
 ### 2. BEM Mapping
+
 - Always structure classes as `block`, `block__element`, and `block--modifier`.
 - Avoid deeply nested selectors; rely on specific BEM classes for scoping.
 
 ### 3. Animation Guidelines (GSAP)
+
 - Use GSAP for all state transitions.
 - Avoid instant visual snaps; favor fluid, organic motion.
 - Implement micro-animations for interactive elements (hover, active states).
@@ -35,9 +39,7 @@ Always refer to the existing design system in `apps/web/src/styles`:
 ```svelte
 <!-- Good: BEM + Tokens + Layout -->
 <section class="hero section-container">
-  <h1 class="hero__title">
-    Ego Ipse
-  </h1>
+  <h1 class="hero__title">Ego Ipse</h1>
 </section>
 
 <style>
@@ -51,6 +53,7 @@ Always refer to the existing design system in `apps/web/src/styles`:
 ```
 
 ## Anti-patterns
+
 - Hardcoding hex codes (e.g., `#ffffff`) instead of using CSS variables.
 - Using plain browser defaults or generic colors.
 - Instant visibility toggles (always use GSAP or Svelte transitions).

@@ -16,14 +16,17 @@ This skill ensures that the application remains robust through consistent testin
 ## How to use it
 
 ### 1. Component Testing
+
 - Use Vitest and Svelte Testing Library for unit tests.
 - Focus on user interactions (clicks, inputs) and state transitions.
 
 ### 2. End-to-End Testing
+
 - Use Playwright for critical user flows (e.g., project navigation, theme toggling).
 - Ensure tests run across multiple screen sizes to verify responsiveness.
 
 ### 3. Standards
+
 - Follow the project's lowercase comment style within test files.
 - Ensure all tests are kept simple and direct (DRY/KISS).
 

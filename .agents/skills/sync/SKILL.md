@@ -16,10 +16,12 @@ This skill ensures that the data layer (Sanity) and the presentation layer (Svel
 ## How to use it
 
 ### 1. Schema Updates
+
 - When modifying a schema, check all references in the frontend.
 - Proactively suggest updates to TypeScript types if the data structure changes.
 
 ### 2. Data Validation
+
 - Ensure that for every new Sanity field, there is a corresponding UI element or state update.
 - Use the `studio` app to verify that sample content matches the frontend requirements.
 

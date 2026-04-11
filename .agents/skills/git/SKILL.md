@@ -16,31 +16,36 @@ This skill ensures that the commit history and PR documentation remain technical
 ## How to use it
 
 ### 1. Commit Formatting
+
 - Use the one-line format: `feat(scope): descriptions & details + second feature`.
 - Connect distinct features with `+`.
 - Connect correlated details with `&`.
-- Wrap long messages immediately after a `+` or `&`.
-- MUST NOT include "Summary:" or any multi-line descriptions in commits.
+- Wrap long messages immediately after a `+` or `&` (Max 120 chars).
+- **Automated Validation**: Commit messages are enforced locally by **Husky** and **Commitlint**.
 
 ### 2. Pull Request Style
-- When requested, provide PR content as markdown for easy copying.
+
 - PR Titles must follow the commit style (one-line, technical).
 - Descriptions MUST include:
-    - `### Summary`: High-level overview.
-    - `### Features`: Bulleted list of new functionality.
-    - `### Changes`: Technical breakdown of modified files with [clickable links].
-    - `### Configuration`: (If applicable) code snippets for setup.
+  - `### Summary`: High-level overview.
+  - `### Features`: Bulleted list of new functionality.
+  - `### Changes`: Technical breakdown of modified files with [clickable links].
+- **Automated Validation**: PR titles are enforced by **GitHub Actions**.
+- **CI Enforcement**: Merging is only allowed if the **CI Pipeline** (build/lint) is green ✅.
 
 ### 3. Guidelines
+
 - Use PowerShell for all Git operations.
 - Prefer technical and descriptive language (`feat(threlte):`, `fix(svelte):`).
 - Use lowercase for simple, direct descriptions.
 
 ## Anti-patterns
+
 - Committing without explicit "go ahead" from the USER.
 - Using multi-line commit messages with summaries.
 - Staging the `.agent` or `.agents` folder.
 
 ## Samples
+
 - `feat(threlte): scene interactions & perspective + load gltf model init`
 - `fix(svelte): resolve each_key_duplicate error & refine dark mode overlay colors`

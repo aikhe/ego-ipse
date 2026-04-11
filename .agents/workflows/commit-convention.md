@@ -10,12 +10,15 @@ description: Standardizes technical one-line commit messages using project-speci
 
 ## Steps
 
-1. **Verify Task Completion**: Before drafting a message, ensure the requested changes are fully implemented and verified according to the project's /done-criteria.
-2. **Review Logic**: Confirm the code follows the KISS (Keep It Simple, Stupid) and DRY (Don't Repeat Yourself) methods. Remove any bloated logic or unnecessary edge cases.
+1. **Verify Task Completion**: Before drafting a message, ensure requested changes are fully implemented and verified according to the project's /done-criteria.
+2. **Review Logic**: Confirm code follows KISS and DRY. Remove any bloated logic or unnecessary edge cases.
 3. **Construct Message**:
-    - Use the technical one-line format.
-    - Start with `feat(scope):` or `fix(scope):` in lowercase.
-    - Use `+` to connect distinct features (e.g., `feat: logo inversion + theme toggle loop`).
-    - Use `&` to connect correlated details (e.g., `fix(svelte): key duplicate & z-index layering`).
-4. **Validation**: Check that the message does not contain a "Summary:" block or multi-line text.
+   - Use the technical one-line format.
+   - Start with `feat(scope):` or `fix(scope):` in lowercase.
+   - Use `+` to connect distinct features.
+   - Use `&` to connect correlated details.
+4. **Validation (Automated)**:
+   - Attempt to commit with `git commit -m "..."`.
+   - **Husky + Commitlint** will automatically validate the message.
+   - If it fails, fix the message according to the terminal output.
 5. **Final Confirmation**: Present the proposed `git commit -m` command and wait for the user's "go ahead" before execution.

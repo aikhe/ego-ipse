@@ -53,7 +53,16 @@ export default defineType({
           description: 'Leave blank if still ongoing (Present)',
         }),
       ],
-      validation: (Rule) => Rule.required().error('Duration is required'),
+      validation: (Rule) => [
+        Rule.required().error('Duration is required'),
+        Rule.custom((value) => {
+          if (!value || !value.start || !value.end) return true
+          const start = new Date(value.start)
+          const end = new Date(value.end)
+          if (end < start) return 'End date cannot be before start date'
+          return true
+        }),
+      ],
     }),
     defineField({
       title: 'Brief Description',
@@ -89,30 +98,54 @@ export default defineType({
       title: 'Tech Stack',
       name: 'techStack',
       type: 'array',
-      of: [{type: 'string'}],
+      of: [
+        {
+          type: 'string',
+          validation: (Rule) => [
+            Rule.min(2).error('Technology must be at least 2 characters'),
+            Rule.max(100).error('Technology cannot exceed 100 characters'),
+            Rule.custom((value) => {
+              if (typeof value !== 'string') return true
+              if (value.trim().length === 0) return 'Cannot be only whitespace'
+              return true
+            }),
+          ],
+        },
+      ],
       validation: (Rule) => [
         Rule.required().error('Tech stack is required'),
         Rule.min(1).error('At least one technology required'),
         Rule.unique().error('No duplicates allowed'),
+        Rule.custom((techStack) => {
+          if (!Array.isArray(techStack)) return true
+          const lowercased = techStack.map((t: string) => t?.toLowerCase().trim())
+          const duplicates = lowercased.filter((item: string, index: number) => lowercased.indexOf(item) !== index)
+          if (duplicates.length > 0) return `No duplicate technologies allowed (case-insensitive): ${duplicates[0]}`
+          return true
+        }),
       ],
     }),
     defineField({
       title: 'Project URL',
       name: 'url',
       type: 'url',
-      validation: (Rule) =>
+      validation: (Rule) => [
+        Rule.required().error('Project URL is required'),
         Rule.uri({
           scheme: ['http', 'https'],
         }).error('Must be a valid URL (http/https)'),
+      ],
     }),
     defineField({
       title: 'GitHub Repository',
       name: 'githubUrl',
       type: 'url',
-      validation: (Rule) =>
+      validation: (Rule) => [
+        Rule.required().error('GitHub repository URL is required'),
         Rule.uri({
           scheme: ['http', 'https'],
         }).error('Must be a valid URL (http/https)'),
+      ],
     }),
     defineField({
       title: 'Category',

@@ -102,11 +102,12 @@ export default defineType({
         {
           type: 'string',
           validation: (Rule) => [
-            Rule.min(2).error('Technology must be at least 2 characters'),
-            Rule.max(100).error('Technology cannot exceed 100 characters'),
             Rule.custom((value) => {
               if (typeof value !== 'string') return true
-              if (value.trim().length === 0) return 'Cannot be only whitespace'
+              const trimmed = value.trim()
+              if (trimmed.length === 0) return 'Cannot be only whitespace'
+              if (trimmed.length < 2) return 'Technology must be at least 2 characters'
+              if (trimmed.length > 100) return 'Technology cannot exceed 100 characters'
               return true
             }),
           ],

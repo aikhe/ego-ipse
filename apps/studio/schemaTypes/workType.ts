@@ -118,7 +118,7 @@ export default defineType({
         Rule.unique().error('No duplicates allowed'),
         Rule.custom((techStack) => {
           if (!Array.isArray(techStack)) return true
-          const lowercased = techStack.map((t: string) => t?.toLowerCase().trim())
+          const lowercased = techStack.map((t: unknown) => typeof t === "string" ? t.toLowerCase().trim() : "")
           const duplicates = lowercased.filter((item: string, index: number) => lowercased.indexOf(item) !== index)
           if (duplicates.length > 0) return `No duplicate technologies allowed (case-insensitive): ${duplicates[0]}`
           return true

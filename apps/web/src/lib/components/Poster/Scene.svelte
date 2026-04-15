@@ -83,12 +83,16 @@
       STAGE_DESIGN_WIDTH,
       STAGE_MIN_SCALE
     );
-    const normalized = (metrics.scale - STAGE_MIN_SCALE) / (1 - STAGE_MIN_SCALE);
+    const normalized =
+      (metrics.scale - STAGE_MIN_SCALE) / (1 - STAGE_MIN_SCALE);
     const posterRange = POSTER_SCALE_START - STAGE_MIN_SCALE;
     const posterNormalized =
       posterRange <= 0
         ? normalized
-        : Math.min(1, Math.max(0, (metrics.scale - STAGE_MIN_SCALE) / posterRange));
+        : Math.min(
+            1,
+            Math.max(0, (metrics.scale - STAGE_MIN_SCALE) / posterRange)
+          );
     const downShiftRange = STACK_DOWN_SHIFT_START - STAGE_MIN_SCALE;
     const downShiftNormalized =
       downShiftRange <= 0
@@ -106,11 +110,9 @@
       Math.pow(posterNormalized, POSTER_SCALE_SENSITIVITY) *
         (1 - MIN_POSTER_SCALE);
     stackSpacingScale =
-      MIN_STACK_SPACING_SCALE +
-      spacingProgress * (1 - MIN_STACK_SPACING_SCALE);
+      MIN_STACK_SPACING_SCALE + spacingProgress * (1 - MIN_STACK_SPACING_SCALE);
     stackStaggerScale =
-      MIN_STACK_STAGGER_SCALE +
-      staggerProgress * (1 - MIN_STACK_STAGGER_SCALE);
+      MIN_STACK_STAGGER_SCALE + staggerProgress * (1 - MIN_STACK_STAGGER_SCALE);
     stackDownShift =
       MAX_STACK_DOWN_SHIFT *
       Math.pow(downShiftProgress, STACK_DOWN_SHIFT_SENSITIVITY);

@@ -244,13 +244,10 @@
     background: rgb(255 255 255 / 8%);
     cursor: zoom-out;
     display: flex;
-    height: var(--page-stage-height, 100vh);
+    inset: 0;
     justify-content: center;
-    left: 0;
     position: fixed;
-    top: 0;
     user-select: none;
-    width: var(--page-stage-width, 100vw);
     z-index: 1000;
   }
 

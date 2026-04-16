@@ -2,7 +2,7 @@
   import { onMount, untrack, tick } from 'svelte';
   import gsap from 'gsap';
   import { startGlitch } from '$lib/utils/glitch';
-  import { toStageRect, toStageValue } from '$lib/utils/stageScale';
+  import { toStageRect, toStageValue, toStageX } from '$lib/utils/stageScale';
 
   import ProjectPreview from './ProjectPreview.svelte';
 
@@ -622,7 +622,7 @@
       });
 
       item.addEventListener('mousemove', (e: MouseEvent) => {
-        xTo(toStageValue(e.clientX));
+        xTo(toStageX(e.clientX));
         yTo(toStageValue(e.clientY));
       });
 

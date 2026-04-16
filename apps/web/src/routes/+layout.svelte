@@ -18,7 +18,7 @@
   let time = $state('--:--:--');
   let themeDisplayText = $state('LIGHT');
   let stageScale = $state(1);
-  let stageHeight = $state(0);
+  let stageHeight = $state<number | null>(null);
   let stageOffsetX = $state(0);
   let isStageScaled = $state(false);
   let glitchInterval: ReturnType<typeof setInterval> | null = null;
@@ -110,7 +110,7 @@
   <div
     class="app-stage"
     class:app-stage--scaled={isStageScaled}
-    style={`--page-stage-scale: ${stageScale}; --page-stage-height: ${stageHeight}px; --page-stage-offset-x: ${stageOffsetX}px;`}
+    style={`--page-stage-scale: ${stageScale}; ${stageHeight === null ? '' : `--page-stage-height: ${stageHeight}px;`} --page-stage-offset-x: ${stageOffsetX}px;`}
   >
     <header class="section-container font--mono-label">
       <img class="logo size-8" src={logo} alt="Aikhe Logo Mark" />

@@ -47,7 +47,7 @@
   const colorNormal = new THREE.Color(0xffffff);
   const colorDimmed = new THREE.Color(0x888888);
 
-  let prevIsShifted = isShifted;
+  let prevIsShifted: boolean | null = null;
 
   $effect(() => {
     if (!mesh || !material) return;
@@ -56,7 +56,8 @@
     const isDimmed = hovered !== null && hovered !== index;
 
     // Update previous shifting state
-    const shifting = isShifted !== prevIsShifted;
+    const actualPrevIsShifted = prevIsShifted ?? isShifted;
+    const shifting = isShifted !== actualPrevIsShifted;
     const shiftDelay = isShifted
       ? (totalLength - 1 - index) * 0.04
       : index * 0.04;

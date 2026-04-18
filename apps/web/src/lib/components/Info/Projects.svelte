@@ -753,7 +753,9 @@
         </svg>
       </button>
     {/each}
-    <button class="project--more">MORE ...</button>
+    <button class="project--more ui-button ui-button--corners ui-button--list">
+      MORE ...
+    </button>
   </div>
 </div>
 
@@ -888,43 +890,9 @@
   }
 
   .project--more {
-    align-items: center;
-    background: var(--color-overlay-02);
-    border: 1px solid var(--color-overlay-20);
-    color: var(--color-text);
-    cursor: pointer;
-    display: flex;
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.875rem;
     font-weight: 400;
     height: 48px;
-    letter-spacing: 0.34%;
-    line-height: 18px;
     margin-top: -1px;
-    padding-left: 1rem;
-    position: relative;
-  }
-
-  .project--more::before {
-    background:
-      linear-gradient(to right, var(--color-text) 1px, transparent 1px) 0 0,
-      linear-gradient(to bottom, var(--color-text) 1px, transparent 1px) 0 0,
-      linear-gradient(to left, var(--color-text) 1px, transparent 1px) 100% 0,
-      linear-gradient(to bottom, var(--color-text) 1px, transparent 1px) 100% 0,
-      linear-gradient(to right, var(--color-text) 1px, transparent 1px) 0 100%,
-      linear-gradient(to top, var(--color-text) 1px, transparent 1px) 0 100%,
-      linear-gradient(to left, var(--color-text) 1px, transparent 1px) 100% 100%,
-      linear-gradient(to top, var(--color-text) 1px, transparent 1px) 100% 100%;
-    background-repeat: no-repeat;
-    background-size: 8px 8px;
-    content: '';
-    inset: -1px;
-    pointer-events: none;
-    position: absolute;
-  }
-
-  .project--more:hover {
-    background: var(--color-overlay-05);
   }
 
   .random-box {

@@ -23,8 +23,8 @@ Maintain a clean, technical, and descriptive commit/PR history following a stric
 
 ## Automated Enforcement
 
-- **Local**: Husky prevents non-compliant commits via a `commit-msg` hook.
 - **Remote**: GitHub Actions validates PR titles and runs the CI pipeline (`build`, `lint`, `format`).
+- **CI**: Commitlint validates commit messages.
 
 ## Pull Request Style
 

@@ -19,6 +19,6 @@ description: Standardizes technical one-line commit messages using project-speci
    - Use `&` to connect correlated details.
 4. **Validation (Automated)**:
    - Attempt to commit with `git commit -m "..."`.
-   - **Husky + Commitlint** will automatically validate the message.
+   - **Commitlint** will validate the message in CI.
    - If it fails, fix the message according to the terminal output.
 5. **Final Confirmation**: Present the proposed `git commit -m` command and wait for the user's "go ahead" before execution.

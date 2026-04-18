@@ -46,7 +46,7 @@ This repository already has a local agent system under `.agents/`. Use this file
 
 - The repo uses Bun, Turborepo, SvelteKit, and Sanity.
 - CI runs `bun run check` and `bun run build`.
-- Commit messages are validated by Commitlint in CI and by Husky locally.
+- Commit messages are validated by Commitlint in CI.
 
 ## Practical Setup For New Agents
 

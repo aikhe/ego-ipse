@@ -21,7 +21,7 @@ This skill ensures that the commit history and PR documentation remain technical
 - Connect distinct features with `+`.
 - Connect correlated details with `&`.
 - Wrap long messages immediately after a `+` or `&` (Max 120 chars).
-- **Automated Validation**: Commit messages are enforced locally by **Husky** and **Commitlint**.
+- **Automated Validation**: Commit messages are enforced in CI by **Commitlint**.
 
 ### 2. Pull Request Style
 

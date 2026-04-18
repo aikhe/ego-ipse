@@ -181,11 +181,11 @@
           <div class="social-card__tags">
             {#if displaySocial.tags}
               {#each displaySocial.tags as tag (tag)}
-                <span class="social-card__tag">[ {tag} ]</span>
+                <span class="social-card__tag font--mono-tag-regular">[ {tag} ]</span>
               {/each}
             {:else}
-              <span class="social-card__tag">[ {displaySocial.name} ]</span>
-              <span class="social-card__tag"
+              <span class="social-card__tag font--mono-tag-regular">[ {displaySocial.name} ]</span>
+              <span class="social-card__tag font--mono-tag-regular"
                 >[ {displaySocial.external ? 'SOCIAL' : 'INTERNAL'} ]</span
               >
             {/if}
@@ -341,10 +341,6 @@
 
   .social-card__tag {
     color: var(--color-text);
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.7rem;
-    font-weight: 400;
-    letter-spacing: 0.034em;
     white-space: nowrap;
   }
 

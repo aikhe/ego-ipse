@@ -290,7 +290,7 @@
         <a
           href={social.href}
           rel={social.external ? 'external' : undefined}
-          class="socials__link"
+          class="socials__link font--mono-link"
           onmouseenter={() => startGlitch(i)}
           onmouseleave={() => stopGlitch(i)}
           bind:this={linkElements[i]}
@@ -305,7 +305,7 @@
         <a
           href={social.href}
           rel={social.external ? 'external' : undefined}
-          class="socials__link"
+          class="socials__link font--mono-link"
           onmouseenter={() => startGlitch(i + 3)}
           onmouseleave={() => stopGlitch(i + 3)}
           bind:this={linkElements[i + 3]}
@@ -345,11 +345,6 @@
   .socials__link {
     color: var(--color-text);
     display: block;
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.875rem;
-    font-weight: 400;
-    letter-spacing: 0.34%;
-    line-height: 18px;
     overflow: hidden;
     position: relative;
     text-decoration: none;

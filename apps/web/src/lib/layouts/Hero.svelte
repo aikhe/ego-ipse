@@ -27,12 +27,12 @@
     <ProjectView project={selectedProject} />
   {:else}
     <div class="hero pointer-events-auto">
-      <h1 class="hero__title">
-        <strong class="title--strong">Aikhe</strong> is a design engineer of the printing
+      <h1 class="hero__title font--hero-title">
+        <strong class="title--strong font--hero-accent">Aikhe</strong> is a design engineer of the printing
         and typesetting industry. Lorem Ipsum has been the industry's standard dummy
         text ever since the 1500s.
       </h1>
-      <p class="hero__description">
+      <p class="hero__description font--mono-label">
         <strong class="description--strong">CONTRARY TO POPULAR BELIEF,</strong> LOREM
         IPSUM IS NOT SIMPLY RANDOM TEXT. IT HAS ROOTS IN A PIECE OF CLASSICAL LATIN
         LITERATURE FROM 45 BC.
@@ -41,7 +41,7 @@
   {/if}
 
   <div class="info pointer-events-auto">
-    <p class="info__title">CREATIVE PROJECTS I’VE WORKED ON</p>
+    <p class="info__title font--mono-label">CREATIVE PROJECTS I’VE WORKED ON</p>
     <Projects
       activeProject={selectedProject}
       onselect={(p: Project) => (selectedProject = p)}
@@ -60,25 +60,11 @@
   }
 
   .hero__title {
-    font-family: 'GeistPixel Square', sans-serif;
-    font-size: 2rem;
-    letter-spacing: 0.34%;
-    line-height: 34px;
     width: 38ch;
-  }
-
-  .title--strong {
-    font-family: Advine-Pixel, sans-serif;
-    font-size: 4rem;
-    letter-spacing: 4%;
   }
 
   .hero__description {
     color: var(--color-text-muted);
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.875rem;
-    font-weight: 500;
-    letter-spacing: 0.34%;
     line-height: 16px;
     width: 48ch;
   }
@@ -101,10 +87,6 @@
     align-items: center;
     color: var(--color-text-muted);
     display: flex;
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.875rem;
-    font-weight: 500;
     gap: 0.5rem;
-    letter-spacing: 0.34%;
   }
 </style>

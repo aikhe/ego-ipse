@@ -21,3 +21,60 @@
   font-weight: normal;
   src: url('../../lib/assets/fonts/Advine-Pixel.otf') format('opentype');
 }
+
+.font--mono-label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.34%;
+}
+
+.font--mono-meta {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.34%;
+}
+
+.font--mono-footer {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.34%;
+}
+
+.font--mono-link {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.34%;
+  line-height: 18px;
+}
+
+.font--hero-title {
+  font-family: 'GeistPixel Square', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 0.34%;
+  line-height: 34px;
+}
+
+.font--hero-accent {
+  font-family: Advine-Pixel, sans-serif;
+  font-size: 4rem;
+  letter-spacing: 4%;
+  line-height: 34px;
+}
+
+.font--mono-tag-strong {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.font--mono-tag-regular {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.034em;
+}

@@ -59,7 +59,7 @@
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
-<header class="section-container">
+<header class="section-container font--mono-label">
   <img class="logo size-8" src={logo} alt="Aikhe Logo Mark" />
 
   <p class="time">{time}</p>
@@ -67,11 +67,14 @@
   <p class="location">CALOOCAN, PH</p>
   <p class="coordinates">14.6514° N, 120.9902° E</p>
 
-  <button class="theme-toggle z-99" onclick={toggleTheme}>
+  <button
+    class="theme-toggle ui-button ui-button--ghost z-99"
+    onclick={toggleTheme}
+  >
     MODE: {themeDisplayText}
   </button>
 
-  <button class="contact-btn z-99">CONTACT</button>
+  <button class="contact-btn ui-button ui-button--corners z-99">CONTACT</button>
 </header>
 
 <main>
@@ -100,13 +103,9 @@
     align-items: center;
     color: var(--color-text-muted);
     display: grid;
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.875rem;
-    font-weight: 500;
     gap: 1.2rem;
     grid-template-columns: repeat(12, 1fr);
     height: 4.8rem;
-    letter-spacing: 0.34%;
     white-space: nowrap;
     z-index: 2;
   }
@@ -137,56 +136,12 @@
   }
 
   .theme-toggle {
-    background: none;
-    border: none;
-    color: var(--color-text-muted);
-    cursor: pointer;
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.875rem;
-    font-weight: 500;
     grid-column: 9;
-    padding: 0;
-    text-align: left;
-  }
-
-  .theme-toggle:hover {
-    color: var(--color-text);
   }
 
   .contact-btn {
-    align-items: center;
-    background: var(--color-overlay-02);
-    border: 1px solid var(--color-overlay-20);
-    color: var(--color-text);
-    cursor: pointer;
-    display: flex;
     grid-column: 12 / span 1;
-    justify-content: center;
     justify-self: flex-end;
-    padding: 6px 12px;
-    position: relative;
-  }
-
-  .contact-btn::before {
-    background:
-      linear-gradient(to right, var(--color-text) 1px, transparent 1px) 0 0,
-      linear-gradient(to bottom, var(--color-text) 1px, transparent 1px) 0 0,
-      linear-gradient(to left, var(--color-text) 1px, transparent 1px) 100% 0,
-      linear-gradient(to bottom, var(--color-text) 1px, transparent 1px) 100% 0,
-      linear-gradient(to right, var(--color-text) 1px, transparent 1px) 0 100%,
-      linear-gradient(to top, var(--color-text) 1px, transparent 1px) 0 100%,
-      linear-gradient(to left, var(--color-text) 1px, transparent 1px) 100% 100%,
-      linear-gradient(to top, var(--color-text) 1px, transparent 1px) 100% 100%;
-    background-repeat: no-repeat;
-    background-size: 8px 8px;
-    content: '';
-    inset: -1px;
-    pointer-events: none;
-    position: absolute;
-  }
-
-  .contact-btn:hover {
-    background: var(--color-overlay-05);
   }
 
   .grid-overlay {

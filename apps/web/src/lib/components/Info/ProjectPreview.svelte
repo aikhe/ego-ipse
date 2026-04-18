@@ -161,7 +161,7 @@
   <div class="corner-accents"></div>
   {#if project}
     <div class="preview-card" bind:this={content}>
-      <div class="header">
+      <div class="header font--mono-meta">
         <h3 class="name">{project.name.toUpperCase()} ...</h3>
         <div class="meta">
           <span class="symbol">&gt;</span>
@@ -177,10 +177,10 @@
             <img src={project.image} alt={project.name} class="project-image" />
             <canvas bind:this={canvas} class="tile-canvas"></canvas>
           </div>
-          <div class="text-footer">
+          <div class="text-footer font--mono-footer">
             <div class="tags">
               {#each project.tags as tag, i (i + tag)}
-                <span class="tag">[ {tag} ]</span>
+                <span class="tag font--mono-tag-strong">[ {tag} ]</span>
               {/each}
             </div>
             <div class="id">{project.id}</div>
@@ -241,11 +241,7 @@
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.8rem;
-    font-weight: 400;
     gap: 0.44rem;
-    letter-spacing: 0.34%;
     padding: 0.8rem;
     position: relative;
   }
@@ -347,21 +343,13 @@
     color: var(--color-overlay-60);
     display: flex;
     flex-shrink: 0;
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.7rem;
-    font-weight: 500;
     justify-content: space-between;
-    letter-spacing: 0.34%;
     padding: 0.6rem 0.8rem;
   }
 
   .tags {
     display: flex;
     gap: 0.5rem;
-  }
-
-  .tag {
-    letter-spacing: 0.05em;
   }
 
   .id {

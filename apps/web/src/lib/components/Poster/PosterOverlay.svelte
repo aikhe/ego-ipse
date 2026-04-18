@@ -227,7 +227,10 @@
     aria-hidden="true"
   />
 
-  <button class="poster-overlay__close contact-btn" onclick={close}>
+  <button
+    class="poster-overlay__close ui-button ui-button--corners"
+    onclick={close}
+  >
     <span>CLOSE</span>
   </button>
 </div>
@@ -316,46 +319,17 @@
     }
   }
 
-  .contact-btn {
-    align-items: center;
+  .poster-overlay__close {
     background: rgb(0 0 0 / 2%);
     border: 1px solid rgb(0 0 0 / 30%);
     color: #080807;
-    cursor: pointer;
-    display: flex;
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.875rem;
-    font-weight: 500;
-    justify-content: center;
-    letter-spacing: 0.34%;
-    line-height: normal;
-    padding: 6px 12px;
     position: fixed;
     right: 2.4rem;
     top: 2.4rem;
-    transition: background 0.2s;
     z-index: 1001;
   }
 
-  .contact-btn::before {
-    background:
-      linear-gradient(to right, #080807 1px, transparent 1px) 0 0,
-      linear-gradient(to bottom, #080807 1px, transparent 1px) 0 0,
-      linear-gradient(to left, #080807 1px, transparent 1px) 100% 0,
-      linear-gradient(to bottom, #080807 1px, transparent 1px) 100% 0,
-      linear-gradient(to right, #080807 1px, transparent 1px) 0 100%,
-      linear-gradient(to top, #080807 1px, transparent 1px) 0 100%,
-      linear-gradient(to left, #080807 1px, transparent 1px) 100% 100%,
-      linear-gradient(to top, #080807 1px, transparent 1px) 100% 100%;
-    background-repeat: no-repeat;
-    background-size: 8px 8px;
-    content: '';
-    inset: -1px;
-    pointer-events: none;
-    position: absolute;
-  }
-
-  .contact-btn:hover {
+  .poster-overlay__close:hover {
     background: rgb(0 0 0 / 5%);
   }
 
@@ -370,7 +344,7 @@
       padding: 0 0.5rem;
     }
 
-    .contact-btn {
+    .poster-overlay__close {
       right: 1.5rem;
       top: 1.5rem;
     }

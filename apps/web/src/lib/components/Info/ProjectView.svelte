@@ -30,7 +30,7 @@
     flex-direction: column;
     grid-column: 1 / span 6;
     grid-row: 1;
-    height: 100vh;
+    height: var(--page-stage-height, 100vh);
     left: 0;
     padding: 2.4rem;
     position: absolute;

@@ -8,6 +8,10 @@
     texture,
     hovered,
     isShifted,
+    scale,
+    spacingScale,
+    staggerScale,
+    downShift,
     totalLength,
     width,
     height,
@@ -19,6 +23,10 @@
     texture: THREE.Texture;
     hovered: number | null;
     isShifted: boolean;
+    scale: number;
+    spacingScale: number;
+    staggerScale: number;
+    downShift: number;
     totalLength: number;
     width: number;
     height: number;
@@ -27,16 +35,31 @@
     onclick?: () => void;
   }>();
 
+  const posterStepX = 0.8;
+  const posterStepY = 0.5;
+  const posterStepZ = -0.74;
+  const shiftStaggerDelay = 0.03;
+  const posterOffsetX = -0.34;
+  const posterLiftY = 1.6;
+  const stackMidIndex = $derived((totalLength - 1) / 2);
+  const centeredIndex = $derived(index - stackMidIndex);
+  const responsiveStepX = $derived(posterStepX * spacingScale);
+  const responsiveStepY = $derived(posterStepY * spacingScale);
+  const responsiveStepZ = $derived(posterStepZ * spacingScale);
+  const responsiveShiftX = $derived(6 * spacingScale);
+  const responsiveShiftY = $derived(2.1 * spacingScale);
+  const responsiveStaggerDelay = $derived(shiftStaggerDelay * staggerScale);
+
   const basePos = $derived({
-    x: index * 0.9,
-    y: index * 0.8,
-    z: index * -0.4,
+    x: centeredIndex * responsiveStepX + posterOffsetX,
+    y: centeredIndex * responsiveStepY + posterLiftY - downShift,
+    z: centeredIndex * responsiveStepZ,
   });
 
   const shiftedPos = $derived({
-    x: index * 0.9 + 6,
-    y: index * 0.8 + 2.1,
-    z: index * -0.4,
+    x: basePos.x + responsiveShiftX,
+    y: basePos.y + responsiveShiftY,
+    z: basePos.z,
   });
 
   let mesh: THREE.Mesh | null = null;
@@ -55,12 +78,12 @@
     const isHovered = hovered === index;
     const isDimmed = hovered !== null && hovered !== index;
 
-    // Update previous shifting state
+    // update previous shifting state
     const actualPrevIsShifted = prevIsShifted ?? isShifted;
     const shifting = isShifted !== actualPrevIsShifted;
     const shiftDelay = isShifted
-      ? (totalLength - 1 - index) * 0.04
-      : index * 0.04;
+      ? (totalLength - 1 - index) * responsiveStaggerDelay
+      : index * responsiveStaggerDelay;
     const delay = shifting ? shiftDelay : 0;
 
     prevIsShifted = isShifted;
@@ -70,7 +93,7 @@
 
     if (hovered !== null) {
       if (isHovered) {
-        hoverLiftY = 0.18; // Increase hovered card vertical lift
+        hoverLiftY = 0.18; // increase hovered card vertical lift
       } else {
         const distance = index - hovered;
         const absDist = Math.abs(distance);
@@ -80,7 +103,7 @@
         const pushX = 0.18 / absDist;
         hoverOffsetX = sign * pushX;
 
-        // Wave effect: adjacent cards lift UP (diminishing based on distance)
+        // wave effect: adjacent cards lift UP (diminishing based on distance)
         hoverLiftY = 0.1 / absDist;
       }
     }
@@ -119,10 +142,24 @@
       onUpdate: invalidate,
     });
   });
+
+  $effect(() => {
+    if (!mesh) return;
+
+    gsap.to(mesh.scale, {
+      x: scale,
+      y: scale,
+      duration: 0.45,
+      ease: 'power2.out',
+      overwrite: 'auto',
+      onUpdate: invalidate,
+    });
+  });
 </script>
 
 <T.Mesh
   position={[basePos.x, basePos.y, basePos.z]}
+  scale={[scale, scale, 1]}
   oncreate={(ref: THREE.Mesh) => {
     mesh = ref;
   }}

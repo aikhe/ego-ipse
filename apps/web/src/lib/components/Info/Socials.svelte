@@ -2,6 +2,7 @@
   import gsap from 'gsap';
 
   import { startGlitch as runGlitch } from '$lib/utils/glitch';
+  import { getStageScale } from '$lib/utils/stageScale';
 
   import SocialCard from './SocialCard.svelte';
   import xIcon from '$lib/assets/socials/X.png';
@@ -227,18 +228,20 @@
         if (lineTracking) lineTracking.kill();
         return;
       }
+
+      const scale = getStageScale();
       const infoRect = info.getBoundingClientRect();
       const boxRect = box.getBoundingClientRect();
       const cardRect = card.getBoundingClientRect();
 
       // box center in local coords relative to .info
-      const bx = boxRect.left + boxRect.width / 2 - infoRect.left;
-      const by = boxRect.top + boxRect.height / 2 - infoRect.top;
+      const bx = (boxRect.left + boxRect.width / 2 - infoRect.left) / scale;
+      const by = (boxRect.top + boxRect.height / 2 - infoRect.top) / scale;
 
       // card bottom corners in local coords relative to .info
-      const clx = cardRect.left - infoRect.left;
-      const crx = cardRect.right - infoRect.left;
-      const cby = cardRect.bottom - infoRect.top;
+      const clx = (cardRect.left - infoRect.left) / scale;
+      const crx = (cardRect.right - infoRect.left) / scale;
+      const cby = (cardRect.bottom - infoRect.top) / scale;
 
       lineL!.setAttribute('points', `${bx},${by} ${clx},${cby}`);
       lineR!.setAttribute('points', `${bx},${by} ${crx},${cby}`);

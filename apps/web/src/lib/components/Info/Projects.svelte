@@ -2,6 +2,7 @@
   import { onMount, untrack, tick } from 'svelte';
   import gsap from 'gsap';
   import { startGlitch } from '$lib/utils/glitch';
+  import { toStageRect, toStageValue } from '$lib/utils/stageScale';
 
   import ProjectPreview from './ProjectPreview.svelte';
 
@@ -242,7 +243,7 @@
       const item = projectItems[index];
       if (!item) return;
 
-      const rect = item.getBoundingClientRect();
+      const rect = toStageRect(item.getBoundingClientRect());
       if (!currentItem) {
         gsap.to(expandReticle, {
           x: rect.left + rect.width / 2,
@@ -267,9 +268,9 @@
       )
         return;
 
-      const sectionRect = infoSection.getBoundingClientRect();
-      const itemRect = item.getBoundingClientRect();
-      const pvRect = pv.getBoundingClientRect();
+      const sectionRect = toStageRect(infoSection.getBoundingClientRect());
+      const itemRect = toStageRect(item.getBoundingClientRect());
+      const pvRect = toStageRect(pv.getBoundingClientRect());
 
       const btnMinX = itemRect.width * 0.4;
       const btnMaxX = itemRect.width * 0.9;
@@ -405,7 +406,7 @@
         const index = projects.findIndex(p => p.name === activeProject.name);
         if (index !== -1) {
           const item = projectItems[index];
-          const rect = item.getBoundingClientRect();
+          const rect = toStageRect(item.getBoundingClientRect());
           gsap.to(expandReticle, {
             x: rect.left + rect.width / 2,
             y: rect.top + rect.height / 2,
@@ -442,8 +443,8 @@
         projects[projectItems.indexOf(currentItem)]?.name === activeProject.name
       )
         return;
-      const sectionRect = infoSection.getBoundingClientRect();
-      const itemRect = currentItem.getBoundingClientRect();
+      const sectionRect = toStageRect(infoSection.getBoundingClientRect());
+      const itemRect = toStageRect(currentItem.getBoundingClientRect());
 
       const btnMinX = itemRect.width * 0.4;
       const btnMaxX = itemRect.width * 0.9;
@@ -556,7 +557,7 @@
 
         if (expanded || activeProject) {
           expanded = true;
-          const rect = item.getBoundingClientRect();
+          const rect = toStageRect(item.getBoundingClientRect());
           gsap.to(expandReticle, {
             x: rect.left + rect.width / 2,
             y: rect.top + rect.height / 2,
@@ -592,13 +593,13 @@
           projects[projectItems.indexOf(item)]?.name !== activeProject?.name
         ) {
           if (!isItem(e.relatedTarget)) {
-            const rect = item.getBoundingClientRect();
+            const rect = toStageRect(item.getBoundingClientRect());
             gsap.set(reticle, { x: rect.right, y: rect.top + rect.height / 2 });
             gsap.to(reticle, { opacity: 1, duration: 0.3, ease: 'power3.out' });
           }
           dwellTimer = setTimeout(() => {
             expanded = true;
-            const rect = item.getBoundingClientRect();
+            const rect = toStageRect(item.getBoundingClientRect());
             gsap.to(reticle, { opacity: 0, duration: 0.2 });
             gsap.set(expandReticle, {
               x: rect.left + rect.width / 2,
@@ -621,8 +622,8 @@
       });
 
       item.addEventListener('mousemove', (e: MouseEvent) => {
-        xTo(e.clientX);
-        yTo(e.clientY);
+        xTo(toStageValue(e.clientX));
+        yTo(toStageValue(e.clientY));
       });
 
       item.addEventListener('mouseleave', (e: MouseEvent) => {

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
   import gsap from 'gsap';
+  import { getStageScale } from '$lib/utils/stageScale';
 
   let { selected = $bindable(), images } = $props<{
     selected: number | null;
@@ -99,7 +100,7 @@
     hasInteracted = true;
     container.setPointerCapture(e.pointerId);
 
-    lastX = e.clientX;
+    lastX = e.clientX / getStageScale();
     lastTime = Date.now();
     velocity = 0;
     gsap.killTweensOf(proxy);
@@ -109,7 +110,7 @@
   function onPointerMove(e: PointerEvent) {
     if (!isDragging || !container) return;
 
-    const x = e.clientX;
+    const x = e.clientX / getStageScale();
     const now = Date.now();
     const dt = now - lastTime;
     const dx = x - lastX;
@@ -158,7 +159,8 @@
 
     // Smooth scroll with higher sensitivity
     const delta =
-      (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY) * 3.5;
+      ((Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY) * 3.5) /
+      getStageScale();
 
     if (!gsap.isTweening(proxy)) {
       proxy.x = container.scrollLeft;
@@ -242,10 +244,13 @@
     background: rgb(255 255 255 / 8%);
     cursor: zoom-out;
     display: flex;
-    inset: 0;
+    height: var(--page-stage-height, 100vh);
     justify-content: center;
+    left: 0;
     position: fixed;
+    top: 0;
     user-select: none;
+    width: var(--page-stage-width, 100vw);
     z-index: 1000;
   }
 

@@ -1,8 +1,14 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import '../styles/main.css';
   import favicon from '$lib/assets/favicon.ico';
   import logo from '$lib/assets/logo.svg';
   import { startGlitch } from '$lib/utils/glitch';
+  import {
+    calculateStageMetrics,
+    STAGE_DESIGN_WIDTH,
+    STAGE_MIN_SCALE,
+  } from '$lib/utils/stageScale';
 
   import type { LayoutProps } from './$types';
 
@@ -11,6 +17,10 @@
   let showGrid = $state(false);
   let time = $state('--:--:--');
   let themeDisplayText = $state('LIGHT');
+  let stageScale = $state(1);
+  let stageHeight = $state(0);
+  let stageOffsetX = $state(0);
+  let isStageScaled = $state(false);
   let glitchInterval: ReturnType<typeof setInterval> | null = null;
 
   function toggleTheme() {
@@ -53,52 +63,119 @@
 
     return () => clearInterval(interval);
   });
+
+  onMount(() => {
+    const viewport = window.visualViewport;
+
+    const updateStageScale = () => {
+      const viewportWidth = viewport?.width ?? window.innerWidth;
+      const viewportHeight = viewport?.height ?? window.innerHeight;
+      const metrics = calculateStageMetrics(
+        viewportWidth,
+        viewportHeight,
+        STAGE_DESIGN_WIDTH,
+        STAGE_MIN_SCALE
+      );
+
+      stageScale = metrics.scale;
+      stageHeight = metrics.height;
+      stageOffsetX = metrics.offsetX;
+      isStageScaled = metrics.isScaled;
+      document.documentElement.style.setProperty('--page-stage-scale', `${metrics.scale}`);
+      document.documentElement.style.setProperty('--page-stage-width', `${metrics.width}px`);
+      document.documentElement.style.setProperty('--page-stage-height', `${metrics.height}px`);
+      document.documentElement.style.setProperty('--page-stage-offset-x', `${metrics.offsetX}px`);
+    };
+
+    updateStageScale();
+    window.addEventListener('resize', updateStageScale);
+    viewport?.addEventListener('resize', updateStageScale);
+
+    return () => {
+      window.removeEventListener('resize', updateStageScale);
+      viewport?.removeEventListener('resize', updateStageScale);
+      document.documentElement.style.setProperty('--page-stage-scale', '1');
+      document.documentElement.style.setProperty('--page-stage-width', `${STAGE_DESIGN_WIDTH}px`);
+      document.documentElement.style.setProperty('--page-stage-height', '100vh');
+      document.documentElement.style.setProperty('--page-stage-offset-x', '0px');
+    };
+  });
 </script>
 
 <svelte:window onkeydown={handleKeydown} />
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
-<header class="section-container font--mono-label">
-  <img class="logo size-8" src={logo} alt="Aikhe Logo Mark" />
-
-  <p class="time">{time}</p>
-  <p class="time-zone">GMT+8</p>
-  <p class="location">CALOOCAN, PH</p>
-  <p class="coordinates">14.6514° N, 120.9902° E</p>
-
-  <button
-    class="theme-toggle ui-button ui-button--ghost z-99"
-    onclick={toggleTheme}
+<div class="app-viewport">
+  <div
+    class="app-stage"
+    class:app-stage--scaled={isStageScaled}
+    style={`--page-stage-scale: ${stageScale}; --page-stage-height: ${stageHeight}px; --page-stage-offset-x: ${stageOffsetX}px;`}
   >
-    MODE: {themeDisplayText}
-  </button>
+    <header class="section-container font--mono-label">
+      <img class="logo size-8" src={logo} alt="Aikhe Logo Mark" />
 
-  <button class="contact-btn ui-button ui-button--corners z-99">CONTACT</button>
-</header>
+      <p class="time">{time}</p>
+      <p class="time-zone">GMT+8</p>
+      <p class="location">CALOOCAN, PH</p>
+      <p class="coordinates">14.6514° N, 120.9902° E</p>
 
-<main>
-  {@render children()}
-</main>
+      <button
+        class="theme-toggle ui-button ui-button--ghost z-99"
+        onclick={toggleTheme}
+      >
+        MODE: {themeDisplayText}
+      </button>
 
-{#if showGrid}
-  <div class="grid-overlay section-container">
-    {#each Array.from(Array(12).keys()) as i (i)}
-      <div class="grid-column"></div>
-    {/each}
+      <button class="contact-btn ui-button ui-button--corners z-99">CONTACT</button>
+    </header>
+
+    <main>
+      {@render children()}
+    </main>
+
+    {#if showGrid}
+      <div class="grid-overlay section-container">
+        {#each Array.from(Array(12).keys()) as i (i)}
+          <div class="grid-column"></div>
+        {/each}
+      </div>
+    {/if}
+
+    <div class="grid-background section-container">
+      {#each Array.from(Array(12).keys()) as i (i)}
+        <div class="bg-grid-column"></div>
+      {/each}
+    </div>
+
+    <div class="stripe-gutter stripe-gutter--left"></div>
+    <div class="stripe-gutter stripe-gutter--right"></div>
   </div>
-{/if}
 
-<div class="grid-background section-container">
-  {#each Array.from(Array(12).keys()) as i (i)}
-    <div class="bg-grid-column"></div>
-  {/each}
+  <div class="stripe-gutter-outer stripe-gutter-outer--left"></div>
+  <div class="stripe-gutter-outer stripe-gutter-outer--right"></div>
 </div>
 
-<div class="stripe-gutter stripe-gutter--left"></div>
-<div class="stripe-gutter stripe-gutter--right"></div>
-
 <style>
+  .app-viewport {
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+
+  .app-stage {
+    height: var(--page-stage-height, 100vh);
+    margin-inline: auto;
+    position: relative;
+    width: var(--page-stage-width, var(--container-max-width));
+  }
+
+  .app-stage--scaled {
+    transform: translateX(var(--page-stage-offset-x, 0)) scale(var(--page-stage-scale));
+    transform-origin: top left;
+  }
+
   header {
     align-items: center;
     color: var(--color-text-muted);
@@ -195,14 +272,11 @@
     mask-repeat: repeat;
     mask-size: 7px 7px;
     pointer-events: none;
-    position: fixed;
+    position: absolute;
     top: 0;
 
-    /* match the gutter of .section-container */
-    width: max(
-      calc((100vw - var(--container-width)) / 2),
-      calc((100vw - var(--container-max-width)) / 2)
-    );
+    /* match section-container side gutters inside 1920 design stage */
+    width: calc((100% - var(--container-width)) / 2);
     z-index: -999;
   }
 
@@ -211,6 +285,30 @@
   }
 
   .stripe-gutter--right {
+    right: 0;
+  }
+
+  .stripe-gutter-outer {
+    background-color: var(--color-overlay-10);
+    bottom: 0;
+    mask-image: url('$lib/assets/stripe.svg');
+    mask-repeat: repeat;
+    mask-size: 7px 7px;
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    width: max(
+      0px,
+      calc((100vw - (var(--container-max-width) * var(--page-stage-scale, 1))) / 2)
+    );
+    z-index: -1000;
+  }
+
+  .stripe-gutter-outer--left {
+    left: 0;
+  }
+
+  .stripe-gutter-outer--right {
     right: 0;
   }
 </style>

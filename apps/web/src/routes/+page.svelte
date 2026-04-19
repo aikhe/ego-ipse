@@ -17,17 +17,19 @@
   let selectedProject = $state<Project | null>(null);
 </script>
 
-<section class="section-container pointer-events-none relative z-20">
-  <Hero bind:selectedProject />
-</section>
+<div class="page-shell">
+  <section class="section-container pointer-events-none relative z-20">
+    <Hero bind:selectedProject />
+  </section>
 
-<div class="scene-container fixed inset-0 z-1">
-  <Canvas dpr={1} toneMapping={THREE.NoToneMapping}>
-    <Scene
-      isShifted={!!selectedProject}
-      onposterclick={i => (selectedPoster = i)}
-    />
-  </Canvas>
+  <div class="scene-container">
+    <Canvas dpr={1} toneMapping={THREE.NoToneMapping}>
+      <Scene
+        isShifted={!!selectedProject}
+        onposterclick={i => (selectedPoster = i)}
+      />
+    </Canvas>
+  </div>
 </div>
 
 {#if selectedPoster !== null}
@@ -38,12 +40,26 @@
 {/if}
 
 <style>
+  .page-shell {
+    height: var(--page-stage-height, 100vh);
+    position: relative;
+  }
+
   section {
     align-items: end;
     display: grid;
     gap: 1.2rem;
     grid-template-columns: repeat(12, 1fr);
-    height: calc(100vh - 4.8rem);
+    height: calc(var(--page-stage-height, 100vh) - 4.8rem);
     padding-bottom: 2rem;
+  }
+
+  .scene-container {
+    height: calc(var(--page-stage-height, 100vh) * var(--page-stage-scale, 1));
+    inset: 0;
+    position: absolute;
+    transform: scale(calc(1 / var(--page-stage-scale, 1)));
+    transform-origin: top left;
+    width: calc(var(--page-stage-width, 100vw) * var(--page-stage-scale, 1));
   }
 </style>

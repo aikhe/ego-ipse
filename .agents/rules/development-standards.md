@@ -34,6 +34,7 @@ Maintain a high-fidelity, premium, and performant coding standard that prioritiz
 - MUST remove unnecessary code on sight.
 - MUST ensure all `each` blocks have a unique key.
 - MUST resolve all LSP diagnostics.
+- MUST use lowercase for comments
 
 ## Linting & Formatting
 

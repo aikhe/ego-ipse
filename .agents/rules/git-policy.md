@@ -33,7 +33,7 @@ Maintain a clean, technical, and descriptive commit/PR history following a stric
 - PR Descriptions MUST include:
   - `### Summary`: High-level overview.
   - `### Features`: Bulleted list of new functionality.
-  - `### Changes`: Technical breakdown of modified files with [clickable links].
+  - `### Changes`: All commits message in bullet list.
   - `### Configuration`: (If applicable) code snippets for setup.
 
 ## Guidelines
@@ -52,5 +52,4 @@ Maintain a clean, technical, and descriptive commit/PR history following a stric
 
 - Committing without explicit "go ahead" from the USER.
 - Using multi-line commit messages with summaries.
-- Staging the `.agent` folder.
 - Merging PRs with failing CI checks (Red ❌).

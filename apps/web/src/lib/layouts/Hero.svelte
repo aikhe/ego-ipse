@@ -34,6 +34,12 @@
       gsap.set(chars, { yPercent: 0, force3D: true });
     }
 
+    if (descEl) {
+      splitTextCustom(descEl, { clipDirection: 'horizontal' });
+      const chars = descEl.querySelectorAll('.char');
+      gsap.set(chars, { xPercent: 0, force3D: true });
+    }
+
     // Give browser a frame to settle layout before showing
     requestAnimationFrame(() => {
       isReadyToAnimate = true;
@@ -83,12 +89,56 @@
     return tl;
   }
 
+  function buildDescTimeline(direction: 'out' | 'in'): gsap.core.Timeline {
+    const tl = gsap.timeline();
+    if (!descEl) return tl;
+
+    const lines = Array.from(descEl.querySelectorAll('.line'));
+    if (!lines.length) return tl;
+
+    if (direction === 'out') {
+      lines.forEach((line, index) => {
+        const chars = Array.from(line.querySelectorAll('.char'));
+        tl.to(
+          chars,
+          {
+            xPercent: -200,
+            duration: 0.6,
+            ease: 'expo.inOut',
+            force3D: true,
+            stagger: { amount: 0.2, from: 'end' },
+          },
+          index * 0.08
+        );
+      });
+    } else {
+      const reversed = [...lines].reverse();
+      reversed.forEach((line, index) => {
+        const chars = Array.from(line.querySelectorAll('.char'));
+        tl.fromTo(
+          chars,
+          { xPercent: -200 },
+          {
+            xPercent: 0,
+            duration: 0.6,
+            ease: 'expo.inOut',
+            force3D: true,
+            stagger: { amount: 0.2, from: 'start' },
+          },
+          index * 0.08
+        );
+      });
+    }
+    return tl;
+  }
+
   async function triggerHeroOut(project: Project) {
     if (isAnimating) return;
     isAnimating = true;
     nextProject = project;
 
     const titleTl = buildTitleTimeline('out');
+    const descTl = buildDescTimeline('out');
 
     const master = gsap.timeline({
       onComplete: () => {
@@ -98,6 +148,7 @@
       },
     });
     master.add(titleTl, 0);
+    master.add(descTl, 0);
   }
 
   async function triggerHeroIn() {
@@ -109,6 +160,7 @@
     // wait a tick for DOM update
     await new Promise(r => requestAnimationFrame(r));
 
+    const descTl = buildDescTimeline('in');
     const titleTl = buildTitleTimeline('in');
 
     const master = gsap.timeline({
@@ -116,6 +168,7 @@
         isAnimating = false;
       },
     });
+    master.add(descTl, 0);
     master.add(titleTl, 0);
   }
 

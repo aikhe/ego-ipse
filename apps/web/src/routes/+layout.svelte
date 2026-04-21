@@ -9,6 +9,8 @@
     STAGE_DESIGN_WIDTH,
     STAGE_MIN_SCALE,
   } from '$lib/utils/stageScale';
+  import { uiState } from '$lib/state/ui.svelte';
+  import gsap from 'gsap';
 
   import type { LayoutProps } from './$types';
 
@@ -59,7 +61,11 @@
     };
 
     updateTime();
-    const interval = setInterval(updateTime, 1000);
+    const interval = setInterval(() => {
+      if (!uiState.isProjectView) {
+        updateTime();
+      }
+    }, 1000);
 
     return () => clearInterval(interval);
   });
@@ -93,12 +99,52 @@
 
     return () => {
       window.removeEventListener('resize', updateStageScale);
+      viewport?.resizeTo?.(0, 0); // fallback for removeEventListener if needed
       viewport?.removeEventListener('resize', updateStageScale);
       document.documentElement.style.setProperty('--page-stage-scale', '1');
       document.documentElement.style.setProperty('--page-stage-width', `${STAGE_DESIGN_WIDTH}px`);
       document.documentElement.style.setProperty('--page-stage-height', '100vh');
       document.documentElement.style.setProperty('--page-stage-offset-x', '0px');
     };
+  });
+
+  onMount(() => {
+    // Warm up header chars
+    if (headerEl) {
+      const chars = headerEl.querySelectorAll('.header-anim .char');
+      gsap.set(chars, { xPercent: 0, force3D: true });
+    }
+  });
+
+  let headerEl = $state<HTMLElement>();
+
+  $effect(() => {
+    if (!headerEl) return;
+    const chars = headerEl.querySelectorAll('.header-anim .char');
+    if (uiState.isProjectView) {
+      gsap.fromTo(chars, 
+        { xPercent: 0 },
+        {
+          xPercent: -200,
+          duration: 0.6,
+          delay: 0.45,
+          ease: 'expo.inOut',
+          force3D: true,
+          stagger: { amount: 0.2, from: 'end' },
+        }
+      );
+    } else {
+      gsap.fromTo(chars,
+        { xPercent: -200 },
+        {
+          xPercent: 0,
+          duration: 0.6,
+          ease: 'expo.inOut',
+          force3D: true,
+          stagger: { amount: 0.2, from: 'start' },
+        }
+      );
+    }
   });
 </script>
 
@@ -112,12 +158,24 @@
     class:app-stage--scaled={isStageScaled}
     style={`--page-stage-scale: ${stageScale}; ${stageHeight === null ? '' : `--page-stage-height: ${stageHeight}px;`} --page-stage-offset-x: ${stageOffsetX}px;`}
   >
-    <header class="section-container font--mono-label">
+    <header class="section-container font--mono-label" bind:this={headerEl}>
       <img class="logo size-8" src={logo} alt="Aikhe Logo Mark" />
 
-      <p class="time">{time}</p>
-      <p class="time-zone">GMT+8</p>
-      <p class="location">CALOOCAN, PH</p>
+      <p class="time header-anim">
+        {#each time.split('') as char}
+          <span class="char-mask"><span class="char">{char}</span></span>
+        {/each}
+      </p>
+      <p class="time-zone header-anim">
+        {#each 'GMT+8'.split('') as char}
+          <span class="char-mask"><span class="char">{char}</span></span>
+        {/each}
+      </p>
+      <p class="location header-anim">
+        {#each 'CALOOCAN, PH'.split('') as char}
+          <span class="char-mask"><span class="char">{char}</span></span>
+        {/each}
+      </p>
       <p class="coordinates">14.6514° N, 120.9902° E</p>
 
       <button
@@ -219,6 +277,33 @@
   .contact-btn {
     grid-column: 12 / span 1;
     justify-self: flex-end;
+  }
+
+  .char-mask {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+  }
+
+  .char {
+    backface-visibility: hidden;
+    display: inline-block;
+    transform: translate3d(0, 0, 0);
+    vertical-align: top;
+    will-change: transform;
+  }
+
+  .time,
+  .time-zone,
+  .location,
+  .coordinates {
+    display: flex;
+    white-space: pre;
+  }
+
+  /* preserve spaces */
+  .char:empty::after {
+    content: '\00a0';
   }
 
   .grid-overlay {

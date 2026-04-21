@@ -140,6 +140,9 @@
     const titleTl = buildTitleTimeline('out');
     const descTl = buildDescTimeline('out');
 
+    // start description at 90% of title duration
+    uiState.isProjectView = true;
+
     const master = gsap.timeline({
       onComplete: () => {
         selectedProject = nextProject;
@@ -148,13 +151,14 @@
       },
     });
     master.add(titleTl, 0);
-    master.add(descTl, 0);
+    master.add(descTl, titleTl.duration() - 0.64);
   }
 
   async function triggerHeroIn() {
     if (isAnimating) return;
     isAnimating = true;
 
+    uiState.isProjectView = false;
     selectedProject = null;
 
     // wait a tick for DOM update
@@ -163,13 +167,14 @@
     const descTl = buildDescTimeline('in');
     const titleTl = buildTitleTimeline('in');
 
+    // start title at 90% of description duration
     const master = gsap.timeline({
       onComplete: () => {
         isAnimating = false;
       },
     });
-    master.add(descTl, 0);
-    master.add(titleTl, 0);
+    master.add(descTl, 0.25);
+    master.add(titleTl, 0.25 + descTl.duration() - 0.64);
   }
 
   function handleDeselect(e: MouseEvent) {
@@ -233,7 +238,7 @@
     gap: 2.4rem;
     grid-column: 1 / span 10;
     grid-row: 1;
-    opacity: 0;
+    opacity: 0; /* Hide initially to prevent SSR flash */
     transition: opacity 0.2s ease;
   }
 

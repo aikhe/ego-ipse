@@ -155,8 +155,7 @@
 <div class="app-viewport">
   <div
     class="app-stage"
-    class:app-stage--scaled={isStageScaled}
-    style={`--page-stage-scale: ${stageScale}; ${stageHeight === null ? '' : `--page-stage-height: ${stageHeight}px;`} --page-stage-offset-x: ${stageOffsetX}px;`}
+    style={`--page-stage-scale: ${stageScale}; ${stageHeight === null ? '' : `--page-stage-height: ${stageHeight}px;`} --page-stage-offset-x: ${stageOffsetX}px; transform: translateX(${stageOffsetX}px) scale(${stageScale}); transform-origin: top left;`}
   >
     <header class="section-container font--mono-label" bind:this={headerEl}>
       <img class="logo size-8" src={logo} alt="Aikhe Logo Mark" />
@@ -224,15 +223,11 @@
 
   .app-stage {
     height: var(--page-stage-height, 100vh);
-    margin-inline: auto;
     position: relative;
     width: var(--page-stage-width, var(--container-max-width));
   }
 
-  .app-stage--scaled {
-    transform: translateX(var(--page-stage-offset-x, 0)) scale(var(--page-stage-scale));
-    transform-origin: top left;
-  }
+
 
   header {
     align-items: center;

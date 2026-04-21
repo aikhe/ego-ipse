@@ -7,7 +7,7 @@
   import type { Project } from '$lib/types/project';
 
   import { splitTextCustom } from '$lib/utils/splitText';
-  import { uiState } from '$lib/state/ui.svelte';
+  import { uiState } from '$lib/state/ui.svelte.ts';
   import gsap from 'gsap';
 
   let { selectedProject = $bindable(null) } = $props();

@@ -9,7 +9,7 @@
     STAGE_DESIGN_WIDTH,
     STAGE_MIN_SCALE,
   } from '$lib/utils/stageScale';
-  import { uiState } from '$lib/state/ui.svelte';
+  import { uiState } from '$lib/state/ui.svelte.ts';
   import gsap from 'gsap';
 
   import type { LayoutProps } from './$types';

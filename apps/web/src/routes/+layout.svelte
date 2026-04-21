@@ -22,7 +22,6 @@
   let stageScale = $state(1);
   let stageHeight = $state<number | null>(null);
   let stageOffsetX = $state(0);
-  let isStageScaled = $state(false);
   let glitchInterval: ReturnType<typeof setInterval> | null = null;
 
   function toggleTheme() {
@@ -86,11 +85,22 @@
       stageScale = metrics.scale;
       stageHeight = metrics.height;
       stageOffsetX = metrics.offsetX;
-      isStageScaled = metrics.isScaled;
-      document.documentElement.style.setProperty('--page-stage-scale', `${metrics.scale}`);
-      document.documentElement.style.setProperty('--page-stage-width', `${metrics.width}px`);
-      document.documentElement.style.setProperty('--page-stage-height', `${metrics.height}px`);
-      document.documentElement.style.setProperty('--page-stage-offset-x', `${metrics.offsetX}px`);
+      document.documentElement.style.setProperty(
+        '--page-stage-scale',
+        `${metrics.scale}`
+      );
+      document.documentElement.style.setProperty(
+        '--page-stage-width',
+        `${metrics.width}px`
+      );
+      document.documentElement.style.setProperty(
+        '--page-stage-height',
+        `${metrics.height}px`
+      );
+      document.documentElement.style.setProperty(
+        '--page-stage-offset-x',
+        `${metrics.offsetX}px`
+      );
     };
 
     updateStageScale();
@@ -99,12 +109,20 @@
 
     return () => {
       window.removeEventListener('resize', updateStageScale);
-      viewport?.resizeTo?.(0, 0); // fallback for removeEventListener if needed
       viewport?.removeEventListener('resize', updateStageScale);
       document.documentElement.style.setProperty('--page-stage-scale', '1');
-      document.documentElement.style.setProperty('--page-stage-width', `${STAGE_DESIGN_WIDTH}px`);
-      document.documentElement.style.setProperty('--page-stage-height', '100vh');
-      document.documentElement.style.setProperty('--page-stage-offset-x', '0px');
+      document.documentElement.style.setProperty(
+        '--page-stage-width',
+        `${STAGE_DESIGN_WIDTH}px`
+      );
+      document.documentElement.style.setProperty(
+        '--page-stage-height',
+        '100vh'
+      );
+      document.documentElement.style.setProperty(
+        '--page-stage-offset-x',
+        '0px'
+      );
     };
   });
 
@@ -122,7 +140,8 @@
     if (!headerEl) return;
     const chars = headerEl.querySelectorAll('.header-anim .char');
     if (uiState.isProjectView) {
-      gsap.fromTo(chars, 
+      gsap.fromTo(
+        chars,
         { xPercent: 0 },
         {
           xPercent: -200,
@@ -134,7 +153,8 @@
         }
       );
     } else {
-      gsap.fromTo(chars,
+      gsap.fromTo(
+        chars,
         { xPercent: -200 },
         {
           xPercent: 0,
@@ -161,17 +181,17 @@
       <img class="logo size-8" src={logo} alt="Aikhe Logo Mark" />
 
       <p class="time header-anim">
-        {#each time.split('') as char}
+        {#each time.split('') as char, i (i)}
           <span class="char-mask"><span class="char">{char}</span></span>
         {/each}
       </p>
       <p class="time-zone header-anim">
-        {#each 'GMT+8'.split('') as char}
+        {#each 'GMT+8'.split('') as char, i (i)}
           <span class="char-mask"><span class="char">{char}</span></span>
         {/each}
       </p>
       <p class="location header-anim">
-        {#each 'CALOOCAN, PH'.split('') as char}
+        {#each 'CALOOCAN, PH'.split('') as char, i (i)}
           <span class="char-mask"><span class="char">{char}</span></span>
         {/each}
       </p>
@@ -184,7 +204,9 @@
         MODE: {themeDisplayText}
       </button>
 
-      <button class="contact-btn ui-button ui-button--corners z-99">CONTACT</button>
+      <button class="contact-btn ui-button ui-button--corners z-99"
+        >CONTACT</button
+      >
     </header>
 
     <main>
@@ -226,8 +248,6 @@
     position: relative;
     width: var(--page-stage-width, var(--container-max-width));
   }
-
-
 
   header {
     align-items: center;
@@ -379,7 +399,9 @@
     top: 0;
     width: max(
       0px,
-      calc((100vw - (var(--container-max-width) * var(--page-stage-scale, 1))) / 2)
+      calc(
+        (100vw - (var(--container-max-width) * var(--page-stage-scale, 1))) / 2
+      )
     );
     z-index: -1000;
   }

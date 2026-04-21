@@ -181,10 +181,14 @@
           <div class="social-card__tags">
             {#if displaySocial.tags}
               {#each displaySocial.tags as tag (tag)}
-                <span class="social-card__tag font--mono-tag-regular">[ {tag} ]</span>
+                <span class="social-card__tag font--mono-tag-regular"
+                  >[ {tag} ]</span
+                >
               {/each}
             {:else}
-              <span class="social-card__tag font--mono-tag-regular">[ {displaySocial.name} ]</span>
+              <span class="social-card__tag font--mono-tag-regular"
+                >[ {displaySocial.name} ]</span
+              >
               <span class="social-card__tag font--mono-tag-regular"
                 >[ {displaySocial.external ? 'SOCIAL' : 'INTERNAL'} ]</span
               >

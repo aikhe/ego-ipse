@@ -3,7 +3,10 @@ interface SplitOptions {
   clipDirection?: 'vertical' | 'horizontal';
 }
 
-export function splitTextCustom(element: HTMLElement, options: SplitOptions = {}) {
+export function splitTextCustom(
+  element: HTMLElement,
+  options: SplitOptions = {}
+) {
   const { clipDirection = 'vertical' } = options;
   // 1. Wrap words and characters
   const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
@@ -15,12 +18,12 @@ export function splitTextCustom(element: HTMLElement, options: SplitOptions = {}
     }
   }
 
-  textNodes.forEach((node) => {
+  textNodes.forEach(node => {
     const text = node.nodeValue || '';
     const fragment = document.createDocumentFragment();
 
     const words = text.split(/(\s+)/);
-    words.forEach((word) => {
+    words.forEach(word => {
       if (word.trim() === '') {
         fragment.appendChild(document.createTextNode(word));
       } else {
@@ -28,7 +31,7 @@ export function splitTextCustom(element: HTMLElement, options: SplitOptions = {}
         wordSpan.style.display = 'inline-block';
         wordSpan.style.verticalAlign = 'top';
         wordSpan.className = 'word';
-        word.split('').forEach((char) => {
+        word.split('').forEach(char => {
           const charSpan = document.createElement('span');
           charSpan.style.display = 'inline-block';
           charSpan.style.verticalAlign = 'top';
@@ -59,7 +62,7 @@ export function splitTextCustom(element: HTMLElement, options: SplitOptions = {}
   const lines: HTMLElement[][] = [];
   let currentLine: HTMLElement[] = [];
 
-  words.forEach((word) => {
+  words.forEach(word => {
     const y = word.offsetTop;
     if (lastY === -1 || Math.abs(y - lastY) > 5) {
       if (currentLine.length > 0) lines.push(currentLine);
@@ -76,13 +79,12 @@ export function splitTextCustom(element: HTMLElement, options: SplitOptions = {}
   container.style.flexDirection = 'column';
   container.style.alignItems = 'flex-start';
 
-  lines.forEach((lineWords, i) => {
+  lines.forEach(lineWords => {
     const lineDiv = document.createElement('div');
     lineDiv.className = 'line';
     // clip-path: vertical clips bottom, horizontal clips left
-    lineDiv.style.clipPath = clipDirection === 'horizontal'
-      ? 'inset(0 0 0 0)'
-      : 'inset(-100% 0 0 0)';
+    lineDiv.style.clipPath =
+      clipDirection === 'horizontal' ? 'inset(0 0 0 0)' : 'inset(-100% 0 0 0)';
     lineDiv.style.display = 'block';
     lineDiv.style.whiteSpace = 'nowrap';
     lineDiv.style.position = 'relative';
@@ -118,6 +120,9 @@ export function splitTextCustom(element: HTMLElement, options: SplitOptions = {}
 
   element.innerHTML = '';
   element.appendChild(container);
-  
-  return { lines: Array.from(container.querySelectorAll('.line')), chars: Array.from(container.querySelectorAll('.char')) };
+
+  return {
+    lines: Array.from(container.querySelectorAll('.line')),
+    chars: Array.from(container.querySelectorAll('.char')),
+  };
 }

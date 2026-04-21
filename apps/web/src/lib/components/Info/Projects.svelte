@@ -3,6 +3,7 @@
   import gsap from 'gsap';
   import { startGlitch } from '$lib/utils/glitch';
   import { toStageRect, toStageValue, toStageX } from '$lib/utils/stageScale';
+  import type { Project } from '$lib/types/project';
 
   import ProjectPreview from './ProjectPreview.svelte';
 
@@ -75,7 +76,17 @@
     },
   ] as const;
 
-  let { onselect = () => {}, activeProject = $bindable(null) } = $props();
+  interface Props {
+    onselect?: (p: Project) => void;
+    activeProject?: Project | null;
+    isReady?: boolean;
+  }
+
+  let {
+    onselect = () => {},
+    activeProject = $bindable(null),
+    isReady = true,
+  }: Props = $props();
 
   // Glitch text state per project
   let glitchTexts = $state<string[]>(projects.map(p => p.name));
@@ -115,11 +126,19 @@
   const EXIT_DELAY = 100;
   const BOX_DELAY = 300;
   let lastActiveName = '';
+  let lastReady = false;
 
   // sticky active state effect
   $effect(() => {
-    const currentName = activeProject?.name || '';
-    if (currentName === lastActiveName) return;
+    const project = activeProject;
+    const currentName = project?.name || '';
+    const ready = isReady;
+
+    if (currentName === lastActiveName && ready === lastReady) return;
+    if (currentName === '' && lastActiveName === '' && ready === lastReady)
+      return;
+
+    lastReady = ready;
 
     untrack(async () => {
       const oldName = lastActiveName;
@@ -131,7 +150,7 @@
         const oldIndex = projects.findIndex(p => p.name === oldName);
         if (oldIndex !== -1) {
           const oldItem = projectItems[oldIndex];
-          if (oldItem && (!activeProject || oldName !== activeProject.name)) {
+          if (oldItem && (!project || oldName !== project.name)) {
             const bg = oldItem.querySelector('.project--bg');
             const arrow = oldItem.querySelector('.arrow');
             gsap.killTweensOf([bg, oldItem, arrow]);
@@ -211,7 +230,7 @@
       projectItems.forEach(item => {
         if (!item) return;
         const name = projects[projectItems.indexOf(item)]?.name;
-        const isCurrentlyActive = activeProject?.name === name;
+        const isCurrentlyActive = project?.name === name;
         const isHovered = item === currentItem;
 
         if (!isCurrentlyActive && !isHovered && name !== oldName) {
@@ -224,7 +243,7 @@
         }
       });
 
-      if (!activeProject) {
+      if (!project) {
         if (!currentItem) {
           gsap.to(expandReticle, {
             width: 0,
@@ -238,7 +257,7 @@
         return;
       }
 
-      const index = projects.findIndex(p => p.name === activeProject.name);
+      const index = projects.findIndex(p => p.name === project.name);
       if (index === -1) return;
       const item = projectItems[index];
       if (!item) return;
@@ -402,8 +421,9 @@
 
       gsap.killTweensOf([randomBox, buttonBox, connectorLine, lineCoords]);
 
-      if (activeProject) {
-        const index = projects.findIndex(p => p.name === activeProject.name);
+      const project = activeProject;
+      if (project) {
+        const index = projects.findIndex(p => p.name === project.name);
         if (index !== -1) {
           const item = projectItems[index];
           const rect = toStageRect(item.getBoundingClientRect());

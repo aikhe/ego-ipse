@@ -123,8 +123,11 @@ export default defineType({
             if (typeof item !== 'string') return 'All technologies must be strings'
           }
           const lowercased = techStack.map((t: string) => t.toLowerCase().trim())
-          const duplicates = lowercased.filter((item: string, index: number) => lowercased.indexOf(item) !== index)
-          if (duplicates.length > 0) return `No duplicate technologies allowed (case-insensitive): ${duplicates[0]}`
+          const duplicates = lowercased.filter(
+            (item: string, index: number) => lowercased.indexOf(item) !== index,
+          )
+          if (duplicates.length > 0)
+            return `No duplicate technologies allowed (case-insensitive): ${duplicates[0]}`
           return true
         }),
       ],

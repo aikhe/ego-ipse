@@ -1,12 +1,12 @@
 export interface Project {
-  name: string;
-  href: string;
-  section: string;
-  date: string;
-  tags: string[];
-  id: string;
-  width: number;
-  height: number;
-  image: string;
-  external: boolean;
+  readonly name: string;
+  readonly href: string;
+  readonly section: string;
+  readonly date: string;
+  readonly tags: readonly string[];
+  readonly id: string;
+  readonly width: number;
+  readonly height: number;
+  readonly image: string;
+  readonly external: boolean;
 }

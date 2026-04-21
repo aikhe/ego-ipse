@@ -292,7 +292,10 @@
       {#each socials.slice(0, 3) as social, i (social.name)}
         <a
           href={social.href}
-          rel={social.external ? 'external' : undefined}
+          target="_blank"
+          rel={social.external
+            ? 'external noopener noreferrer'
+            : 'noopener noreferrer'}
           class="socials__link font--mono-link"
           onmouseenter={() => startGlitch(i)}
           onmouseleave={() => stopGlitch(i)}
@@ -307,7 +310,10 @@
       {#each socials.slice(3, 6) as social, i (social.name)}
         <a
           href={social.href}
-          rel={social.external ? 'external' : undefined}
+          target="_blank"
+          rel={social.external
+            ? 'external noopener noreferrer'
+            : 'noopener noreferrer'}
           class="socials__link font--mono-link"
           onmouseenter={() => startGlitch(i + 3)}
           onmouseleave={() => stopGlitch(i + 3)}

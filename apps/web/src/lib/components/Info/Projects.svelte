@@ -202,19 +202,19 @@
         gsap.set([activeLineTop, activeLineBottom], { opacity: 0 });
 
         // 4. Now it's safe to remove the visual active class
-        if (!activeProject || oldName !== activeProject.name) {
+        if (!project || oldName !== project.name) {
           visualActiveProject = null;
         }
       }
 
       // Set visual active immediately when activating
-      if (activeProject) {
-        visualActiveProject = activeProject.name;
+      if (project) {
+        visualActiveProject = project.name;
       }
 
       // Sync active item state immediately if it exists
-      if (activeProject) {
-        const idx = projects.findIndex(p => p.name === activeProject.name);
+      if (project) {
+        const idx = projects.findIndex(p => p.name === project.name);
         if (idx !== -1) {
           const item = projectItems[idx];
           if (item) {

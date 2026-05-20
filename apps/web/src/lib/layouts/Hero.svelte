@@ -203,11 +203,8 @@
     class:hero--ready={isReadyToAnimate}
   >
     <h1 class="hero__title font--hero-title" bind:this={titleEl}>
-      <strong class="title--strong font--hero-accent">Aikhe</strong> is a design engineer
-      of the printing and typesetting industry. Lorem Ipsum has been the industry's
-      standard dummy text ever since the 1500s.
-    </h1>
-    <p class="hero__description font--mono-label" bind:this={descEl}>
+      <strong class="title--strong font--hero-accent">aikhe</strong> is a design engineer working across <br> products, systems, and software experiences <br> that connect thoughtful interfaces with the <br> engineering behind them.</h1>
+    <p class="hero__description font--mono-link" bind:this={descEl}>
       <strong class="description--strong">CONTRARY TO POPULAR BELIEF,</strong> LOREM
       IPSUM IS NOT SIMPLY RANDOM TEXT. IT HAS ROOTS IN A PIECE OF CLASSICAL LATIN
       LITERATURE FROM 45 BC.
@@ -215,7 +212,7 @@
   </div>
 
   <div class="info pointer-events-auto">
-    <p class="info__title font--mono-label">CREATIVE PROJECTS I'VE WORKED ON</p>
+    <p class="info__title font--mono-label">PROJECTS I'VE WORKED ON</p>
     <Projects
       activeProject={selectedProject || nextProject}
       isReady={uiState.isProjectView}
@@ -235,7 +232,7 @@
   .hero {
     display: flex;
     flex-direction: column;
-    gap: 2.4rem;
+    gap: 1.6rem;
     grid-column: 1 / span 10;
     grid-row: 1;
     opacity: 0; /* Hide initially to prevent SSR flash */
@@ -257,12 +254,12 @@
   }
 
   .hero__title {
-    width: 38ch;
+    width: 64ch;
   }
 
   .hero__description {
     color: var(--color-text-muted);
-    line-height: 16px;
+    line-height: 15px;
     width: 48ch;
   }
 

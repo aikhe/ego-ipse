@@ -197,7 +197,7 @@
       <p class="coordinates">14.6514° N, 120.9902° E</p>
 
       <button
-        class="theme-toggle ui-button ui-button--ghost z-99"
+        class="theme-toggle ui-button ui-button--ghost z-99 font--mono-label"
         onclick={toggleTheme}
       >
         MODE: {themeDisplayText}
@@ -285,7 +285,7 @@
   }
 
   .theme-toggle {
-    grid-column: 9;
+    grid-column: 10;
   }
 
   .contact-btn {

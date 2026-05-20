@@ -127,6 +127,7 @@
   const BOX_DELAY = 300;
   let lastActiveName = '';
   let lastReady = false;
+  let activeDrawTimeline: gsap.core.Timeline | null = null;
 
   // sticky active state effect
   $effect(() => {
@@ -154,7 +155,7 @@
             const bg = oldItem.querySelector('.project--bg');
             const arrow = oldItem.querySelector('.arrow');
             gsap.killTweensOf([bg, oldItem, arrow]);
-            gsap.to(bg, { opacity: 0, duration: 0.08, ease: 'power3.out' });
+            gsap.to(bg, { opacity: 0, duration: 0.6, ease: 'power3.out' });
             gsap.to(oldItem, {
               padding: '0',
               zIndex: 1,
@@ -163,6 +164,11 @@
             });
             gsap.to(arrow, { opacity: 0.8, duration: 0.3, ease: 'power3.out' });
           }
+        }
+
+        if (activeDrawTimeline) {
+          activeDrawTimeline.kill();
+          activeDrawTimeline = null;
         }
 
         gsap.killTweensOf([
@@ -174,7 +180,7 @@
         const tl = gsap.timeline();
 
         // 2. Lines retract back to their current startX/Y (the random box)
-        await tl.to(activeLineCoords, {
+        tl.to(activeLineCoords, {
           topX: activeLineCoords.startX,
           topY: activeLineCoords.startY,
           botX: activeLineCoords.startX,
@@ -194,12 +200,15 @@
         });
 
         // 3. Then the box fades out
-        await tl.to(activeButtonBox, {
+        tl.to(activeButtonBox, {
           opacity: 0,
           duration: 0.3,
           ease: 'power2.in',
         });
-        gsap.set([activeLineTop, activeLineBottom], { opacity: 0 });
+
+        tl.call(() => {
+          gsap.set([activeLineTop, activeLineBottom], { opacity: 0 });
+        });
 
         // 4. Now it's safe to remove the visual active class
         if (!project || oldName !== project.name) {
@@ -237,7 +246,7 @@
           const bg = item.querySelector('.project--bg');
           const arrow = item.querySelector('.arrow');
           gsap.killTweensOf([bg, item, arrow]);
-          gsap.to(bg, { opacity: 0, duration: 0.08 });
+          gsap.to(bg, { opacity: 0, duration: 0.6, ease: 'power3.out' });
           gsap.to(item, { padding: '0', zIndex: 1, duration: 0.2 });
           gsap.to(arrow, { opacity: 0.8, duration: 0.2 });
         }
@@ -278,9 +287,6 @@
 
       await tick();
       await new Promise(r => requestAnimationFrame(r));
-
-      // Wait for hero animations to finish before showing connector lines
-      await new Promise(r => setTimeout(r, 1200));
 
       const pv = document.querySelector('.project-view');
       if (
@@ -333,7 +339,13 @@
         `${startX},${startY} ${startX},${startY}`
       );
 
+      if (activeDrawTimeline) {
+        activeDrawTimeline.kill();
+        activeDrawTimeline = null;
+      }
+
       const inTl = gsap.timeline();
+      activeDrawTimeline = inTl;
 
       // 1. New box fades in
       gsap.set(activeButtonBox, {
@@ -659,7 +671,7 @@
         const isCurrentActive =
           projects[projectItems.indexOf(item)]?.name === activeProject?.name;
         if (!isCurrentActive) {
-          gsap.to(bg, { opacity: 0, duration: 0.08 });
+          gsap.to(bg, { opacity: 0, duration: 0.8, ease: 'power3.out' });
           gsap.to(item, { zIndex: 1, padding: '0', duration: 0.3 });
           gsap.to(arrow, { opacity: 0.8, duration: 0.3 });
         }
@@ -828,7 +840,6 @@
     opacity: 0;
     pointer-events: none;
     position: absolute;
-    transition: opacity 0.08s ease;
     z-index: 0;
   }
 
@@ -933,8 +944,8 @@
 
   .random-box.is-active {
     background: var(--color-bg);
-    height: 0.5rem;
-    width: 0.5rem;
+    height: 0.43rem;
+    width: 0.43rem;
   }
 
   .connector-svg {

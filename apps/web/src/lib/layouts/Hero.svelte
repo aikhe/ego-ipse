@@ -17,6 +17,7 @@
   let descEl: HTMLElement | undefined = $state();
 
   let isAnimating = $state(false);
+  let activeTimeline: gsap.core.Timeline | null = null;
   let titleSplit = $state(false);
   let isReadyToAnimate = $state(false);
 
@@ -133,7 +134,10 @@
   }
 
   async function triggerHeroOut(project: Project) {
-    if (isAnimating) return;
+    if (activeTimeline) {
+      activeTimeline.kill();
+      activeTimeline = null;
+    }
     isAnimating = true;
     nextProject = project;
 
@@ -148,18 +152,24 @@
         selectedProject = nextProject;
         nextProject = null;
         isAnimating = false;
+        activeTimeline = null;
       },
     });
+    activeTimeline = master;
     master.add(titleTl, 0);
     master.add(descTl, titleTl.duration() - 0.64);
   }
 
   async function triggerHeroIn() {
-    if (isAnimating) return;
+    if (activeTimeline) {
+      activeTimeline.kill();
+      activeTimeline = null;
+    }
     isAnimating = true;
 
     uiState.isProjectView = false;
     selectedProject = null;
+    nextProject = null;
 
     // wait a tick for DOM update
     await new Promise(r => requestAnimationFrame(r));
@@ -171,10 +181,12 @@
     const master = gsap.timeline({
       onComplete: () => {
         isAnimating = false;
+        activeTimeline = null;
       },
     });
-    master.add(descTl, 0.25);
-    master.add(titleTl, 0.25 + descTl.duration() - 0.64);
+    activeTimeline = master;
+    master.add(descTl, 0);
+    master.add(titleTl, descTl.duration() - 0.64);
   }
 
   function handleDeselect(e: MouseEvent) {
@@ -217,11 +229,7 @@
       activeProject={selectedProject || nextProject}
       isReady={uiState.isProjectView}
       onselect={(p: Project) => {
-        if (!selectedProject && !isAnimating) {
-          triggerHeroOut(p);
-        } else if (selectedProject) {
-          selectedProject = p;
-        }
+        triggerHeroOut(p);
       }}
     />
     <Socials />

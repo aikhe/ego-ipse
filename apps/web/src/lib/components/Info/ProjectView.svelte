@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { fade } from 'svelte/transition';
   import type { Project } from '$lib/types/project';
 
   interface Props {
@@ -11,15 +12,11 @@
   let revealed = $state(false);
 
   onMount(() => {
-    // Delay reveal to match hero animation completion
-    const timer = setTimeout(() => {
-      revealed = true;
-    }, 1200);
-    return () => clearTimeout(timer);
+    revealed = true;
   });
 </script>
 
-<div class="project-view" class:project-view--visible={revealed} bind:this={viewEl}>
+<div class="project-view" class:project-view--visible={revealed} bind:this={viewEl} transition:fade={{ duration: 400 }}>
   <div class="corner-accents"></div>
   {#if project}
     <div class="project-content">
@@ -47,7 +44,6 @@
     padding: 2.4rem;
     position: absolute;
     top: calc(-4.8rem); /* offset header height */
-    transition: opacity 0.4s ease;
     width: 100%;
     z-index: 100;
   }

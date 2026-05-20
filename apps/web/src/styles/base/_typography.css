@@ -24,9 +24,10 @@
 
 .font--mono-label {
   font-family: 'Geist Mono', monospace;
-  font-size: 0.875rem;
+  font-size: 0.84rem;
   font-weight: 500;
   letter-spacing: 0.34%;
+  line-height: 15px;
 }
 
 .font--mono-meta {
@@ -53,17 +54,17 @@
 
 .font--hero-title {
   font-family: 'GeistPixel Square', sans-serif;
-  font-size: 2rem;
+  font-size: 1.6rem;
   letter-spacing: 0.34%;
-  line-height: 34px;
+  line-height: 28px;
 }
 
 .font--hero-accent {
   font-family: Advine-Pixel, sans-serif;
-  font-size: 4rem;
+  font-size: 2.6rem;
   font-weight: normal !important;
   letter-spacing: 4%;
-  line-height: 34px;
+  line-height: 26px;
 }
 
 .font--mono-tag-strong {

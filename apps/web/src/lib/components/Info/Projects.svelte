@@ -277,6 +277,11 @@
       }
 
       await tick();
+      await new Promise(r => requestAnimationFrame(r));
+
+      // Wait for hero animations to finish before showing connector lines
+      await new Promise(r => setTimeout(r, 1200));
+
       const pv = document.querySelector('.project-view');
       if (
         !pv ||
@@ -928,7 +933,8 @@
 
   .random-box.is-active {
     background: var(--color-bg);
-    border: 1px solid var(--color-text);
+    height: 0.5rem;
+    width: 0.5rem;
   }
 
   .connector-svg {

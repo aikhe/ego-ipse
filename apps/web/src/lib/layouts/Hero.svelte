@@ -60,12 +60,12 @@
           chars,
           {
             yPercent: 300,
-            duration: 0.6,
-            ease: 'power4.inOut',
+            duration: 0.52,
+            ease: 'power2.inOut',
             force3D: true,
-            stagger: { amount: 0.2, from: 'end' },
+            stagger: { amount: 0.16, from: 'end' },
           },
-          index * 0.05
+          index * 0.04
         );
       });
     } else {
@@ -77,12 +77,12 @@
           { yPercent: 300 },
           {
             yPercent: 0,
-            duration: 0.6,
-            ease: 'power4.inOut',
+            duration: 0.52,
+            ease: 'power3.out',
             force3D: true,
-            stagger: { amount: 0.2, from: 'start' },
+            stagger: { amount: 0.16, from: 'start' },
           },
-          index * 0.05
+          index * 0.04
         );
       });
     }
@@ -193,8 +193,8 @@
 <svelte:window onpointerdown={handleDeselect} />
 
 <div style="display: contents">
-  {#if uiState.isProjectView && selectedProject}
-    <ProjectView project={selectedProject} />
+  {#if uiState.isProjectView}
+    <ProjectView project={selectedProject || nextProject} />
   {/if}
 
   <div

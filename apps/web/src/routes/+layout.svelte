@@ -146,7 +146,6 @@
         {
           xPercent: -200,
           duration: 0.6,
-          delay: 0.45,
           ease: 'expo.inOut',
           force3D: true,
           stagger: { amount: 0.2, from: 'end' },

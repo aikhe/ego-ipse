@@ -263,7 +263,7 @@
     grid-template-columns: 1fr 1fr;
     height: 100%;
     box-sizing: border-box;
-    padding: 1rem;
+    padding: 0.8rem;
   }
 
   .social-card__side--left {
@@ -375,11 +375,11 @@
     background: var(--color-bg);
     border: 1px dashed var(--color-overlay-60);
     display: flex;
-    height: 10.5rem;
+    height: 12.5rem;
     justify-content: center;
     overflow: visible;
     position: relative;
-    width: 10.5rem;
+    width: 12.5rem;
   }
 
   .social-card__img {

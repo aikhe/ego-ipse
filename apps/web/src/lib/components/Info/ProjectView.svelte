@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import type { Project } from '$lib/types/project';
 
   interface Props {
@@ -6,9 +7,19 @@
   }
 
   let { project }: Props = $props();
+  let viewEl: HTMLElement | undefined = $state();
+  let revealed = $state(false);
+
+  onMount(() => {
+    // Delay reveal to match hero animation completion
+    const timer = setTimeout(() => {
+      revealed = true;
+    }, 1200);
+    return () => clearTimeout(timer);
+  });
 </script>
 
-<div class="project-view">
+<div class="project-view" class:project-view--visible={revealed} bind:this={viewEl}>
   <div class="corner-accents"></div>
   {#if project}
     <div class="project-content">
@@ -32,11 +43,17 @@
     grid-row: 1;
     height: var(--page-stage-height, 100vh);
     left: 0;
+    opacity: 0;
     padding: 2.4rem;
     position: absolute;
     top: calc(-4.8rem); /* offset header height */
+    transition: opacity 0.4s ease;
     width: 100%;
     z-index: 100;
+  }
+
+  .project-view--visible {
+    opacity: 1;
   }
 
   .corner-accents {

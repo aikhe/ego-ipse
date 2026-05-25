@@ -12,6 +12,7 @@
   import * as THREE from 'three';
 
   import type { Project } from '$lib/types/project';
+  import { uiState } from '$lib/state/ui.svelte';
 
   let selectedPoster = $state<number | null>(null);
   let selectedProject = $state<Project | null>(null);
@@ -25,7 +26,7 @@
   <div class="scene-container">
     <Canvas dpr={1} toneMapping={THREE.NoToneMapping}>
       <Scene
-        isShifted={!!selectedProject}
+        isShifted={uiState.isProjectView}
         onposterclick={i => (selectedPoster = i)}
       />
     </Canvas>

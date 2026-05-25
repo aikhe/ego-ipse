@@ -17,6 +17,7 @@
   --color-overlay-20: rgb(255 255 255 / 20%);
   --color-overlay-40: rgb(255 255 255 / 40%);
   --color-overlay-60: rgb(255 255 255 / 60%);
+  --color-border-solid: #363636;
 }
 
 @media (prefers-color-scheme: light) {
@@ -34,6 +35,7 @@
     --color-overlay-20: rgb(0 0 0 / 30%);
     --color-overlay-40: rgb(0 0 0 / 40%);
     --color-overlay-60: rgb(0 0 0 / 60%);
+    --color-border-solid: #adadad;
   }
 }
 
@@ -53,4 +55,5 @@
   --color-overlay-20: rgb(0 0 0 / 30%);
   --color-overlay-40: rgb(0 0 0 / 40%);
   --color-overlay-60: rgb(0 0 0 / 60%);
+  --color-border-solid: #adadad;
 }

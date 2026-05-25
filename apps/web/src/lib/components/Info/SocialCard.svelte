@@ -221,9 +221,9 @@
   .social-card {
     backdrop-filter: blur(4px);
     background: var(--color-bg);
-    border: 1px solid var(--color-overlay-20);
+    border: 1px solid var(--color-border-solid);
     bottom: calc(100% - 1rem);
-    height: auto;
+    height: 14.5rem;
     opacity: 0;
     pointer-events: none;
     position: absolute;
@@ -261,7 +261,8 @@
     display: grid;
     gap: 1rem;
     grid-template-columns: 1fr 1fr;
-    min-height: 12.5rem;
+    height: 100%;
+    box-sizing: border-box;
     padding: 1rem;
   }
 
@@ -350,7 +351,7 @@
 
   .social-card__status {
     background: var(--color-overlay-02);
-    border: 1px solid var(--color-overlay-20);
+    border: 1px solid var(--color-border-solid);
     color: var(--color-overlay-60);
     cursor: default;
     font-family: 'Geist Mono', monospace;

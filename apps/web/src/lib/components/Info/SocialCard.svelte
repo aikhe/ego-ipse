@@ -258,11 +258,11 @@
   }
 
   .social-card__inner {
+    box-sizing: border-box;
     display: grid;
     gap: 1rem;
     grid-template-columns: 1fr 1fr;
     height: 100%;
-    box-sizing: border-box;
     padding: 0.8rem;
   }
 

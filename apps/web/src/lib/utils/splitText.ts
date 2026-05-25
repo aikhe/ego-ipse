@@ -81,7 +81,9 @@ export function splitTextCustom(
     lineDiv.className = 'line';
     // clip-path: vertical clips bottom, horizontal clips left
     lineDiv.style.clipPath =
-      clipDirection === 'horizontal' ? 'inset(0 0 0 0)' : 'inset(-200% 0 -50% 0)';
+      clipDirection === 'horizontal'
+        ? 'inset(0 0 0 0)'
+        : 'polygon(-10% -200%, 110% -200%, 110% 100%, -10% 100%)';
     lineDiv.style.display = 'flex';
     lineDiv.style.alignItems = 'baseline';
     lineDiv.style.whiteSpace = 'nowrap';

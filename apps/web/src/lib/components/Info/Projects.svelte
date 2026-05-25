@@ -166,6 +166,14 @@
           }
         }
 
+        // Snapshot coords before killing anything
+        const snapTopX = activeLineCoords.topX;
+        const snapTopY = activeLineCoords.topY;
+        const snapBotX = activeLineCoords.botX;
+        const snapBotY = activeLineCoords.botY;
+        const snapStartX = activeLineCoords.startX;
+        const snapStartY = activeLineCoords.startY;
+
         if (activeDrawTimeline) {
           activeDrawTimeline.kill();
           activeDrawTimeline = null;
@@ -177,40 +185,46 @@
           activeLineTop,
           activeLineBottom,
         ]);
-        const tl = gsap.timeline();
 
-        // 2. Lines retract back to their current startX/Y (the random box)
-        tl.to(activeLineCoords, {
-          topX: activeLineCoords.startX,
-          topY: activeLineCoords.startY,
-          botX: activeLineCoords.startX,
-          botY: activeLineCoords.startY,
-          duration: 0.4,
+        // Retract lines back to their current startX/Y (the old button box)
+        const exitCoords = {
+          topX: snapTopX, topY: snapTopY,
+          botX: snapBotX, botY: snapBotY,
+        };
+        const retractTl = gsap.timeline();
+        activeDrawTimeline = retractTl;
+
+        retractTl.to(exitCoords, {
+          topX: snapStartX, topY: snapStartY,
+          botX: snapStartX, botY: snapStartY,
+          duration: 0.35,
           ease: 'power3.in',
           onUpdate: () => {
             activeLineTop.setAttribute(
               'points',
-              `${activeLineCoords.startX},${activeLineCoords.startY} ${activeLineCoords.topX},${activeLineCoords.topY}`
+              `${snapStartX},${snapStartY} ${exitCoords.topX},${exitCoords.topY}`
             );
             activeLineBottom.setAttribute(
               'points',
-              `${activeLineCoords.startX},${activeLineCoords.startY} ${activeLineCoords.botX},${activeLineCoords.botY}`
+              `${snapStartX},${snapStartY} ${exitCoords.botX},${exitCoords.botY}`
             );
           },
         });
 
-        // 3. Then the box fades out
-        tl.to(activeButtonBox, {
+        // Smoothly fade out lines and box immediately as the retraction starts
+        // Use power1.in so they remain visible enough to see the length decreasing
+        retractTl.to([activeLineTop, activeLineBottom, activeButtonBox], {
           opacity: 0,
-          duration: 0.3,
-          ease: 'power2.in',
-        });
+          duration: 0.35,
+          ease: 'power1.in',
+        }, 0);
 
-        tl.call(() => {
-          gsap.set([activeLineTop, activeLineBottom], { opacity: 0 });
-        });
+        await retractTl;
 
-        // 4. Now it's safe to remove the visual active class
+        if (activeDrawTimeline !== retractTl) return;
+        activeDrawTimeline = null;
+
+        // Now it's safe to remove the visual active class
         if (!project || oldName !== project.name) {
           visualActiveProject = null;
         }
@@ -287,6 +301,9 @@
 
       await tick();
       await new Promise(r => requestAnimationFrame(r));
+
+      // If the active project changed while we were waiting, bail
+      if (lastActiveName !== project.name) return;
 
       const pv = document.querySelector('.project-view');
       if (
@@ -812,7 +829,7 @@
     align-items: center;
     background: none;
     border: none;
-    border-bottom: 1px solid var(--color-overlay-20);
+    border-bottom: 1px solid var(--color-border-solid);
     color: var(--color-text);
     cursor: pointer;
     display: flex;
@@ -848,7 +865,7 @@
   }
 
   .project--item:nth-child(-n + 2) {
-    border-top: 1px solid var(--color-overlay-20);
+    border-top: 1px solid var(--color-border-solid);
   }
 
   .project--item span {

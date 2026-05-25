@@ -59,7 +59,7 @@
         tl.to(
           chars,
           {
-            yPercent: 200,
+            yPercent: 300,
             duration: 0.6,
             ease: 'power4.inOut',
             force3D: true,
@@ -74,7 +74,7 @@
         const chars = Array.from(line.querySelectorAll('.char'));
         tl.fromTo(
           chars,
-          { yPercent: 200 },
+          { yPercent: 300 },
           {
             yPercent: 0,
             duration: 0.6,

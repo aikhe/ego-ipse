@@ -372,14 +372,14 @@
 
   .social-card__preview {
     align-items: center;
-    aspect-ratio: 1 / 1;
     background: var(--color-bg);
     border: 1px dashed var(--color-overlay-60);
     display: flex;
+    height: 10.5rem;
     justify-content: center;
     overflow: visible;
     position: relative;
-    width: 100%;
+    width: 10.5rem;
   }
 
   .social-card__img {

@@ -205,9 +205,7 @@
 <svelte:window onpointerdown={handleDeselect} />
 
 <div style="display: contents">
-  {#if uiState.isProjectView}
-    <ProjectView project={selectedProject || nextProject} />
-  {/if}
+  <ProjectView project={selectedProject || nextProject} visible={uiState.isProjectView} />
 
   <div
     class="hero pointer-events-auto"

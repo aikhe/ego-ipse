@@ -928,6 +928,7 @@
 
   .random-box.is-active {
     background: var(--color-bg);
+    border: 1px solid var(--color-text);
   }
 
   .connector-svg {
@@ -943,11 +944,11 @@
   .connector-svg polyline {
     fill: none;
     opacity: 0;
-    stroke: var(--color-overlay-40);
+    stroke: var(--color-text);
     stroke-width: 1px;
   }
 
   .connector-svg .active-line {
-    stroke: var(--color-overlay-60);
+    stroke: var(--color-text);
   }
 </style>

@@ -61,6 +61,7 @@
 .font--hero-accent {
   font-family: Advine-Pixel, sans-serif;
   font-size: 4rem;
+  font-weight: normal !important;
   letter-spacing: 4%;
   line-height: 34px;
 }

@@ -29,19 +29,16 @@ export function splitTextCustom(
       } else {
         const wordSpan = document.createElement('span');
         wordSpan.style.display = 'inline-block';
-        wordSpan.style.verticalAlign = 'top';
         wordSpan.className = 'word';
         word.split('').forEach(char => {
           const charSpan = document.createElement('span');
           charSpan.style.display = 'inline-block';
-          charSpan.style.verticalAlign = 'top';
           charSpan.className = 'char';
           charSpan.textContent = char;
           if (clipDirection === 'horizontal') {
             // wrap char in its own overflow:hidden container
             const charWrap = document.createElement('span');
             charWrap.style.display = 'inline-block';
-            charWrap.style.verticalAlign = 'top';
             charWrap.style.overflow = 'hidden';
             charWrap.className = 'char-mask';
             charWrap.appendChild(charSpan);
@@ -84,8 +81,9 @@ export function splitTextCustom(
     lineDiv.className = 'line';
     // clip-path: vertical clips bottom, horizontal clips left
     lineDiv.style.clipPath =
-      clipDirection === 'horizontal' ? 'inset(0 0 0 0)' : 'inset(-100% 0 0 0)';
-    lineDiv.style.display = 'block';
+      clipDirection === 'horizontal' ? 'inset(0 0 0 0)' : 'inset(-200% 0 -50% 0)';
+    lineDiv.style.display = 'flex';
+    lineDiv.style.alignItems = 'baseline';
     lineDiv.style.whiteSpace = 'nowrap';
     lineDiv.style.position = 'relative';
 
@@ -93,8 +91,14 @@ export function splitTextCustom(
       // Preserve parent classes (like strong tags)
       let parent = word.parentElement;
       let classes = '';
+      let isHeroAccent = false;
       while (parent && parent !== element) {
-        if (parent.className) classes += parent.className + ' ';
+        if (parent.className) {
+          classes += parent.className + ' ';
+          if (parent.className.includes('font--hero-accent')) {
+            isHeroAccent = true;
+          }
+        }
         // Preserve tag name for styling if needed
         if (parent.tagName === 'STRONG') classes += 'strong-tag ';
         parent = parent.parentElement;
@@ -102,7 +106,7 @@ export function splitTextCustom(
       if (classes) {
         word.className = `word ${classes.trim()}`;
         // If it was strong, make font bold manually in case CSS relied on tag
-        if (classes.includes('strong-tag')) word.style.fontWeight = 'bold';
+        if (classes.includes('strong-tag') && !isHeroAccent) word.style.fontWeight = 'bold';
       }
 
       lineDiv.appendChild(word);

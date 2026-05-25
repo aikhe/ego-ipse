@@ -195,7 +195,7 @@
   .preview-container {
     backdrop-filter: blur(4px);
     background: var(--color-bg);
-    border: 1px solid var(--color-overlay-20);
+    border: 1px solid var(--color-border-solid);
     opacity: 0;
     padding: 0;
     pointer-events: none;
@@ -237,7 +237,7 @@
 
   .header {
     background: var(--color-overlay-02);
-    border-bottom: 1px solid var(--color-overlay-20);
+    border-bottom: 1px solid var(--color-border-solid);
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
@@ -304,7 +304,7 @@
 
   .preview-inner {
     background: var(--color-bg);
-    border: 1px solid var(--color-overlay-20);
+    border: 1px solid var(--color-border-solid);
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -339,7 +339,7 @@
   .text-footer {
     align-items: center;
     background: var(--color-bg);
-    border-top: 1px solid var(--color-overlay-20);
+    border-top: 1px solid var(--color-border-solid);
     color: var(--color-overlay-60);
     display: flex;
     flex-shrink: 0;

@@ -105,7 +105,7 @@
       image: blogIcon,
       stats: [
         { label: 'ENTRIES', value: '8' },
-        { label: 'TOPIC', value: 'CODE\\AI\\ART' },
+        { label: 'TOPIC', value: 'UNDEFINED' },
       ],
       tags: ['BLOG', 'DATA'],
       status: 'INITIALIZING...',

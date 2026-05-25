@@ -154,7 +154,7 @@
             const bg = oldItem.querySelector('.project--bg');
             const arrow = oldItem.querySelector('.arrow');
             gsap.killTweensOf([bg, oldItem, arrow]);
-            gsap.to(bg, { opacity: 0, duration: 0 });
+            gsap.to(bg, { opacity: 0, duration: 0.08, ease: 'power3.out' });
             gsap.to(oldItem, {
               padding: '0',
               zIndex: 1,
@@ -237,7 +237,7 @@
           const bg = item.querySelector('.project--bg');
           const arrow = item.querySelector('.arrow');
           gsap.killTweensOf([bg, item, arrow]);
-          gsap.to(bg, { opacity: 0, duration: 0 });
+          gsap.to(bg, { opacity: 0, duration: 0.08 });
           gsap.to(item, { padding: '0', zIndex: 1, duration: 0.2 });
           gsap.to(arrow, { opacity: 0.8, duration: 0.2 });
         }
@@ -599,7 +599,7 @@
           }
         }
 
-        gsap.to(bg, { opacity: 1, duration: 0 });
+        gsap.to(bg, { opacity: 1, duration: 0.08, ease: 'power3.out' });
         gsap.to(item, {
           zIndex: 20,
           padding: '0 0.6rem',
@@ -654,7 +654,7 @@
         const isCurrentActive =
           projects[projectItems.indexOf(item)]?.name === activeProject?.name;
         if (!isCurrentActive) {
-          gsap.to(bg, { opacity: 0, duration: 0 });
+          gsap.to(bg, { opacity: 0, duration: 0.08 });
           gsap.to(item, { zIndex: 1, padding: '0', duration: 0.3 });
           gsap.to(arrow, { opacity: 0.8, duration: 0.3 });
         }
@@ -696,7 +696,7 @@
         }
 
         gsap.killTweensOf([bg, arrow, item]);
-        gsap.to(bg, { opacity: 1, duration: 0 });
+        gsap.to(bg, { opacity: 1, duration: 0.08 });
         gsap.to(item, { padding: '0 0.6rem', zIndex: 20, duration: 0.2 });
         gsap.to(arrow, { opacity: 0, duration: 0.1 });
       });
@@ -823,6 +823,7 @@
     opacity: 0;
     pointer-events: none;
     position: absolute;
+    transition: opacity 0.08s ease;
     z-index: 0;
   }
 

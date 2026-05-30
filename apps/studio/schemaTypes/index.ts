@@ -1,3 +1,4 @@
-import workType from './workType'
+import work from './work'
+import workRoot from './workRoot'
 
-export const schemaTypes = [workType]
+export const schemaTypes = [work, workRoot]

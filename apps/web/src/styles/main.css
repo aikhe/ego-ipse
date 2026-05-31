@@ -29,6 +29,3 @@ body {
   outline-offset: 2px;
 }
 
-.inspect {
-  border: var(--color-debug) solid 1px;
-}

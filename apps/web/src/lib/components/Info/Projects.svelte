@@ -25,13 +25,6 @@
   let glitchOverrides = $state<Record<number, string>>({});
   let glitchIntervals: (ReturnType<typeof setInterval> | null)[] = [];
 
-  $effect(() => {
-    console.log(
-      'Projects.svelte: projects prop value is:',
-      $state.snapshot(projects)
-    );
-  });
-
   let projectItems = $state<HTMLButtonElement[]>([]);
   let reticle: HTMLDivElement;
   let reticleBorders: HTMLDivElement;
@@ -798,8 +791,8 @@
   }
 
   .project--item.is-placeholder {
-    pointer-events: none;
     cursor: default;
+    pointer-events: none;
   }
 
   .project--bg {

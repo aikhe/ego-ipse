@@ -141,11 +141,6 @@
     <div class="corner-accents"></div>
     {#if showContent && project}
       <div class="project-content" bind:this={content}>
-        <!-- Content will be added here later -->
-        <!-- <div class="placeholder"> -->
-        <!--   <h2>{project.name}</h2> -->
-        <!--   <p>{project.section}</p> -->
-        <!-- </div> -->
       </div>
     {/if}
   </div>
@@ -166,8 +161,8 @@
 
   .project-view-inner {
     background: var(--color-bg);
-    border-left: 1px dashed #3a3a3a;
-    border-right: 1px dashed #3a3a3a;
+    border-left: 1px dashed var(--color-overlay-40);
+    border-right: 1px dashed var(--color-overlay-40);
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -217,26 +212,4 @@
     width: 100%;
     z-index: 1;
   }
-
-  /* .placeholder {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding-top: 2rem;
-  }
-
-  h2 {
-    font-size: 3rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    margin: 0;
-    text-transform: uppercase;
-  }
-
-  p {
-    color: var(--color-text-muted);
-    font-family: 'Geist Mono', monospace;
-    font-size: 1rem;
-    margin: 0;
-  } */
 </style>

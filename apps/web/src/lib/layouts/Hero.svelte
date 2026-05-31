@@ -10,13 +10,17 @@
   import { uiState } from '$lib/state/ui.svelte';
   import gsap from 'gsap';
 
-  let { selectedProject = $bindable(null) } = $props();
+  interface Props {
+    projects: Project[];
+    selectedProject?: Project | null;
+  }
+
+  let { projects = [], selectedProject = $bindable(null) }: Props = $props();
 
   let nextProject: Project | null = $state(null);
   let titleEl: HTMLElement | undefined = $state();
   let descEl: HTMLElement | undefined = $state();
 
-  let isAnimating = $state(false);
   let activeTimeline: gsap.core.Timeline | null = null;
   let titleSplit = $state(false);
   let isReadyToAnimate = $state(false);
@@ -138,7 +142,6 @@
       activeTimeline.kill();
       activeTimeline = null;
     }
-    isAnimating = true;
     nextProject = project;
 
     const titleTl = buildTitleTimeline('out');
@@ -151,7 +154,6 @@
       onComplete: () => {
         selectedProject = nextProject;
         nextProject = null;
-        isAnimating = false;
         activeTimeline = null;
       },
     });
@@ -165,7 +167,6 @@
       activeTimeline.kill();
       activeTimeline = null;
     }
-    isAnimating = true;
 
     uiState.isProjectView = false;
     selectedProject = null;
@@ -180,7 +181,6 @@
     // start title at 90% of description duration
     const master = gsap.timeline({
       onComplete: () => {
-        isAnimating = false;
         activeTimeline = null;
       },
     });
@@ -205,7 +205,10 @@
 <svelte:window onpointerdown={handleDeselect} />
 
 <div style="display: contents">
-  <ProjectView project={selectedProject || nextProject} visible={uiState.isProjectView} />
+  <ProjectView
+    project={selectedProject || nextProject}
+    visible={uiState.isProjectView}
+  />
 
   <div
     class="hero pointer-events-auto"
@@ -213,7 +216,11 @@
     class:hero--ready={isReadyToAnimate}
   >
     <h1 class="hero__title font--hero-title" bind:this={titleEl}>
-      <strong class="title--strong font--hero-accent">aikhe</strong> is a design engineer working across <br> products, systems, and software experiences <br> that connect thoughtful interfaces with the <br> engineering behind them.</h1>
+      <strong class="title--strong font--hero-accent">aikhe</strong> is a design
+      engineer working across <br /> products, systems, and software experiences
+      <br />
+      that connect thoughtful interfaces with the <br /> engineering behind them.
+    </h1>
     <p class="hero__description font--mono-link" bind:this={descEl}>
       <strong class="description--strong">CONTRARY TO POPULAR BELIEF,</strong> LOREM
       IPSUM IS NOT SIMPLY RANDOM TEXT. IT HAS ROOTS IN A PIECE OF CLASSICAL LATIN
@@ -224,6 +231,7 @@
   <div class="info pointer-events-auto">
     <p class="info__title font--mono-label">PROJECTS I'VE WORKED ON</p>
     <Projects
+      {projects}
       activeProject={selectedProject || nextProject}
       isReady={uiState.isProjectView}
       onselect={(p: Project) => {

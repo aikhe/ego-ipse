@@ -14,13 +14,15 @@
   import type { Project } from '$lib/types/project';
   import { uiState } from '$lib/state/ui.svelte';
 
+  let { data } = $props();
+
   let selectedPoster = $state<number | null>(null);
   let selectedProject = $state<Project | null>(null);
 </script>
 
 <div class="page-shell">
   <section class="section-container pointer-events-none relative z-20">
-    <Hero bind:selectedProject />
+    <Hero bind:selectedProject projects={data.projects || []} />
   </section>
 
   <div class="scene-container">

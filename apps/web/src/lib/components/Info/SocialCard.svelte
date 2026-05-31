@@ -2,19 +2,7 @@
   import { tick } from 'svelte';
   import gsap from 'gsap';
   import { runTileReveal } from '$lib/utils/tiles';
-
-  interface Social {
-    name: string;
-    href: string;
-    external: boolean;
-    handle?: string;
-    bioPrefix?: string;
-    bioHighlight?: string;
-    stats?: { label: string; value: string }[];
-    tags?: string[];
-    status?: string;
-    image?: string;
-  }
+  import type { Social } from '$lib/types/social';
 
   interface Props {
     social?: Social | null;

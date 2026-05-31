@@ -11,18 +11,16 @@
   import { Canvas } from '@threlte/core';
   import * as THREE from 'three';
 
-  import type { Project } from '$lib/types/project';
   import { uiState } from '$lib/state/ui.svelte';
 
   let { data } = $props();
 
   let selectedPoster = $state<number | null>(null);
-  let selectedProject = $state<Project | null>(null);
 </script>
 
 <div class="page-shell">
-  <section class="section-container pointer-events-none relative z-20">
-    <Hero bind:selectedProject projects={data.projects || []} />
+  <section class="hero-section section-container pointer-events-none relative z-20">
+    <Hero projects={data.projects || []} />
   </section>
 
   <div class="scene-container">
@@ -48,7 +46,7 @@
     position: relative;
   }
 
-  section {
+  .hero-section {
     align-items: end;
     display: grid;
     gap: 1.2rem;

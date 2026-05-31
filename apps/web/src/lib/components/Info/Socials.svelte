@@ -11,19 +11,7 @@
   import aboutIcon from '$lib/assets/socials/about.png';
   import blogIcon from '$lib/assets/socials/blog.png';
   import acediaIcon from '$lib/assets/socials/acedia.png';
-
-  interface Social {
-    name: string;
-    href: string;
-    external: boolean;
-    handle?: string;
-    bioPrefix?: string;
-    bioHighlight?: string;
-    stats?: { label: string; value: string }[];
-    tags?: string[];
-    status?: string;
-    image: string;
-  }
+  import type { Social } from '$lib/types/social';
 
   // github stats index in socials array
   const GITHUB_INDEX = 2;

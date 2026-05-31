@@ -1,5 +1,6 @@
 import type { PageServerLoad } from './$types';
 import type { Project } from '$lib/types/project';
+import type { SanityProject } from '$lib/types/sanity';
 
 export const prerender = false;
 
@@ -26,25 +27,6 @@ export const load: PageServerLoad = async ({ fetch }) => {
   try {
     const res = await fetch(url);
     if (res.ok) {
-      interface SanityProject {
-        title?: string;
-        duration?: {
-          start?: string;
-          end?: string;
-        };
-        brief?: string;
-        projectType?: string;
-        techStack?: string[];
-        url?: string;
-        githubUrl?: string;
-        category?: string;
-        description?: string;
-        imageUrl?: string;
-        tags?: string[];
-        width?: number;
-        height?: number;
-      }
-
       const data = (await res.json()) as { result?: SanityProject[] };
       const rawProjects = data.result || [];
 

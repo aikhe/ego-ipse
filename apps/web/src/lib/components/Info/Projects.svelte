@@ -7,92 +7,30 @@
 
   import ProjectPreview from './ProjectPreview.svelte';
 
-  import katha from '$lib/assets/projects/katha.png';
-  import sola from '$lib/assets/projects/sola.png';
-  import praf from '$lib/assets/projects/praf.png';
-  import success from '$lib/assets/projects/success.png';
-  import uccingo from '$lib/assets/projects/uccingo.png';
-
-  const projects = [
-    {
-      name: 'Katha',
-      href: '/',
-      section: 'IDEA COMPRESSION',
-      date: '03.2026 | PRESENT',
-      tags: ['AI & MCP', 'WEB'],
-      id: '25-26',
-      width: 340,
-      height: 440,
-      image: katha,
-      external: false,
-    },
-    {
-      name: 'Sola',
-      href: '/',
-      section: 'HEALTH BUDDY',
-      date: '12.2025',
-      tags: ['WEB', 'RAG & FAISS'],
-      id: '2025',
-      width: 290,
-      height: 420,
-      image: sola,
-      external: false,
-    },
-    {
-      name: 'Success',
-      href: '/',
-      section: 'CLI AI APP',
-      date: '11.2025',
-      tags: ['VSS', 'TUI'],
-      id: '2025',
-      width: 400,
-      height: 360,
-      image: success,
-      external: false,
-    },
-    {
-      name: 'P.R.A.F',
-      href: '/',
-      section: 'IoT FLOOD SYSTEM',
-      date: '04.2025',
-      tags: ['IoT', 'AI & SMS'],
-      id: '2025',
-      width: 320,
-      height: 380,
-      image: praf,
-      external: false,
-    },
-    {
-      name: 'Uccingo',
-      href: '/',
-      section: 'CS COUNCIL HUB',
-      date: '07.2025 | PRESENT',
-      tags: ['FULLSTACK', 'CMS'],
-      id: '25-26',
-      width: 320,
-      height: 400,
-      image: uccingo,
-      external: false,
-    },
-  ] as const;
-
   interface Props {
+    projects: Project[];
     onselect?: (p: Project) => void;
     activeProject?: Project | null;
     isReady?: boolean;
   }
 
   let {
+    projects = [],
     onselect = () => {},
     activeProject = $bindable(null),
     isReady = true,
   }: Props = $props();
 
-  // Glitch text state per project
-  let glitchTexts = $state<string[]>(projects.map(p => p.name));
-  let glitchIntervals: (ReturnType<typeof setInterval> | null)[] = projects.map(
-    () => null
-  );
+  // Glitch text state per project — use $state for glitch mutations, fallback to project.name directly
+  let glitchOverrides = $state<Record<number, string>>({});
+  let glitchIntervals: (ReturnType<typeof setInterval> | null)[] = [];
+
+  $effect(() => {
+    console.log(
+      'Projects.svelte: projects prop value is:',
+      $state.snapshot(projects)
+    );
+  });
 
   let projectItems = $state<HTMLButtonElement[]>([]);
   let reticle: HTMLDivElement;
@@ -106,7 +44,7 @@
   let activeLineTop: SVGPolylineElement;
   let activeLineBottom: SVGPolylineElement;
   let currentItem = $state<HTMLButtonElement | null>(null);
-  let currentProject = $state<(typeof projects)[number] | null>(null);
+  let currentProject = $state<Project | null>(null);
   let showPreview = $state(false);
   let previewX = $state(0);
   let previewY = $state(0);
@@ -188,15 +126,19 @@
 
         // Retract lines back to their current startX/Y (the old button box)
         const exitCoords = {
-          topX: snapTopX, topY: snapTopY,
-          botX: snapBotX, botY: snapBotY,
+          topX: snapTopX,
+          topY: snapTopY,
+          botX: snapBotX,
+          botY: snapBotY,
         };
         const retractTl = gsap.timeline();
         activeDrawTimeline = retractTl;
 
         retractTl.to(exitCoords, {
-          topX: snapStartX, topY: snapStartY,
-          botX: snapStartX, botY: snapStartY,
+          topX: snapStartX,
+          topY: snapStartY,
+          botX: snapStartX,
+          botY: snapStartY,
           duration: 0.35,
           ease: 'power3.in',
           onUpdate: () => {
@@ -213,11 +155,15 @@
 
         // Smoothly fade out lines and box immediately as the retraction starts
         // Use power1.in so they remain visible enough to see the length decreasing
-        retractTl.to([activeLineTop, activeLineBottom, activeButtonBox], {
-          opacity: 0,
-          duration: 0.35,
-          ease: 'power1.in',
-        }, 0);
+        retractTl.to(
+          [activeLineTop, activeLineBottom, activeButtonBox],
+          {
+            opacity: 0,
+            duration: 0.35,
+            ease: 'power1.in',
+          },
+          0
+        );
 
         await retractTl;
 
@@ -716,7 +662,7 @@
           revealSpeed: 2,
           tailFrames: 12,
           onUpdate: t => {
-            glitchTexts[index] = t;
+            glitchOverrides[index] = t;
           },
         });
 
@@ -773,10 +719,12 @@
       <button
         type="button"
         class="project--item"
-        class:is-active={visualActiveProject === project.name}
+        class:is-active={visualActiveProject === project.name &&
+          project.name !== ''}
+        class:is-placeholder={project.name === ''}
         bind:this={projectItems[i]}
         onmouseenter={() => {
-          currentItem = projectItems[i];
+          if (project.name !== '') currentItem = projectItems[i];
         }}
         onmouseleave={() => {
           currentItem = null;
@@ -784,28 +732,31 @@
       >
         <div
           class="project--bg"
-          class:is-active={visualActiveProject === project.name}
+          class:is-active={visualActiveProject === project.name &&
+            project.name !== ''}
         ></div>
-        <span class="project--name">{glitchTexts[i]}</span>
-        <svg
-          data-testid="geist-icon"
-          height={12}
-          width={12}
-          stroke-linejoin="miter"
-          style="color: currentcolor;"
-          viewBox="0 0 16 16"
-          class="arrow"
-          class:is-active={visualActiveProject === project.name}
-        >
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M5.75001 2H5.00001V3.5H5.75001H11.4393L2.21968 12.7197L1.68935 13.25L2.75001 14.3107L3.28034 13.7803L12.4988 4.56182V11H13.9988V2H5.75001Z"
-            fill="currentColor"
-            stroke="currentColor"
-            stroke-width="0.4"
-          ></path>
-        </svg>
+        <span class="project--name">{glitchOverrides[i] ?? project.name}</span>
+        {#if project.name !== ''}
+          <svg
+            data-testid="geist-icon"
+            height={12}
+            width={12}
+            stroke-linejoin="miter"
+            style="color: currentcolor;"
+            viewBox="0 0 16 16"
+            class="arrow"
+            class:is-active={visualActiveProject === project.name}
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M5.75001 2H5.00001V3.5H5.75001H11.4393L2.21968 12.7197L1.68935 13.25L2.75001 14.3107L3.28034 13.7803L12.4988 4.56182V11H13.9988V2H5.75001Z"
+              fill="currentColor"
+              stroke="currentColor"
+              stroke-width="0.4"
+            ></path>
+          </svg>
+        {/if}
       </button>
     {/each}
     <button class="project--more ui-button ui-button--corners ui-button--list">
@@ -844,6 +795,11 @@
     text-align: left;
     text-decoration: none;
     width: 100%;
+  }
+
+  .project--item.is-placeholder {
+    pointer-events: none;
+    cursor: default;
   }
 
   .project--bg {

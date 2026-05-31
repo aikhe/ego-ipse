@@ -108,7 +108,8 @@ export function splitTextCustom(
       if (classes) {
         word.className = `word ${classes.trim()}`;
         // If it was strong, make font bold manually in case CSS relied on tag
-        if (classes.includes('strong-tag') && !isHeroAccent) word.style.fontWeight = 'bold';
+        if (classes.includes('strong-tag') && !isHeroAccent)
+          word.style.fontWeight = 'bold';
       }
 
       lineDiv.appendChild(word);

@@ -30,7 +30,10 @@
   });
 
   async function show() {
-    if (tl) { tl.kill(); tl = null; }
+    if (tl) {
+      tl.kill();
+      tl = null;
+    }
     if (!viewEl || !innerEl) return;
 
     viewEl.style.display = 'flex';
@@ -89,7 +92,10 @@
   }
 
   function hide() {
-    if (tl) { tl.kill(); tl = null; }
+    if (tl) {
+      tl.kill();
+      tl = null;
+    }
     if (!viewEl || !innerEl) return;
 
     tl = gsap.timeline({

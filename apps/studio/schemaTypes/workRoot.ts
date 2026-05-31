@@ -57,8 +57,8 @@ export default defineType({
         Rule.required().error('Duration is required'),
         Rule.custom((value) => {
           if (!value || !value.start || !value.end) return true
-          const start = new Date(value.start)
-          const end = new Date(value.end)
+          const start = new Date(value.start as string)
+          const end = new Date(value.end as string)
           if (end < start) return 'End date cannot be before start date'
           return true
         }),
@@ -122,7 +122,7 @@ export default defineType({
           for (const item of techStack) {
             if (typeof item !== 'string') return 'All technologies must be strings'
           }
-          const lowercased = techStack.map((t: string) => t.toLowerCase().trim())
+          const lowercased = (techStack as string[]).map((t) => t.toLowerCase().trim())
           const duplicates = lowercased.filter(
             (item: string, index: number) => lowercased.indexOf(item) !== index,
           )

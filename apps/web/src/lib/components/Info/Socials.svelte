@@ -120,7 +120,10 @@
     (async () => {
       try {
         const res = await fetch('/api/github-stats');
-        if (!res.ok) return;
+        if (!res.ok) {
+          console.warn('GitHub stats proxy returned', res.status);
+          return;
+        }
 
         const data = await res.json();
 
@@ -130,8 +133,8 @@
           { label: 'REPOS', value: String(data.repos) },
           { label: 'FOLLOWERS', value: String(data.followers) },
         ];
-      } catch {
-        // keep placeholder on network error
+      } catch (err) {
+        console.warn('GitHub stats proxy error:', err);
       }
     })();
   });

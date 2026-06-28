@@ -11,10 +11,11 @@ interface GitHubStats {
 }
 
 export const GET: RequestHandler = async () => {
+  const hasToken = !!env.GITHUB_TOKEN;
   const headers: Record<string, string> = {
     Accept: 'application/vnd.github+json',
   };
-  if (env.GITHUB_TOKEN) {
+  if (hasToken) {
     headers['Authorization'] = `Bearer ${env.GITHUB_TOKEN}`;
   }
 
@@ -35,11 +36,20 @@ export const GET: RequestHandler = async () => {
         JSON.stringify({
           user: userRes.status,
           repos: reposRes.status,
+          search: searchRes.status,
+          hasToken,
         })
       );
-      return new Response(JSON.stringify({ error: 'GitHub API error' }), {
-        status: 502,
-      });
+      return new Response(
+        JSON.stringify({
+          error: 'GitHub API error',
+          user: userRes.status,
+          repos: reposRes.status,
+          search: searchRes.status,
+          hasToken,
+        }),
+        { status: 502 }
+      );
     }
 
     const user = await userRes.json();

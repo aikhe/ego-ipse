@@ -121,7 +121,8 @@
       try {
         const res = await fetch('/api/github-stats');
         if (!res.ok) {
-          console.warn('GitHub stats proxy returned', res.status);
+          const body = await res.json().catch(() => ({}));
+          console.warn('GitHub stats proxy returned', res.status, body);
           return;
         }
 

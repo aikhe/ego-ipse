@@ -115,27 +115,27 @@
     },
   ]);
 
-  // fetch github stats via internal proxy
+  // fetch github stats directly (browser IP, not shared Cloudflare IP)
   $effect(() => {
     (async () => {
       try {
-        const res = await fetch('/api/github-stats');
-        if (!res.ok) {
-          const body = await res.json().catch(() => ({}));
-          console.warn('GitHub stats proxy returned', res.status, body);
-          return;
-        }
+        const [userRes, reposRes] = await Promise.all([
+          fetch('https://api.github.com/users/aikhe'),
+          fetch('https://api.github.com/users/aikhe/repos?per_page=100'),
+        ]);
+        if (!userRes.ok || !reposRes.ok) return;
 
-        const data = await res.json();
+        const user = await userRes.json();
+        const repos: { stargazers_count: number }[] = await reposRes.json();
+        const totalStars = repos.reduce((sum, r) => sum + r.stargazers_count, 0);
 
         socials[GITHUB_INDEX].stats = [
-          { label: 'CONTRIBUTIONS', value: String(data.contributions ?? '—') },
-          { label: 'STARS', value: String(data.stars) },
-          { label: 'REPOS', value: String(data.repos) },
-          { label: 'FOLLOWERS', value: String(data.followers) },
+          { label: 'STARS', value: String(totalStars) },
+          { label: 'REPOS', value: String(user.public_repos) },
+          { label: 'FOLLOWERS', value: String(user.followers) },
         ];
-      } catch (err) {
-        console.warn('GitHub stats proxy error:', err);
+      } catch {
+        // keep placeholder on network error
       }
     })();
   });

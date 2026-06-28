@@ -115,34 +115,24 @@
     },
   ]);
 
-  // fetch github stats on mount
+  // fetch github stats via internal proxy
   $effect(() => {
-    const username = 'aikhe';
-
     (async () => {
-      const [userRes, reposRes, searchRes] = await Promise.all([
-        fetch(`https://api.github.com/users/${username}`),
-        fetch(`https://api.github.com/users/${username}/repos?per_page=100`),
-        fetch(`https://api.github.com/search/commits?q=author:${username}`, {
-          headers: { Accept: 'application/vnd.github.cloak-preview+json' },
-        }),
-      ]);
+      try {
+        const res = await fetch('/api/github-stats');
+        if (!res.ok) return;
 
-      if (!userRes.ok || !reposRes.ok) return;
+        const data = await res.json();
 
-      const user = await userRes.json();
-      const repos: { stargazers_count: number }[] = await reposRes.json();
-      const totalStars = repos.reduce((sum, r) => sum + r.stargazers_count, 0);
-      const contributions = searchRes.ok
-        ? ((await searchRes.json()).total_count ?? '—')
-        : '—';
-
-      socials[GITHUB_INDEX].stats = [
-        { label: 'CONTRIBUTIONS', value: String(contributions) },
-        { label: 'STARS', value: String(totalStars) },
-        { label: 'REPOS', value: String(user.public_repos) },
-        { label: 'FOLLOWERS', value: String(user.followers) },
-      ];
+        socials[GITHUB_INDEX].stats = [
+          { label: 'CONTRIBUTIONS', value: String(data.contributions ?? '—') },
+          { label: 'STARS', value: String(data.stars) },
+          { label: 'REPOS', value: String(data.repos) },
+          { label: 'FOLLOWERS', value: String(data.followers) },
+        ];
+      } catch {
+        // keep placeholder on network error
+      }
     })();
   });
 

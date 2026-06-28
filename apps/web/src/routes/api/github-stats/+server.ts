@@ -10,43 +10,45 @@ interface GitHubStats {
   followers: number;
 }
 
-export const GET: RequestHandler = async () => {
-  const hasToken = !!env.GITHUB_TOKEN;
+function fetchStats(token?: string): Promise<[Response, Response, Response]> {
   const headers: Record<string, string> = {
     Accept: 'application/vnd.github+json',
   };
-  if (hasToken) {
-    headers['Authorization'] = `Bearer ${env.GITHUB_TOKEN}`;
-  }
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  return Promise.all([
+    fetch(`https://api.github.com/users/${GH_USERNAME}`, { headers }),
+    fetch(`https://api.github.com/users/${GH_USERNAME}/repos?per_page=100`, { headers }),
+    fetch(`https://api.github.com/search/commits?q=author:${GH_USERNAME}`, { headers }),
+  ]);
+}
+
+export const GET: RequestHandler = async () => {
+  const token = env.GITHUB_TOKEN;
 
   try {
-    const [userRes, reposRes, searchRes] = await Promise.all([
-      fetch(`https://api.github.com/users/${GH_USERNAME}`, { headers }),
-      fetch(`https://api.github.com/users/${GH_USERNAME}/repos?per_page=100`, {
-        headers,
-      }),
-      fetch(`https://api.github.com/search/commits?q=author:${GH_USERNAME}`, {
-        headers,
-      }),
-    ]);
+    let [userRes, reposRes, searchRes] = await fetchStats(token);
+
+    // if auth returns 403, retry without token (broken token or wrong perms)
+    if (token && userRes.status === 403 && reposRes.status === 403) {
+      console.warn('GitHub token rejected (403), falling back to unauthenticated');
+      [userRes, reposRes, searchRes] = await fetchStats();
+    }
 
     if (!userRes.ok || !reposRes.ok) {
-      console.error(
-        'GitHub API error',
-        JSON.stringify({
-          user: userRes.status,
-          repos: reposRes.status,
-          search: searchRes.status,
-          hasToken,
-        })
-      );
+      console.error('GitHub API error', {
+        user: userRes.status,
+        repos: reposRes.status,
+        search: searchRes.status,
+        hasToken: !!token,
+      });
       return new Response(
         JSON.stringify({
           error: 'GitHub API error',
           user: userRes.status,
           repos: reposRes.status,
           search: searchRes.status,
-          hasToken,
+          hasToken: !!token,
         }),
         { status: 502 }
       );

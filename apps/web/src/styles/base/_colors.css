@@ -10,14 +10,15 @@
   --color-text-muted: #888;
   --color-text-inv: var(--color-black);
   --logo-invert: 1;
-  --color-overlay-02: rgb(255 255 255 / 2%);
+  --color-overlay-02: #111;
   --color-overlay-05: rgb(255 255 255 / 5%);
   --color-overlay-10: rgb(255 255 255 / 10%);
   --color-overlay-15: rgb(255 255 255 / 12%);
   --color-overlay-20: rgb(255 255 255 / 20%);
   --color-overlay-40: rgb(255 255 255 / 40%);
   --color-overlay-60: rgb(255 255 255 / 60%);
-  --color-border-solid: #363636;
+  --color-border-solid: #303030;
+  --color-border-corner: #4e4e4e;
 }
 
 @media (prefers-color-scheme: light) {
@@ -28,14 +29,15 @@
     --color-text-muted: #737373;
     --color-text-inv: var(--color-white);
     --logo-invert: 0;
-    --color-overlay-02: rgb(0 0 0 / 2%);
+    --color-overlay-02: #f0f0f0;
     --color-overlay-05: rgb(0 0 0 / 5%);
     --color-overlay-10: rgb(0 0 0 / 10%);
     --color-overlay-15: rgb(0 0 0 / 20%);
     --color-overlay-20: rgb(0 0 0 / 30%);
     --color-overlay-40: rgb(0 0 0 / 40%);
     --color-overlay-60: rgb(0 0 0 / 60%);
-    --color-border-solid: #adadad;
+    --color-border-solid: #bfbfbf;
+    --color-border-corner: #000;
   }
 }
 
@@ -48,12 +50,13 @@
   --color-text-muted: #737373;
   --color-text-inv: var(--color-white);
   --logo-invert: 0;
-  --color-overlay-02: rgb(0 0 0 / 2%);
+  --color-overlay-02: #f0f0f0;
   --color-overlay-05: rgb(0 0 0 / 5%);
   --color-overlay-10: rgb(0 0 0 / 10%);
   --color-overlay-15: rgb(0 0 0 / 20%);
   --color-overlay-20: rgb(0 0 0 / 30%);
   --color-overlay-40: rgb(0 0 0 / 40%);
   --color-overlay-60: rgb(0 0 0 / 60%);
-  --color-border-solid: #adadad;
+  --color-border-solid: #bfbfbf;
+  --color-border-corner: #000;
 }

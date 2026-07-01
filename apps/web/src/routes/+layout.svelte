@@ -15,7 +15,11 @@
   import type { LayoutProps } from './$types';
 
   let { children }: LayoutProps = $props();
-  let theme = $state('dark');
+  let theme = $state(
+    typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: light)').matches
+      ? 'light'
+      : 'dark'
+  );
   let showGrid = $state(false);
   let time = $state('--:--:--');
   let themeDisplayText = $state('LIGHT');
@@ -332,7 +336,7 @@
   }
 
   .grid-column {
-    background-color: var(--color-overlay-02);
+    background-color: var(--color-overlay-05);
   }
 
   .grid-background {

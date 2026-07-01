@@ -216,13 +216,13 @@
     class:hero--ready={isReadyToAnimate}
   >
     <h1 class="hero__title font--hero-title" bind:this={titleEl}>
-      <strong class="title--strong font--hero-accent">aikhe</strong> is a design
-      engineer working across <br /> products, systems, and software experiences
-      <br />
-      that connect thoughtful interfaces with the <br /> engineering behind them.
+      Aikhe is a design engineer working across <br />
+      products, systems, and software experiences <br />
+      that connect thoughtful interfaces with the <br />
+      engineering behind them.
     </h1>
-    <p class="hero__description font--mono-link" bind:this={descEl}>
-      <strong class="description--strong">CONTRARY TO POPULAR BELIEF,</strong> LOREM
+    <p class="hero__description font--mono-label" bind:this={descEl}>
+      <span class="description--strong">CONTRARY TO POPULAR BELIEF,</span> LOREM
       IPSUM IS NOT SIMPLY RANDOM TEXT. IT HAS ROOTS IN A PIECE OF CLASSICAL LATIN
       LITERATURE FROM 45 BC.
     </p>
@@ -249,7 +249,7 @@
     gap: 1.6rem;
     grid-column: 1 / span 10;
     grid-row: 1;
-    opacity: 0; /* Hide initially to prevent SSR flash */
+    opacity: 0;
     transition: opacity 0.2s ease;
   }
 
@@ -273,13 +273,11 @@
 
   .hero__description {
     color: var(--color-text-muted);
-    line-height: 15px;
     width: 48ch;
   }
 
   .description--strong {
     color: var(--color-text);
-    font-weight: 500;
   }
 
   .info {

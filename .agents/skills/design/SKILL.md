@@ -20,7 +20,7 @@ This skill ensures that all UI implementations adhere to the project's premium a
 Always refer to the existing design system in `apps/web/src/styles`:
 
 - **Colors (`_colors.css`)**: Use `var(--color-bg)`, `var(--color-text)`, and `var(--color-primary)`. Use `--color-overlay-xx` for depth.
-- **Typography (`_typography.css`)**: Use `Geist` (200 weight, 0.34% tracking) for main text. Use `GeistPixel` or `Advine-Pixel` for custom branding.
+- **Typography (`_typography.css`)**: Use `Geist` (200 weight, 0.34% tracking) for main text. Use `Geist Pixel` (from Google Fonts) or `Advine-Pixel` for custom branding.
 - **Layout (`_containers.css`)**: Wrap hero and section content in `.section-container` (max-width 1920px).
 
 ### 2. BEM Mapping

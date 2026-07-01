@@ -21,7 +21,7 @@ Maintain a high-fidelity, premium, and performant user interface that feels orga
 
 - **Typography**:
   - Main: `Geist` and `Geist Mono` at thin weights (e.g., 200) with tight letter spacing (0.34%).
-  - Custom: `GeistPixel Square`, `GeistPixel Line`, and `Advine-Pixel` for specific creative elements.
+  - Custom: `Geist Pixel` (from Google Fonts) and `Advine-Pixel` for specific creative elements.
 - **Colors**: Use the curated palette in `_colors.css`.
   - Surface: `var(--color-bg)`, `var(--color-primary)`
   - Content: `var(--color-text)`, `var(--color-text-muted)`, `var(--color-text-inv)`

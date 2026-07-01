@@ -6,7 +6,7 @@
   cursor: pointer;
   display: inline-flex;
   font-family: 'Geist Mono', monospace;
-  font-size: 0.875rem;
+  font-size: 0.84rem;
   font-weight: 400;
   justify-content: center;
   letter-spacing: 0.34%;
@@ -52,16 +52,15 @@
 }
 
 .ui-button--corners::before {
-  /* stylelint-disable-next-line declaration-property-value-no-unknown */
   background:
-    linear-gradient(to right, currentcolor 1px, transparent 1px) 0 0,
-    linear-gradient(to bottom, currentcolor 1px, transparent 1px) 0 0,
-    linear-gradient(to left, currentcolor 1px, transparent 1px) 100% 0,
-    linear-gradient(to bottom, currentcolor 1px, transparent 1px) 100% 0,
-    linear-gradient(to right, currentcolor 1px, transparent 1px) 0 100%,
-    linear-gradient(to top, currentcolor 1px, transparent 1px) 0 100%,
-    linear-gradient(to left, currentcolor 1px, transparent 1px) 100% 100%,
-    linear-gradient(to top, currentcolor 1px, transparent 1px) 100% 100%;
+    linear-gradient(to right, var(--color-border-corner) 1px, transparent 1px) 0 0,
+    linear-gradient(to bottom, var(--color-border-corner) 1px, transparent 1px) 0 0,
+    linear-gradient(to left, var(--color-border-corner) 1px, transparent 1px) 100% 0,
+    linear-gradient(to bottom, var(--color-border-corner) 1px, transparent 1px) 100% 0,
+    linear-gradient(to right, var(--color-border-corner) 1px, transparent 1px) 0 100%,
+    linear-gradient(to top, var(--color-border-corner) 1px, transparent 1px) 0 100%,
+    linear-gradient(to left, var(--color-border-corner) 1px, transparent 1px) 100% 100%,
+    linear-gradient(to top, var(--color-border-corner) 1px, transparent 1px) 100% 100%;
   background-repeat: no-repeat;
   background-size: 8px 8px;
   content: '';

@@ -384,7 +384,7 @@
     pointer-events: none;
     position: absolute;
     width: 100%;
-    z-index: 50;
+    z-index: 5000;
   }
 
   .socials__connector polyline {

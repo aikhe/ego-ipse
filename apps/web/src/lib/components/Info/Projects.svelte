@@ -921,7 +921,7 @@
     pointer-events: none;
     position: absolute;
     width: 100%;
-    z-index: 2000;
+    z-index: 5000;
   }
 
   .connector-svg polyline {

@@ -52,7 +52,7 @@
     },
   });
 
-  const width = 3;
+  const width = 2.8;
   const height = (3690 / 2848) * width;
 
   let {

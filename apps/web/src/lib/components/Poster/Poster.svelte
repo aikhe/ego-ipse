@@ -35,19 +35,20 @@
     onclick?: () => void;
   }>();
 
-  const posterStepX = 0.8;
-  const posterStepY = 0.5;
-  const posterStepZ = -0.74;
+  const r = $derived(width / 3);
+  const posterStepX = $derived(0.8 * r);
+  const posterStepY = $derived(0.5 * r);
+  const posterStepZ = $derived(-0.74 * r);
   const shiftStaggerDelay = 0.03;
-  const posterOffsetX = -0.34;
-  const posterLiftY = 1.6;
+  const posterOffsetX = $derived(-0.34 * r);
+  const posterLiftY = $derived(1.6 * r);
   const stackMidIndex = $derived((totalLength - 1) / 2);
   const centeredIndex = $derived(index - stackMidIndex);
   const responsiveStepX = $derived(posterStepX * spacingScale);
   const responsiveStepY = $derived(posterStepY * spacingScale);
   const responsiveStepZ = $derived(posterStepZ * spacingScale);
-  const responsiveShiftX = $derived(6 * spacingScale);
-  const responsiveShiftY = $derived(2.1 * spacingScale);
+  const responsiveShiftX = $derived(6.4 * r * spacingScale);
+  const responsiveShiftY = $derived(2.1 * r * spacingScale);
   const responsiveStaggerDelay = $derived(shiftStaggerDelay * staggerScale);
 
   const basePos = $derived({
@@ -93,18 +94,18 @@
 
     if (hovered !== null) {
       if (isHovered) {
-        hoverLiftY = 0.18; // increase hovered card vertical lift
+        hoverLiftY = 0.18 * r; // increase hovered card vertical lift
       } else {
         const distance = index - hovered;
         const absDist = Math.abs(distance);
         const sign = Math.sign(distance);
 
         // Decay based on distance (spreading horizontally)
-        const pushX = 0.18 / absDist;
+        const pushX = (0.18 * r) / absDist;
         hoverOffsetX = sign * pushX;
 
         // wave effect: adjacent cards lift UP (diminishing based on distance)
-        hoverLiftY = 0.1 / absDist;
+        hoverLiftY = (0.1 * r) / absDist;
       }
     }
 

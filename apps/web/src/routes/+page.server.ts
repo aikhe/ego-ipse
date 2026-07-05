@@ -5,7 +5,7 @@ import type { SanityProject } from '$lib/types/sanity';
 export const prerender = false;
 
 export const load: PageServerLoad = async ({ fetch }) => {
-  const query = `*[_type == "workRoot"] | order(duration.start desc) [0...5] {
+  const query = `*[_type == "workRoot"] | order(index asc) [0...5] {
     title,
     duration,
     brief,
@@ -18,7 +18,8 @@ export const load: PageServerLoad = async ({ fetch }) => {
     "imageUrl": cover.asset->url,
     tags,
     width,
-    height
+    height,
+    index
   }`;
 
   const url = `https://dn2lfgdt.api.sanity.io/v2022-03-07/data/query/production?query=${encodeURIComponent(query)}`;
@@ -79,6 +80,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
           width: p.width || 320,
           height: p.height || 400,
           image: p.imageUrl || '',
+          index: p.index ?? 0,
         });
       });
     } else {
@@ -99,6 +101,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
       width: 320,
       height: 400,
       image: '',
+      index: 0,
     });
   }
 

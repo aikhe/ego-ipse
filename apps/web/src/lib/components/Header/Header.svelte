@@ -87,7 +87,7 @@
 </script>
 
 <header class="header section-container font--mono-label" bind:this={headerEl}>
-  <img class="header__logo size-8" src={logo} alt="Aikhe Logo Mark" />
+  <img class="header__logo size-5" src={logo} alt="Aikhe Logo Mark" />
 
   <p class="header__time header-anim">
     {#each time.split('') as char, i (i)}

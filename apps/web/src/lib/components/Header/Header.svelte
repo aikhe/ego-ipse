@@ -107,7 +107,7 @@
   <p class="header__coordinates">14.6514° N, 120.9902° E</p>
 
   <button
-    class="header__theme-toggle ui-button ui-button--ghost font--mono-label z-99"
+    class="header__theme-toggle ui-button--ghost font--mono-label z-99"
     onclick={toggleTheme}
   >
     MODE: {themeDisplayText}

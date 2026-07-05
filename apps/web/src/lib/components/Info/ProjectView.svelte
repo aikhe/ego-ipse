@@ -1,7 +1,6 @@
 <script lang="ts">
   import { tick } from 'svelte';
   import gsap from 'gsap';
-  import { runTileReveal } from '$lib/utils/tiles';
   import type { Project } from '$lib/types/project';
 
   interface Props {
@@ -13,12 +12,8 @@
   let viewEl: HTMLDivElement;
   let innerEl: HTMLDivElement;
   let content: HTMLDivElement;
-  let canvas: HTMLCanvasElement;
   let tl: gsap.core.Timeline | null = null;
   let showContent = $state(!!project);
-
-  const COLS = 18;
-  const ROWS = 24;
 
   $effect(() => {
     if (visible) {
@@ -84,11 +79,6 @@
         '-=0.2'
       );
     }
-
-    // tile reveal
-    if (canvas) {
-      runTileReveal(canvas, tl, COLS, ROWS, true, 0.7, '<0.15');
-    }
   }
 
   function hide() {
@@ -116,11 +106,6 @@
       });
     }
 
-    // tile hide
-    if (canvas) {
-      runTileReveal(canvas, tl, COLS, ROWS, false, 0.25, '<');
-    }
-
     // collapse container
     tl.to(
       innerEl,
@@ -137,11 +122,9 @@
 
 <div class="project-view" bind:this={viewEl}>
   <div class="project-view-inner" bind:this={innerEl}>
-    <canvas bind:this={canvas} class="tile-canvas"></canvas>
     <div class="corner-accents"></div>
     {#if showContent && project}
-      <div class="project-content" bind:this={content}>
-      </div>
+      <div class="project-content" bind:this={content}></div>
     {/if}
   </div>
 </div>
@@ -154,29 +137,20 @@
     height: var(--page-stage-height, 100vh);
     left: 0;
     position: absolute;
-    top: calc(-4.8rem); /* offset header height */
+    top: calc(-4.8rem);
     width: 100%;
     z-index: 100;
   }
 
   .project-view-inner {
     background: var(--color-bg);
-    border-left: 1px dashed var(--color-overlay-40);
-    border-right: 1px dashed var(--color-overlay-40);
+    border-left: 1px dashed var(--color-overlay-20);
+    border-right: 1px dashed var(--color-overlay-20);
     display: flex;
     flex-direction: column;
     height: 100%;
-    overflow: hidden;
     padding: 2.4rem;
     position: relative;
-    width: 100%;
-  }
-
-  .tile-canvas {
-    height: 100%;
-    inset: 0;
-    pointer-events: none;
-    position: absolute;
     width: 100%;
   }
 

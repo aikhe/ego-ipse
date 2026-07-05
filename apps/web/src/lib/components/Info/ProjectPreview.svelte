@@ -213,14 +213,30 @@
 
   .corner-accents::before {
     background:
-      linear-gradient(to right, var(--color-border-corner) 1px, transparent 1px) 0 0,
-      linear-gradient(to bottom, var(--color-border-corner) 1px, transparent 1px) 0 0,
-      linear-gradient(to left, var(--color-border-corner) 1px, transparent 1px) 100% 0,
-      linear-gradient(to bottom, var(--color-border-corner) 1px, transparent 1px) 100% 0,
-      linear-gradient(to right, var(--color-border-corner) 1px, transparent 1px) 0 100%,
-      linear-gradient(to top, var(--color-border-corner) 1px, transparent 1px) 0 100%,
-      linear-gradient(to left, var(--color-border-corner) 1px, transparent 1px) 100% 100%,
-      linear-gradient(to top, var(--color-border-corner) 1px, transparent 1px) 100% 100%;
+      linear-gradient(to right, var(--color-border-corner) 1px, transparent 1px)
+        0 0,
+      linear-gradient(
+          to bottom,
+          var(--color-border-corner) 1px,
+          transparent 1px
+        )
+        0 0,
+      linear-gradient(to left, var(--color-border-corner) 1px, transparent 1px)
+        100% 0,
+      linear-gradient(
+          to bottom,
+          var(--color-border-corner) 1px,
+          transparent 1px
+        )
+        100% 0,
+      linear-gradient(to right, var(--color-border-corner) 1px, transparent 1px)
+        0 100%,
+      linear-gradient(to top, var(--color-border-corner) 1px, transparent 1px) 0
+        100%,
+      linear-gradient(to left, var(--color-border-corner) 1px, transparent 1px)
+        100% 100%,
+      linear-gradient(to top, var(--color-border-corner) 1px, transparent 1px)
+        100% 100%;
     background-repeat: no-repeat;
     background-size: 10px 10px;
     content: '';
@@ -260,8 +276,14 @@
 
   .header::before {
     background:
-      linear-gradient(to right, var(--color-border-corner) 1px, transparent 1px) 0 0,
-      linear-gradient(to bottom, var(--color-border-corner) 1px, transparent 1px) 0 50%;
+      linear-gradient(to right, var(--color-border-corner) 1px, transparent 1px)
+        0 0,
+      linear-gradient(
+          to bottom,
+          var(--color-border-corner) 1px,
+          transparent 1px
+        )
+        0 50%;
     background-repeat: no-repeat;
     background-size:
       1px 100%,
@@ -271,9 +293,14 @@
 
   .header::after {
     background:
-      linear-gradient(to left, var(--color-border-corner) 1px, transparent 1px) 100% 0,
-      linear-gradient(to bottom, var(--color-border-corner) 1px, transparent 1px) 100%
-        50%;
+      linear-gradient(to left, var(--color-border-corner) 1px, transparent 1px)
+        100% 0,
+      linear-gradient(
+          to bottom,
+          var(--color-border-corner) 1px,
+          transparent 1px
+        )
+        100% 50%;
     background-repeat: no-repeat;
     background-size:
       1px 100%,

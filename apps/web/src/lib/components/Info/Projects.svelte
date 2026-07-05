@@ -777,12 +777,8 @@
     color: var(--color-text);
     cursor: pointer;
     display: flex;
-    font-family: inherit;
-    font-size: 1.2rem;
-    font-weight: 400;
-    height: 48px;
+    height: 46px;
     justify-content: space-between;
-    letter-spacing: 0.34%;
     padding: 0;
     position: relative;
     text-align: left;

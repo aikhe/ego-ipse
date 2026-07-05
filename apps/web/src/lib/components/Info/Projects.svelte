@@ -728,7 +728,9 @@
           class:is-active={visualActiveProject === project.name &&
             project.name !== ''}
         ></div>
-        <span class="project--name font--project-name">{glitchOverrides[i] ?? project.name}</span>
+        <span class="project--name font--project-name"
+          >{glitchOverrides[i] ?? project.name}</span
+        >
         {#if project.name !== ''}
           <svg
             data-testid="geist-icon"
@@ -923,11 +925,11 @@
   .connector-svg polyline {
     fill: none;
     opacity: 0;
-    stroke: var(--color-text);
+    stroke: var(--color-overlay-40);
     stroke-width: 1px;
   }
 
   .connector-svg .active-line {
-    stroke: var(--color-text);
+    stroke: var(--color-overlay-40);
   }
 </style>

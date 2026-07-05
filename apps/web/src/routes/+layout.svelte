@@ -2,15 +2,12 @@
   import { onMount } from 'svelte';
   import '../styles/main.css';
   import favicon from '$lib/assets/favicon.ico';
-  import logo from '$lib/assets/logo.svg';
-  import { startGlitch } from '$lib/utils/glitch';
   import {
     calculateStageMetrics,
     STAGE_DESIGN_WIDTH,
     STAGE_MIN_SCALE,
   } from '$lib/utils/stageScale';
-  import { uiState } from '$lib/state/ui.svelte';
-  import gsap from 'gsap';
+  import Header from '$lib/components/Header/Header.svelte';
 
   import type { LayoutProps } from './$types';
 
@@ -21,12 +18,9 @@
       : 'dark'
   );
   let showGrid = $state(false);
-  let time = $state('--:--:--');
-  let themeDisplayText = $state('LIGHT');
   let stageScale = $state(1);
   let stageHeight = $state<number | null>(null);
   let stageOffsetX = $state(0);
-  let glitchInterval: ReturnType<typeof setInterval> | null = null;
 
   function toggleTheme() {
     theme = theme === 'dark' ? 'light' : 'dark';
@@ -34,13 +28,6 @@
 
   $effect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    if (glitchInterval) clearInterval(glitchInterval);
-    glitchInterval = startGlitch({
-      text: theme.toUpperCase(),
-      revealSpeed: 3,
-      tailFrames: 15,
-      onUpdate: t => (themeDisplayText = t),
-    });
   });
 
   function handleKeydown(event: KeyboardEvent) {
@@ -51,27 +38,6 @@
       toggleTheme();
     }
   }
-
-  $effect(() => {
-    const updateTime = () => {
-      time = new Date().toLocaleTimeString('en-US', {
-        timeZone: 'Asia/Manila',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true,
-      });
-    };
-
-    updateTime();
-    const interval = setInterval(() => {
-      if (!uiState.isProjectView) {
-        updateTime();
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  });
 
   onMount(() => {
     const viewport = window.visualViewport;
@@ -129,46 +95,6 @@
       );
     };
   });
-
-  onMount(() => {
-    // Warm up header chars
-    if (headerEl) {
-      const chars = headerEl.querySelectorAll('.header-anim .char');
-      gsap.set(chars, { xPercent: 0, force3D: true });
-    }
-  });
-
-  let headerEl = $state<HTMLElement>();
-
-  $effect(() => {
-    if (!headerEl) return;
-    const chars = headerEl.querySelectorAll('.header-anim .char');
-    if (uiState.isProjectView) {
-      gsap.fromTo(
-        chars,
-        { xPercent: 0 },
-        {
-          xPercent: -200,
-          duration: 0.6,
-          ease: 'expo.inOut',
-          force3D: true,
-          stagger: { amount: 0.2, from: 'end' },
-        }
-      );
-    } else {
-      gsap.fromTo(
-        chars,
-        { xPercent: -200 },
-        {
-          xPercent: 0,
-          duration: 0.6,
-          ease: 'expo.inOut',
-          force3D: true,
-          stagger: { amount: 0.2, from: 'start' },
-        }
-      );
-    }
-  });
 </script>
 
 <svelte:window onkeydown={handleKeydown} />
@@ -180,37 +106,7 @@
     class="app-stage"
     style={`--page-stage-scale: ${stageScale}; ${stageHeight === null ? '' : `--page-stage-height: ${stageHeight}px;`} --page-stage-offset-x: ${stageOffsetX}px; transform: translateX(${stageOffsetX}px) scale(${stageScale}); transform-origin: top left;`}
   >
-    <header class="section-container font--mono-label" bind:this={headerEl}>
-      <img class="logo size-8" src={logo} alt="Aikhe Logo Mark" />
-
-      <p class="time header-anim">
-        {#each time.split('') as char, i (i)}
-          <span class="char-mask"><span class="char">{char}</span></span>
-        {/each}
-      </p>
-      <p class="time-zone header-anim">
-        {#each 'GMT+8'.split('') as char, i (i)}
-          <span class="char-mask"><span class="char">{char}</span></span>
-        {/each}
-      </p>
-      <p class="location header-anim">
-        {#each 'CALOOCAN, PH'.split('') as char, i (i)}
-          <span class="char-mask"><span class="char">{char}</span></span>
-        {/each}
-      </p>
-      <p class="coordinates">14.6514° N, 120.9902° E</p>
-
-      <button
-        class="theme-toggle ui-button ui-button--ghost font--mono-label z-99"
-        onclick={toggleTheme}
-      >
-        MODE: {themeDisplayText}
-      </button>
-
-      <button class="contact-btn ui-button ui-button--corners z-99"
-        >CONTACT</button
-      >
-    </header>
+    <Header {theme} {toggleTheme} />
 
     <main>
       {@render children()}
@@ -250,78 +146,6 @@
     height: var(--page-stage-height, 100vh);
     position: relative;
     width: var(--page-stage-width, var(--container-max-width));
-  }
-
-  header {
-    align-items: center;
-    color: var(--color-text-muted);
-    display: grid;
-    gap: 1.2rem;
-    grid-template-columns: repeat(12, 1fr);
-    height: 4.8rem;
-    white-space: nowrap;
-    z-index: 2;
-  }
-
-  header > * {
-    grid-row: 1;
-  }
-
-  .logo {
-    filter: brightness(0) invert(var(--logo-invert, 0));
-    grid-column: 1;
-  }
-
-  .time {
-    grid-column: 2 / span 1;
-  }
-
-  .time-zone {
-    grid-column: 3;
-  }
-
-  .location {
-    grid-column: 4 / span 2;
-  }
-
-  .coordinates {
-    grid-column: 7 / span 2;
-  }
-
-  .theme-toggle {
-    grid-column: 10;
-  }
-
-  .contact-btn {
-    grid-column: 12 / span 1;
-    justify-self: flex-end;
-  }
-
-  .char-mask {
-    display: inline-block;
-    overflow: hidden;
-    vertical-align: top;
-  }
-
-  .char {
-    backface-visibility: hidden;
-    display: inline-block;
-    transform: translate3d(0, 0, 0);
-    vertical-align: top;
-    will-change: transform;
-  }
-
-  .time,
-  .time-zone,
-  .location,
-  .coordinates {
-    display: flex;
-    white-space: pre;
-  }
-
-  /* preserve spaces */
-  .char:empty::after {
-    content: '\00a0';
   }
 
   .grid-overlay {

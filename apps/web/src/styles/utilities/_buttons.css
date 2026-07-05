@@ -14,9 +14,6 @@
   padding: 8px 12px;
   position: relative;
   text-decoration: none;
-  transition:
-    background 0.2s,
-    color 0.2s;
   z-index: 99;
 }
 

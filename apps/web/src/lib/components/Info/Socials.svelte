@@ -127,7 +127,10 @@
 
         const user = await userRes.json();
         const repos: { stargazers_count: number }[] = await reposRes.json();
-        const totalStars = repos.reduce((sum, r) => sum + r.stargazers_count, 0);
+        const totalStars = repos.reduce(
+          (sum, r) => sum + r.stargazers_count,
+          0
+        );
 
         socials[GITHUB_INDEX].stats = [
           { label: 'STARS', value: String(totalStars) },

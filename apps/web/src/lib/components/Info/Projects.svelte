@@ -728,7 +728,7 @@
           class:is-active={visualActiveProject === project.name &&
             project.name !== ''}
         ></div>
-        <span class="project--name">{glitchOverrides[i] ?? project.name}</span>
+        <span class="project--name font--project-name">{glitchOverrides[i] ?? project.name}</span>
         {#if project.name !== ''}
           <svg
             data-testid="geist-icon"

@@ -113,7 +113,9 @@
     MODE: {themeDisplayText}
   </button>
 
-  <button class="header__contact ui-button ui-button--corners z-99">CONTACT</button>
+  <button class="header__contact ui-button ui-button--corners z-99"
+    >CONTACT</button
+  >
 </header>
 
 <style>

@@ -47,8 +47,8 @@
   const responsiveStepX = $derived(posterStepX * spacingScale);
   const responsiveStepY = $derived(posterStepY * spacingScale);
   const responsiveStepZ = $derived(posterStepZ * spacingScale);
-  const responsiveShiftX = $derived(6.4 * r * spacingScale);
-  const responsiveShiftY = $derived(2.1 * r * spacingScale);
+  const responsiveShiftX = $derived(6.7 * r * spacingScale);
+  const responsiveShiftY = $derived(2.3 * r * spacingScale);
   const responsiveStaggerDelay = $derived(shiftStaggerDelay * staggerScale);
 
   const basePos = $derived({

@@ -15,4 +15,5 @@ export interface SanityProject {
   tags?: string[];
   width?: number;
   height?: number;
+  index?: number;
 }

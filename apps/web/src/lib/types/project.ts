@@ -7,4 +7,5 @@ export interface Project {
   readonly width: number;
   readonly height: number;
   readonly image: string;
+  readonly index: number;
 }

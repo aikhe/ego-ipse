@@ -19,7 +19,9 @@
 </script>
 
 <div class="page-shell">
-  <section class="hero-section section-container pointer-events-none relative z-20">
+  <section
+    class="hero-section section-container pointer-events-none relative z-20"
+  >
     <Hero projects={data.projects || []} />
   </section>
 

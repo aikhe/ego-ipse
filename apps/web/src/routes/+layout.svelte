@@ -13,7 +13,8 @@
 
   let { children }: LayoutProps = $props();
   let theme = $state(
-    typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: light)').matches
+    typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-color-scheme: light)').matches
       ? 'light'
       : 'dark'
   );

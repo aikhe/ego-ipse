@@ -195,7 +195,8 @@
     if (
       !target.closest('.project-view') &&
       !target.closest('.info') &&
-      !target.closest('.poster-overlay')
+      !target.closest('.poster-overlay') &&
+      !target.closest('.header')
     ) {
       triggerHeroIn();
     }
@@ -222,9 +223,9 @@
       engineering behind them.
     </h1>
     <p class="hero__description font--mono-label" bind:this={descEl}>
-      <span class="description--strong">CONTRARY TO POPULAR BELIEF,</span> LOREM
-      IPSUM IS NOT SIMPLY RANDOM TEXT. IT HAS ROOTS IN A PIECE OF CLASSICAL LATIN
-      LITERATURE FROM 45 BC.
+      <span class="description--strong">CONTRARY TO POPULAR BELIEF,</span> LOREM IPSUM
+      IS NOT SIMPLY RANDOM TEXT. IT HAS ROOTS IN A PIECE OF CLASSICAL LATIN LITERATURE
+      FROM 45 BC.
     </p>
   </div>
 

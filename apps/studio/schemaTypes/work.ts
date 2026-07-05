@@ -287,5 +287,17 @@ export default defineType({
         }),
       ],
     }),
+    defineField({
+      title: 'Index Position',
+      name: 'index',
+      type: 'number',
+      description:
+        'Position in the homepage grid (1=top-left, 2=top-right, 3=middle-left, 4=middle-right, 5=bottom-left)',
+      validation: (Rule) => [
+        Rule.required().error('Index is required'),
+        Rule.integer().error('Must be a whole number'),
+        Rule.min(1).error('Index must start at 1'),
+      ],
+    }),
   ],
 })

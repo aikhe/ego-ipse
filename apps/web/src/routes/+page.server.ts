@@ -106,7 +106,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
     index: 0,
   });
 
-  const projects: Project[] = slots.map((slot) => slot ?? emptyProject());
+  const projects: Project[] = slots.map(slot => slot ?? emptyProject());
 
   return {
     projects,

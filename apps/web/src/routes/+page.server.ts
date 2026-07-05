@@ -23,7 +23,8 @@ export const load: PageServerLoad = async ({ fetch }) => {
   }`;
 
   const url = `https://dn2lfgdt.api.sanity.io/v2022-03-07/data/query/production?query=${encodeURIComponent(query)}`;
-  const projects: Project[] = [];
+  const GRID_SIZE = 5;
+  const slots: (Project | null)[] = Array(GRID_SIZE).fill(null);
 
   try {
     const res = await fetch(url);
@@ -71,17 +72,20 @@ export const load: PageServerLoad = async ({ fetch }) => {
           }
         }
 
-        projects.push({
-          name: p.title || '',
-          section: (p.brief || '').toUpperCase(),
-          date: dateStr,
-          tags: p.tags || [],
-          id: idStr,
-          width: p.width || 320,
-          height: p.height || 400,
-          image: p.imageUrl || '',
-          index: p.index ?? 0,
-        });
+        const slotIndex = (p.index ?? 0) - 1;
+        if (slotIndex >= 0 && slotIndex < GRID_SIZE) {
+          slots[slotIndex] = {
+            name: p.title || '',
+            section: (p.brief || '').toUpperCase(),
+            date: dateStr,
+            tags: p.tags || [],
+            id: idStr,
+            width: p.width || 320,
+            height: p.height || 400,
+            image: p.imageUrl || '',
+            index: p.index ?? 0,
+          };
+        }
       });
     } else {
       console.error('Failed to fetch from Sanity', await res.text());
@@ -90,20 +94,19 @@ export const load: PageServerLoad = async ({ fetch }) => {
     console.error('Error fetching sanity data:', err);
   }
 
-  // Pad to exactly 5 elements with empty placeholders
-  while (projects.length < 5) {
-    projects.push({
-      name: '',
-      section: '',
-      date: '',
-      tags: [],
-      id: '',
-      width: 320,
-      height: 400,
-      image: '',
-      index: 0,
-    });
-  }
+  const emptyProject = (): Project => ({
+    name: '',
+    section: '',
+    date: '',
+    tags: [],
+    id: '',
+    width: 320,
+    height: 400,
+    image: '',
+    index: 0,
+  });
+
+  const projects: Project[] = slots.map((slot) => slot ?? emptyProject());
 
   return {
     projects,

@@ -33,7 +33,12 @@
   </section>
 
   <div class="scene-container">
-    <Canvas dpr={1} toneMapping={THREE.NoToneMapping}>
+    <Canvas
+      dpr={typeof window !== 'undefined'
+        ? Math.min(window.devicePixelRatio, 2)
+        : 1}
+      toneMapping={THREE.NoToneMapping}
+    >
       <Scene
         isShifted={uiState.isProjectView}
         onposterclick={i => (selectedPoster = i)}

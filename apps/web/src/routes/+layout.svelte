@@ -8,6 +8,7 @@
     STAGE_DESIGN_WIDTH,
     STAGE_MIN_SCALE,
   } from '$lib/utils/stageScale';
+  import { uiState } from '$lib/state/ui.svelte';
   import Header from '$lib/components/Header/Header.svelte';
 
   import type { LayoutProps } from './$types';
@@ -19,7 +20,6 @@
       ? 'light'
       : 'dark'
   );
-  let showGrid = $state(false);
   let stageScale = $state(1);
   let stageHeight = $state<number | null>(null);
   let stageOffsetX = $state(0);
@@ -34,7 +34,7 @@
 
   function handleKeydown(event: KeyboardEvent) {
     if (event.shiftKey && event.key === 'G') {
-      showGrid = !showGrid;
+      uiState.gridOverlay = !uiState.gridOverlay;
     }
     if (event.shiftKey && event.key === 'T') {
       toggleTheme();
@@ -116,14 +116,6 @@
       {@render children()}
     </main>
 
-    {#if showGrid}
-      <div class="grid-overlay section-container">
-        {#each Array.from(Array(12).keys()) as i (i)}
-          <div class="grid-column"></div>
-        {/each}
-      </div>
-    {/if}
-
     <div class="grid-background section-container">
       {#each Array.from(Array(12).keys()) as i (i)}
         <div class="bg-grid-column"></div>
@@ -133,6 +125,14 @@
     <div class="stripe-gutter stripe-gutter--left"></div>
     <div class="stripe-gutter stripe-gutter--right"></div>
   </div>
+
+  {#if uiState.gridOverlay}
+    <div class="grid-overlay section-container">
+      {#each Array.from(Array(12).keys()) as i (i)}
+        <div class="grid-column"></div>
+      {/each}
+    </div>
+  {/if}
 
   <div class="stripe-gutter-outer stripe-gutter-outer--left"></div>
   <div class="stripe-gutter-outer stripe-gutter-outer--right"></div>
@@ -160,7 +160,7 @@
     margin-inline: auto;
     pointer-events: none;
     position: absolute;
-    z-index: 1;
+    z-index: 9999;
   }
 
   .grid-column {

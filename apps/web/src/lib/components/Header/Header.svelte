@@ -52,7 +52,7 @@
   onMount(() => {
     if (headerEl) {
       const chars = headerEl.querySelectorAll('.header-anim .char');
-      gsap.set(chars, { xPercent: 0, force3D: true });
+      gsap.set(chars, { xPercent: 0, force3D: false, clearProps: 'transform' });
     }
   });
 
@@ -67,7 +67,7 @@
           xPercent: -200,
           duration: 0.6,
           ease: 'expo.inOut',
-          force3D: true,
+          force3D: false,
           stagger: { amount: 0.2, from: 'end' },
         }
       );
@@ -79,7 +79,8 @@
           xPercent: 0,
           duration: 0.6,
           ease: 'expo.inOut',
-          force3D: true,
+          force3D: false,
+          clearProps: 'transform',
           stagger: { amount: 0.2, from: 'start' },
         }
       );

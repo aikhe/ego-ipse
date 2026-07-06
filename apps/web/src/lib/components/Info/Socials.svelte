@@ -175,7 +175,10 @@
         isSocialRevealed = true;
         summonBox(index);
         summonLines(index);
-        getOpenPanel()?.track('social_dwell', { name: socials[index].name, handle: socials[index].handle });
+        getOpenPanel()?.track('social_dwell', {
+          name: socials[index].name,
+          handle: socials[index].handle,
+        });
       },
     });
   }

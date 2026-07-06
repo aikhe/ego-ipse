@@ -46,9 +46,7 @@
   const textures = useTexture(posters, {
     transform: t => {
       t.anisotropy = 16;
-      t.generateMipmaps = false;
-      t.minFilter = THREE.LinearFilter;
-      t.magFilter = THREE.LinearFilter;
+      t.generateMipmaps = true;
       t.colorSpace = 'srgb';
       return t;
     },

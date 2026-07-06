@@ -3,6 +3,7 @@
   import gsap from 'gsap';
   import { startGlitch } from '$lib/utils/glitch';
   import { uiState } from '$lib/state/ui.svelte';
+  import { getOpenPanel } from '$lib/analytics';
   import logo from '$lib/assets/logo.svg';
 
   interface Props {
@@ -112,13 +113,15 @@
 
   <button
     class="header__theme-toggle ui-button--ghost font--mono-label z-99"
-    onclick={toggleTheme}
+    onclick={() => { toggleTheme(); getOpenPanel()?.track('theme_toggle', { theme }); }}
   >
     MODE: {themeDisplayText}
   </button>
 
-  <button class="header__contact ui-button ui-button--corners z-99"
-    >CONTACT</button
+  <button
+    class="header__contact ui-button ui-button--corners z-99"
+    onclick={() => getOpenPanel()?.track('contact_click')}
+  >CONTACT</button
   >
 </header>
 

@@ -40,15 +40,15 @@
   const posterStepY = $derived(0.5 * r);
   const posterStepZ = $derived(-0.74 * r);
   const shiftStaggerDelay = 0.03;
-  const posterOffsetX = $derived(-0.34 * r);
-  const posterLiftY = $derived(1.6 * r);
+  const posterOffsetX = $derived(-0.134 * r);
+  const posterLiftY = $derived(1.7 * r);
   const stackMidIndex = $derived((totalLength - 1) / 2);
   const centeredIndex = $derived(index - stackMidIndex);
   const responsiveStepX = $derived(posterStepX * spacingScale);
   const responsiveStepY = $derived(posterStepY * spacingScale);
   const responsiveStepZ = $derived(posterStepZ * spacingScale);
-  const responsiveShiftX = $derived(6.7 * r * spacingScale);
-  const responsiveShiftY = $derived(2.3 * r * spacingScale);
+  const responsiveShiftX = $derived(6.5 * r * spacingScale);
+  const responsiveShiftY = $derived(1.92 * r * spacingScale);
   const responsiveStaggerDelay = $derived(shiftStaggerDelay * staggerScale);
 
   const basePos = $derived({

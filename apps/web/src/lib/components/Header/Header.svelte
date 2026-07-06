@@ -188,11 +188,8 @@
   }
 
   .char {
-    backface-visibility: hidden;
     display: inline-block;
-    transform: translate3d(0, 0, 0);
     vertical-align: top;
-    will-change: transform;
   }
 
   .header__time,

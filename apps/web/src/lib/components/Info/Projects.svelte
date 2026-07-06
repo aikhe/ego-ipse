@@ -609,7 +609,10 @@
             });
             const dwellProject = projects[projectItems.indexOf(item)];
             if (dwellProject) {
-              getOpenPanel()?.track('project_dwell', { name: dwellProject.name, id: dwellProject.id });
+              getOpenPanel()?.track('project_dwell', {
+                name: dwellProject.name,
+                id: dwellProject.id,
+              });
             }
             const stillNotActive =
               !activeProject ||
@@ -652,7 +655,10 @@
         const project = projects[index];
         activeProject = project;
         onselect(project);
-        getOpenPanel()?.track('project_select', { name: project.name, id: project.id });
+        getOpenPanel()?.track('project_select', {
+          name: project.name,
+          id: project.id,
+        });
 
         // Glitch the project name on click
         if (glitchIntervals[index]) clearInterval(glitchIntervals[index]!);

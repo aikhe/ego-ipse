@@ -2,6 +2,7 @@
   import { fade } from 'svelte/transition';
   import gsap from 'gsap';
   import { getStageScale } from '$lib/utils/stageScale';
+  import { getOpenPanel } from '$lib/analytics';
 
   let { selected = $bindable(), images } = $props<{
     selected: number | null;
@@ -24,6 +25,8 @@
   let container: HTMLDivElement | null = null;
   let isDragging = false;
   let hasInteracted = false;
+  let hasTrackedDrag = false;
+  let scrollTrackTimer: ReturnType<typeof setTimeout> | null = null;
   let setWidth = 0;
 
   // velocity tracking
@@ -71,6 +74,7 @@
   });
 
   function close() {
+    getOpenPanel()?.track('gallery_close');
     selected = null;
   }
 
@@ -98,6 +102,10 @@
     if (!container) return;
     isDragging = true;
     hasInteracted = true;
+    if (!hasTrackedDrag) {
+      hasTrackedDrag = true;
+      getOpenPanel()?.track('gallery_drag');
+    }
     container.setPointerCapture(e.pointerId);
 
     lastX = e.clientX / getStageScale();
@@ -131,6 +139,7 @@
   function onPointerUp(e: PointerEvent) {
     if (!isDragging || !container) return;
     isDragging = false;
+    hasTrackedDrag = false;
     container.releasePointerCapture(e.pointerId);
 
     if (Math.abs(velocity) > 0.1) {
@@ -156,6 +165,12 @@
   function onWheel(e: WheelEvent) {
     if (!container || setWidth === 0) return;
     hasInteracted = true;
+    if (!scrollTrackTimer) {
+      scrollTrackTimer = setTimeout(() => {
+        scrollTrackTimer = null;
+        getOpenPanel()?.track('gallery_scroll');
+      }, 500);
+    }
 
     // Smooth scroll with higher sensitivity
     const delta =

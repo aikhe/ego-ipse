@@ -15,8 +15,10 @@
 
   let time = $state('--:--:--');
   let themeDisplayText = $state('LIGHT');
+  let gridDisplayText = $state('HIDDEN');
   let headerEl = $state<HTMLElement>();
   let glitchInterval: ReturnType<typeof setInterval> | null = null;
+  let gridGlitchInterval: ReturnType<typeof setInterval> | null = null;
 
   $effect(() => {
     if (glitchInterval) clearInterval(glitchInterval);
@@ -25,6 +27,16 @@
       revealSpeed: 3,
       tailFrames: 15,
       onUpdate: t => (themeDisplayText = t),
+    });
+  });
+
+  $effect(() => {
+    if (gridGlitchInterval) clearInterval(gridGlitchInterval);
+    gridGlitchInterval = startGlitch({
+      text: uiState.gridOverlay ? 'OVERLAY' : 'HIDDEN',
+      revealSpeed: 3,
+      tailFrames: 15,
+      onUpdate: t => (gridDisplayText = t),
     });
   });
 
@@ -103,24 +115,79 @@
       {/each}
     </p>
     <div class="header__time-group-extra">
-      <p class="header__coordinates">14.6514° N, 120.9902° E</p>
+      <p class="header__coordinates header-anim">
+        {#each '14.6514° N, 120.9902° E'.split('') as char, i (i)}
+          <span class="char-mask"><span class="char">{char}</span></span>
+        {/each}
+      </p>
       <p class="header__location header-anim">
         {#each 'CALOOCAN, PH'.split('') as char, i (i)}
           <span class="char-mask"><span class="char">{char}</span></span>
         {/each}
       </p>
+      <div class="header__meta-group">
+        <p class="header__location header-anim">
+          {#each 'AVAIL REMOTE'.split('') as char, i (i)}
+            <span class="char-mask"><span class="char">{char}</span></span>
+          {/each}
+        </p>
+        <p class="header__location header-anim">
+          {#each 'RES: <24H'.split('') as char, i (i)}
+            <span class="char-mask"><span class="char">{char}</span></span>
+          {/each}
+        </p>
+      </div>
+      <div class="header__meta-group">
+        <p class="header__location header-anim">
+          {#each 'REV: 06.07'.split('') as char, i (i)}
+            <span class="char-mask"><span class="char">{char}</span></span>
+          {/each}
+        </p>
+      </div>
     </div>
   </div>
 
-  <button
-    class="header__theme-toggle ui-button--ghost font--mono-label z-99"
-    onclick={() => {
-      toggleTheme();
-      getOpenPanel()?.track('theme_toggle', { theme });
-    }}
-  >
-    MODE: {themeDisplayText}
-  </button>
+  <div class="header__cursor-group">
+    <p class="header__cursor-coords">X:438 Y:182 Z:000 14px/ms</p>
+    <div class="header__cursor-group-extra">
+      <p class="header__cursor-timer">02m 31s</p>
+    </div>
+  </div>
+
+  <div class="header__theme-group">
+    <button
+      class="header__theme-toggle ui-button--ghost font--mono-label z-99"
+      onclick={() => {
+        toggleTheme();
+        getOpenPanel()?.track('theme_toggle', { theme });
+      }}
+    >
+      STATE: <span class="header__theme-value">{themeDisplayText}</span>
+    </button>
+    <div class="header__theme-group-extra">
+      <p class="header__layout-name">
+        LAYOUT <span class="header__theme-value">[LAYERED]</span>
+      </p>
+      <button
+        class="header__layout-name header__grid-toggle"
+        onclick={() => {
+          uiState.gridOverlay = !uiState.gridOverlay;
+          getOpenPanel()?.track('grid_overlay_toggle', {
+            visible: uiState.gridOverlay,
+          });
+        }}
+      >
+        GRID: <span class="header__theme-value">{gridDisplayText}</span>
+      </button>
+      <p class="header__layout-name">1920 × 1080</p>
+      <p class="header__layout-name">DPR: 2.0</p>
+      <div class="header__meta-group">
+        <p class="header__layout-name">
+          SFX: <span class="header__theme-value">[TYPE]</span>
+        </p>
+      </div>
+    </div>
+  </div>
 
   <button
     class="header__contact ui-button ui-button--corners z-99"
@@ -151,7 +218,7 @@
 
   .header__time-group {
     display: flex;
-    gap: 1.2rem;
+    gap: 1rem;
     grid-column: 2 / span 2;
     position: relative;
   }
@@ -160,22 +227,84 @@
     margin: 0;
   }
 
+  .header__cursor-group {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    grid-column: 6 / span 2;
+    position: relative;
+  }
+
+  .header__cursor-coords {
+    margin: 0;
+  }
+
+  .header__cursor-group-extra {
+    left: 0;
+    position: absolute;
+    top: calc(100% + 0.3rem);
+    white-space: nowrap;
+  }
+
+  .header__cursor-timer {
+    margin: 0;
+  }
+
   .header__time-group-extra {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.3rem;
     left: 0;
     position: absolute;
-    top: calc(100% + 0.4rem);
+    top: calc(100% + 0.3rem);
     white-space: nowrap;
+  }
+
+  .header__meta-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-top: 1.2rem;
   }
 
   .header__time {
     color: var(--color-text);
   }
 
-  .header__theme-toggle {
-    grid-column: 10;
+  .header__theme-value {
+    color: var(--color-text);
+  }
+
+  .header__theme-toggle:hover,
+  .header__grid-toggle:hover {
+    color: inherit;
+  }
+
+  .header__theme-group {
+    grid-column: 11;
+    position: relative;
+  }
+
+  .header__theme-group-extra {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    left: 0;
+    position: absolute;
+    top: calc(100% + 0.3rem);
+    white-space: nowrap;
+  }
+
+  .header__grid-toggle {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    display: block;
+    font: inherit;
+    padding: 0;
+    text-align: left;
+    width: 100%;
   }
 
   .header__contact {
@@ -200,6 +329,10 @@
   .header__coordinates {
     display: flex;
     white-space: pre;
+  }
+
+  .header__layout-name {
+    margin: 0;
   }
 
   /* preserve spaces */

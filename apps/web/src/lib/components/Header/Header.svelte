@@ -89,22 +89,26 @@
 <header class="header section-container font--mono-label" bind:this={headerEl}>
   <img class="header__logo size-5" src={logo} alt="Aikhe Logo Mark" />
 
-  <p class="header__time header-anim">
-    {#each time.split('') as char, i (i)}
-      <span class="char-mask"><span class="char">{char}</span></span>
-    {/each}
-  </p>
-  <p class="header__timezone header-anim">
-    {#each 'GMT+8'.split('') as char, i (i)}
-      <span class="char-mask"><span class="char">{char}</span></span>
-    {/each}
-  </p>
-  <p class="header__location header-anim">
-    {#each 'CALOOCAN, PH'.split('') as char, i (i)}
-      <span class="char-mask"><span class="char">{char}</span></span>
-    {/each}
-  </p>
-  <p class="header__coordinates">14.6514° N, 120.9902° E</p>
+  <div class="header__time-group header-anim">
+    <p class="header__timezone">
+      {#each 'GMT+8'.split('') as char, i (i)}
+        <span class="char-mask"><span class="char">{char}</span></span>
+      {/each}
+    </p>
+    <p class="header__time">
+      {#each time.split('') as char, i (i)}
+        <span class="char-mask"><span class="char">{char}</span></span>
+      {/each}
+    </p>
+    <div class="header__time-group-extra">
+      <p class="header__coordinates">14.6514° N, 120.9902° E</p>
+      <p class="header__location header-anim">
+        {#each 'CALOOCAN, PH'.split('') as char, i (i)}
+          <span class="char-mask"><span class="char">{char}</span></span>
+        {/each}
+      </p>
+    </div>
+  </div>
 
   <button
     class="header__theme-toggle ui-button--ghost font--mono-label z-99"
@@ -139,20 +143,29 @@
     grid-column: 1;
   }
 
+  .header__time-group {
+    display: flex;
+    gap: 1.2rem;
+    grid-column: 2 / span 2;
+    position: relative;
+  }
+
+  .header__time-group p {
+    margin: 0;
+  }
+
+  .header__time-group-extra {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    left: 0;
+    position: absolute;
+    top: calc(100% + 0.4rem);
+    white-space: nowrap;
+  }
+
   .header__time {
-    grid-column: 2 / span 1;
-  }
-
-  .header__timezone {
-    grid-column: 3;
-  }
-
-  .header__location {
-    grid-column: 4 / span 2;
-  }
-
-  .header__coordinates {
-    grid-column: 7 / span 2;
+    color: var(--color-text);
   }
 
   .header__theme-toggle {

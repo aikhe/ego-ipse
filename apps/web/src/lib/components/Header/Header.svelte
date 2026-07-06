@@ -14,6 +14,10 @@
   let { theme, toggleTheme }: Props = $props();
 
   let time = $state('--:--:--');
+  let uptime = $state('0m 00s');
+  let cursorX = $state(0);
+  let cursorY = $state(0);
+  let cursorSpeed = $state(0);
   let themeDisplayText = $state('LIGHT');
   let gridDisplayText = $state('HIDDEN');
   let headerEl = $state<HTMLElement>();
@@ -61,6 +65,50 @@
     return () => clearInterval(interval);
   });
 
+  $effect(() => {
+    const start = Date.now();
+
+    const updateUptime = () => {
+      const elapsed = Date.now() - start;
+      const totalSec = Math.floor(elapsed / 1000);
+      const m = Math.floor(totalSec / 60);
+      const s = totalSec % 60;
+      const ms = elapsed % 1000;
+      uptime = `${m}m ${String(s).padStart(2, '0')}s ${String(ms).padStart(3, '0')}`;
+    };
+
+    updateUptime();
+    const interval = setInterval(updateUptime, 50);
+    return () => clearInterval(interval);
+  });
+
+  $effect(() => {
+    let lastX = 0;
+    let lastY = 0;
+    let lastTime = 0;
+
+    const onMouseMove = (e: MouseEvent) => {
+      cursorX = e.clientX;
+      cursorY = e.clientY;
+
+      if (lastTime) {
+        const dt = e.timeStamp - lastTime;
+        if (dt > 0) {
+          const dist = Math.sqrt(
+            (e.clientX - lastX) ** 2 + (e.clientY - lastY) ** 2
+          );
+          cursorSpeed = Math.round(dist / dt);
+        }
+      }
+
+      lastX = e.clientX;
+      lastY = e.clientY;
+      lastTime = e.timeStamp;
+    };
+
+    window.addEventListener('mousemove', onMouseMove);
+    return () => window.removeEventListener('mousemove', onMouseMove);
+  });
   onMount(() => {
     if (headerEl) {
       const chars = headerEl.querySelectorAll('.header-anim .char');
@@ -148,9 +196,11 @@
   </div>
 
   <div class="header__cursor-group">
-    <p class="header__cursor-coords">X:438 Y:182 Z:000 14px/ms</p>
+    <p class="header__cursor-coords">
+      X:{cursorX} Y:{cursorY} Z:000 {cursorSpeed}px/ms
+    </p>
     <div class="header__cursor-group-extra">
-      <p class="header__cursor-timer">02m 31s</p>
+      <p class="header__cursor-timer">{uptime}</p>
     </div>
   </div>
 

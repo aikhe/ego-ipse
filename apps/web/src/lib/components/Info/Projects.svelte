@@ -4,6 +4,7 @@
   import { startGlitch } from '$lib/utils/glitch';
   import { toStageRect, toStageValue, toStageX } from '$lib/utils/stageScale';
   import type { Project } from '$lib/types/project';
+  import { getOpenPanel } from '$lib/analytics';
 
   import ProjectPreview from './ProjectPreview.svelte';
 
@@ -606,6 +607,10 @@
               opacity: 1,
               duration: 0.5,
             });
+            const dwellProject = projects[projectItems.indexOf(item)];
+            if (dwellProject) {
+              getOpenPanel()?.track('project_dwell', { name: dwellProject.name, id: dwellProject.id });
+            }
             const stillNotActive =
               !activeProject ||
               projects[projectItems.indexOf(item)]?.name !== activeProject.name;
@@ -647,6 +652,7 @@
         const project = projects[index];
         activeProject = project;
         onselect(project);
+        getOpenPanel()?.track('project_select', { name: project.name, id: project.id });
 
         // Glitch the project name on click
         if (glitchIntervals[index]) clearInterval(glitchIntervals[index]!);

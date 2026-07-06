@@ -36,13 +36,13 @@
 
       // Warm up GSAP and record initial state to prevent first-run jitter
       const chars = titleEl.querySelectorAll('.char');
-      gsap.set(chars, { yPercent: 0, force3D: true });
+      gsap.set(chars, { yPercent: 0, force3D: false, clearProps: 'transform' });
     }
 
     if (descEl) {
       splitTextCustom(descEl, { clipDirection: 'horizontal' });
       const chars = descEl.querySelectorAll('.char');
-      gsap.set(chars, { xPercent: 0, force3D: true });
+      gsap.set(chars, { xPercent: 0, force3D: false, clearProps: 'transform' });
     }
 
     // Give browser a frame to settle layout before showing
@@ -67,7 +67,7 @@
             yPercent: 300,
             duration: 0.52,
             ease: 'power2.inOut',
-            force3D: true,
+            force3D: false,
             stagger: { amount: 0.16, from: 'end' },
           },
           index * 0.04
@@ -84,7 +84,8 @@
             yPercent: 0,
             duration: 0.52,
             ease: 'power3.out',
-            force3D: true,
+            force3D: false,
+            clearProps: 'transform',
             stagger: { amount: 0.16, from: 'start' },
           },
           index * 0.04
@@ -110,7 +111,7 @@
             xPercent: -200,
             duration: 0.6,
             ease: 'expo.inOut',
-            force3D: true,
+            force3D: false,
             stagger: { amount: 0.2, from: 'end' },
           },
           index * 0.08
@@ -127,7 +128,8 @@
             xPercent: 0,
             duration: 0.6,
             ease: 'expo.inOut',
-            force3D: true,
+            force3D: false,
+            clearProps: 'transform',
             stagger: { amount: 0.2, from: 'start' },
           },
           index * 0.08
@@ -263,9 +265,7 @@
   }
 
   :global(.char) {
-    backface-visibility: hidden;
-    transform: translate3d(0, 0, 0);
-    will-change: transform;
+    display: inline-block;
   }
 
   .hero__title {

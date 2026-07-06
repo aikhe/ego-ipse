@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import '../styles/main.css';
   import favicon from '$lib/assets/favicon.ico';
+  import { getOpenPanel } from '$lib/analytics';
   import {
     calculateStageMetrics,
     STAGE_DESIGN_WIDTH,
@@ -41,6 +42,8 @@
   }
 
   onMount(() => {
+    getOpenPanel();
+
     const viewport = window.visualViewport;
 
     const updateStageScale = () => {

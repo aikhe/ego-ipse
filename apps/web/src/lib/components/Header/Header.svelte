@@ -114,15 +114,17 @@
 
   <button
     class="header__theme-toggle ui-button--ghost font--mono-label z-99"
-    onclick={() => { toggleTheme(); getOpenPanel()?.track('theme_toggle', { theme }); }}
+    onclick={() => {
+      toggleTheme();
+      getOpenPanel()?.track('theme_toggle', { theme });
+    }}
   >
     MODE: {themeDisplayText}
   </button>
 
   <button
     class="header__contact ui-button ui-button--corners z-99"
-    onclick={() => getOpenPanel()?.track('contact_click')}
-  >CONTACT</button
+    onclick={() => getOpenPanel()?.track('contact_click')}>CONTACT</button
   >
 </header>
 

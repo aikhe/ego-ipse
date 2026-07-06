@@ -3,5 +3,8 @@
   "name": "ego-ipse",
   "compatibility_date": "2026-02-24",
   "compatibility_flags": ["nodejs_als"],
-  "pages_build_output_dir": ".svelte-kit/cloudflare"
+  "pages_build_output_dir": ".svelte-kit/cloudflare",
+  "vars": {
+    "PUBLIC_OPENPANEL_CLIENT_ID": "5f1ec374-6ec6-412d-a76b-3426072f47c5"
+  }
 }

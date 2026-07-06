@@ -40,7 +40,7 @@
   const posterStepY = $derived(0.5 * r);
   const posterStepZ = $derived(-0.74 * r);
   const shiftStaggerDelay = 0.03;
-  const posterOffsetX = $derived(-0.134 * r);
+  const posterOffsetX = $derived(-0.2 * r);
   const posterLiftY = $derived(1.7 * r);
   const stackMidIndex = $derived((totalLength - 1) / 2);
   const centeredIndex = $derived(index - stackMidIndex);

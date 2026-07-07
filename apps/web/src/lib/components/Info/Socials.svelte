@@ -208,11 +208,12 @@
             ? 'external noopener noreferrer'
             : 'noopener noreferrer'}
           class="socials__link font--mono-link"
+          class:is-placeholder={social.name === ''}
           onmouseenter={() => startGlitch(i)}
           onmouseleave={() => stopGlitch(i)}
           bind:this={linkElements[i]}
         >
-          {displayTexts[i]}
+          {displayTexts[i] || 'EMPTY'}
           <div class="socials__box" bind:this={boxElements[i]}></div>
         </a>
       {/each}
@@ -226,11 +227,12 @@
             ? 'external noopener noreferrer'
             : 'noopener noreferrer'}
           class="socials__link font--mono-link"
+          class:is-placeholder={social.name === ''}
           onmouseenter={() => startGlitch(i + 3)}
           onmouseleave={() => stopGlitch(i + 3)}
           bind:this={linkElements[i + 3]}
         >
-          {displayTexts[i + 3]}
+          {displayTexts[i + 3] || 'EMPTY'}
           <div class="socials__box" bind:this={boxElements[i + 3]}></div>
         </a>
       {/each}
@@ -271,6 +273,12 @@
     transition: color 0.1s ease;
     width: 100%;
     z-index: 1;
+  }
+
+  .socials__link.is-placeholder {
+    color: var(--color-text-muted);
+    cursor: default;
+    pointer-events: none;
   }
 
   .socials__link::before {

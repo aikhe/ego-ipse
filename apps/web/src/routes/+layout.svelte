@@ -14,12 +14,7 @@
   import type { LayoutProps } from './$types';
 
   let { children }: LayoutProps = $props();
-  let theme = $state(
-    typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-color-scheme: light)').matches
-      ? 'light'
-      : 'dark'
-  );
+  let theme = $state('light');
   let stageScale = $state(1);
   let stageHeight = $state<number | null>(null);
   let stageOffsetX = $state(0);

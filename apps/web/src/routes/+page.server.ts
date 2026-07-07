@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 import type { Project } from '$lib/types/project';
 import type { Social } from '$lib/types/social';
-import type { SanityProject, SanitySocial } from '$lib/types/sanity';
+import type { SanityProject, SanitySocial, SanityGitHub } from '$lib/types/sanity';
 
 export const prerender = false;
 
@@ -176,8 +176,57 @@ export const load: PageServerLoad = async ({ fetch }) => {
 
   const socials: Social[] = socialSlots.map(slot => slot ?? emptySocial());
 
+  // ── GitHub Config ──────────────────────────────────────────
+  const githubQuery = `*[_type == "github"][0] {
+    name,
+    href,
+    external,
+    handle,
+    bioPrefix,
+    bioHighlight,
+    tags,
+    status,
+    "imageUrl": image.asset->url
+  }`;
+
+  let github: Social | null = null;
+
+  try {
+    const res = await fetch(
+      `${SANITY_URL}?query=${encodeURIComponent(githubQuery)}`
+    );
+    if (res.ok) {
+      const data = (await res.json()) as { result?: SanityGitHub | null };
+      const raw = data.result;
+      if (raw) {
+        github = {
+          name: raw.name || '',
+          href: raw.href || '',
+          external: raw.external ?? true,
+          handle: raw.handle || '',
+          bioPrefix: raw.bioPrefix,
+          bioHighlight: raw.bioHighlight,
+          stats: [
+            { label: 'CONTRIBUTION', value: '—' },
+            { label: 'STARS', value: '—' },
+            { label: 'REPOS', value: '—' },
+            { label: 'FOLLOWERS', value: '—' },
+          ],
+          tags: raw.tags,
+          status: raw.status,
+          image: raw.imageUrl || '',
+        };
+      }
+    } else {
+      console.error('Failed to fetch github config', await res.text());
+    }
+  } catch (err) {
+    console.error('Error fetching github config:', err);
+  }
+
   return {
     projects,
     socials,
+    github,
   };
 };

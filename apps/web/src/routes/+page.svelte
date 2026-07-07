@@ -29,7 +29,11 @@
   <section
     class="hero-section section-container pointer-events-none relative z-20"
   >
-    <Hero projects={data.projects || []} />
+    <Hero
+      projects={data.projects || []}
+      socials={data.socials || []}
+      github={data.github}
+    />
   </section>
 
   <div class="scene-container">

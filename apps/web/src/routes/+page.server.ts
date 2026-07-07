@@ -4,8 +4,12 @@ import type { SanityProject } from '$lib/types/sanity';
 
 export const prerender = false;
 
+const SANITY_URL =
+  'https://dn2lfgdt.api.sanity.io/v2022-03-07/data/query/production';
+
 export const load: PageServerLoad = async ({ fetch }) => {
-  const query = `*[_type == "workRoot"] | order(index asc) [0...5] {
+  // ── Projects ──────────────────────────────────────────────
+  const projectQuery = `*[_type == "workRoot"] | order(index asc) [0...5] {
     title,
     duration,
     brief,
@@ -22,18 +26,17 @@ export const load: PageServerLoad = async ({ fetch }) => {
     index
   }`;
 
-  const url = `https://dn2lfgdt.api.sanity.io/v2022-03-07/data/query/production?query=${encodeURIComponent(query)}`;
+  const projectUrl = `${SANITY_URL}?query=${encodeURIComponent(projectQuery)}`;
   const GRID_SIZE = 5;
   const slots: (Project | null)[] = Array(GRID_SIZE).fill(null);
 
   try {
-    const res = await fetch(url);
+    const res = await fetch(projectUrl);
     if (res.ok) {
       const data = (await res.json()) as { result?: SanityProject[] };
       const rawProjects = data.result || [];
 
       rawProjects.forEach((p: SanityProject) => {
-        // 1. Process Date
         let dateStr = '';
         let idStr = '';
         if (p.duration?.start) {
@@ -60,7 +63,6 @@ export const load: PageServerLoad = async ({ fetch }) => {
               idStr = `${startYearShort}-${endYearShort}`;
             }
           } else {
-            // Ongoing / Present
             dateStr = `${startMonth}.${startYear} | PRESENT`;
             const currentYear = new Date().getFullYear();
             if (startYear === currentYear) {
@@ -72,7 +74,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
           }
         }
 
-        const slotIndex = (p.index ?? 0) - 1;
+        const slotIndex = Number(p.index ?? 0) - 1;
         if (slotIndex >= 0 && slotIndex < GRID_SIZE) {
           slots[slotIndex] = {
             name: p.title || '',

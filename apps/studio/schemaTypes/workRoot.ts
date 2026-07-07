@@ -290,14 +290,29 @@ export default defineType({
     defineField({
       title: 'Index Position',
       name: 'index',
-      type: 'number',
-      description:
-        'Position in the homepage grid (1=top-left, 2=top-right, 3=middle-left, 4=middle-right, 5=bottom-left)',
-      validation: (Rule) => [
-        Rule.required().error('Index is required'),
-        Rule.integer().error('Must be a whole number'),
-        Rule.min(1).error('Index must start at 1'),
-      ],
+      type: 'string',
+      description: 'Position in the homepage grid (1-5)',
+      options: {
+        list: [
+          {title: '1', value: '1'},
+          {title: '2', value: '2'},
+          {title: '3', value: '3'},
+          {title: '4', value: '4'},
+          {title: '5', value: '5'},
+        ],
+      },
+      validation: (Rule) =>
+        Rule.required().custom(async (value, context) => {
+          if (!value) return true
+          const client = (context as any).getClient({apiVersion: '2022-03-07'})
+          const id = context.document?._id || ''
+          const baseId = id.startsWith('drafts.') ? id.slice(7) : id
+          const count = await client.fetch(
+            `count(*[_type == "workRoot" && index == $index && !(_id in [$id, $baseId])])`,
+            {index: value, id, baseId},
+          )
+          return count === 0 ? true : 'Index already in use by another project'
+        }),
     }),
   ],
 })

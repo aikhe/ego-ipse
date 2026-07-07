@@ -1,7 +1,11 @@
 import type { PageServerLoad } from './$types';
 import type { Project } from '$lib/types/project';
 import type { Social } from '$lib/types/social';
-import type { SanityProject, SanitySocial, SanityGitHub } from '$lib/types/sanity';
+import type {
+  SanityProject,
+  SanitySocial,
+  SanityGitHub,
+} from '$lib/types/sanity';
 
 export const prerender = false;
 

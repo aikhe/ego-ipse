@@ -11,7 +11,8 @@
     "format": "bun run prettier:fix; turbo lint:fix",
     "prettier": "prettier \"**/*.{js,mjs,ts,tsx,json,yml,css,svelte,md,html}\" --check --cache --cache-strategy=content --cache-location=.prettiercache",
     "prettier:fix": "bun run prettier -- --write",
-    "start": "turbo start"
+    "start": "turbo start",
+    "deploy": "turbo deploy"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.5.0",

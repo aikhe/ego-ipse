@@ -15,5 +15,31 @@ export interface SanityProject {
   tags?: string[];
   width?: number;
   height?: number;
-  index?: number;
+  index?: string;
+}
+
+export interface SanitySocial {
+  name?: string;
+  href?: string;
+  external?: boolean;
+  handle?: string;
+  bioPrefix?: string;
+  bioHighlight?: string;
+  stats?: { label: string; value: string }[];
+  tags?: string[];
+  status?: string;
+  imageUrl?: string;
+  index?: string;
+}
+
+export interface SanityGitHub {
+  name?: string;
+  href?: string;
+  external?: boolean;
+  handle?: string;
+  bioPrefix?: string;
+  bioHighlight?: string;
+  tags?: string[];
+  status?: string;
+  imageUrl?: string;
 }

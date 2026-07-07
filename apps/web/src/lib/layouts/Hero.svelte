@@ -5,6 +5,7 @@
   import ProjectView from '$lib/components/Info/ProjectView.svelte';
 
   import type { Project } from '$lib/types/project';
+  import type { Social } from '$lib/types/social';
 
   import { splitTextCustom } from '$lib/utils/splitText';
   import { uiState } from '$lib/state/ui.svelte';
@@ -12,10 +13,17 @@
 
   interface Props {
     projects: Project[];
+    socials: Social[];
+    github?: Social | null;
     selectedProject?: Project | null;
   }
 
-  let { projects = [], selectedProject = $bindable(null) }: Props = $props();
+  let {
+    projects = [],
+    socials = [],
+    github = null,
+    selectedProject = $bindable(null),
+  }: Props = $props();
 
   let nextProject: Project | null = $state(null);
   let titleEl: HTMLElement | undefined = $state();
@@ -241,7 +249,7 @@
         triggerHeroOut(p);
       }}
     />
-    <Socials />
+    <Socials {socials} {github} />
   </div>
 </div>
 

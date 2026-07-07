@@ -6,123 +6,33 @@
   import { getStageScale } from '$lib/utils/stageScale';
 
   import SocialCard from './SocialCard.svelte';
-  import xIcon from '$lib/assets/socials/X.png';
-  import linkedinIcon from '$lib/assets/socials/linkedin.png';
-  import githubIcon from '$lib/assets/socials/github.png';
-  import aboutIcon from '$lib/assets/socials/about.png';
-  import blogIcon from '$lib/assets/socials/blog.png';
-  import acediaIcon from '$lib/assets/socials/acedia.png';
   import type { Social } from '$lib/types/social';
 
-  // github stats index in socials array
-  const GITHUB_INDEX = 2;
+  let {
+    socials: _socials = [],
+    github = null,
+  }: { socials: Social[]; github?: Social | null } = $props();
 
-  let socials = $state<Social[]>([
-    {
-      name: 'X(TWITTER)',
-      href: 'https://x.com/aikheandrie',
-      external: true,
-      handle: '@aikheandrei',
-      bioPrefix: 'BIO',
-      bioHighlight: '→ ANTI SLOP',
-      image: xIcon,
-      stats: [
-        { label: 'FOLLOWING', value: '164' },
-        { label: 'FOLLOWERS', value: '7' },
-        { label: 'POSTS', value: '20' },
-        { label: 'LIKES', value: '12' },
-      ],
-      tags: ['X', 'SOCIAL'],
-      status: 'ACTIVE...',
-    },
-    {
-      name: 'LINKEDIN',
-      href: 'https://www.linkedin.com/in/ike-rosacay-5a8b12316/',
-      external: true,
-      handle: 'aikhe-andrei',
-      bioPrefix: 'PROFESSIONAL',
-      bioHighlight: '→ ENG',
-      image: linkedinIcon,
-      stats: [
-        { label: 'CONNECTS', value: '268' },
-        { label: 'POSTS', value: '1' },
-        { label: 'SKILLS', value: '12' },
-      ],
-      tags: ['LINKEDIN', 'WORK'],
-      status: 'ONLINE...',
-    },
-    {
-      name: 'GITHUB',
-      href: 'https://github.com/aikhe',
-      external: true,
-      handle: 'aikhe',
-      bioPrefix: 'OS',
-      bioHighlight: '→ OPEN SOURCE',
-      image: githubIcon,
-      stats: [
-        { label: 'CONTRIBUTIONS', value: '—' },
-        { label: 'STARS', value: '—' },
-        { label: 'REPOS', value: '—' },
-        { label: 'FOLLOWERS', value: '—' },
-      ],
-      tags: ['GITHUB', 'CODE'],
-      status: 'PUSHING...',
-    },
-    {
-      name: 'ABOUT',
-      href: 'https://aikhe.pages.dev/about',
-      external: false,
-      handle: '@aikhe',
-      bioPrefix: 'ORIGIN',
-      bioHighlight: '→ HUMAN ENTITY',
-      image: aboutIcon,
-      stats: [
-        { label: 'AGE', value: '24' },
-        { label: 'LOC', value: 'SEA' },
-        { label: 'EXP', value: '5Y' },
-      ],
-      tags: ['ABOUT', 'INTERNAL'],
-      status: 'WIP...',
-    },
-    {
-      name: 'BLOG',
-      href: 'https://acedia.pages.dev/blog',
-      external: false,
-      handle: 'log_entry',
-      bioPrefix: 'DATA',
-      bioHighlight: '→ THOUGHTS',
-      image: blogIcon,
-      stats: [
-        { label: 'ENTRIES', value: '8' },
-        { label: 'TOPIC', value: 'UNDEFINED' },
-      ],
-      tags: ['BLOG', 'DATA'],
-      status: 'INITIALIZING...',
-    },
-    {
-      name: 'ACEDIA',
-      href: 'https://acedia.pages.dev/',
-      external: false,
-      handle: 'null_state',
-      bioPrefix: 'VOID',
-      bioHighlight: '→ EXPERIMENT',
-      image: acediaIcon,
-      stats: [
-        { label: 'STATUS', value: 'OFFLINE' },
-        { label: 'VERSION', value: '0.0.1' },
-      ],
-      tags: ['EXPERIMENTAL', 'VOID'],
-      status: 'IN PROGRESS...',
-    },
-  ]);
+  let gitStats = $state<{ label: string; value: string }[]>([]);
+
+  let socials = $derived(
+    _socials.map((s, i) =>
+      i === 2 && s.name === '' && github
+        ? { ...github, stats: gitStats.length ? gitStats : github.stats }
+        : s
+    )
+  );
 
   // fetch github stats directly (browser IP, not shared Cloudflare IP)
   $effect(() => {
     (async () => {
       try {
-        const [userRes, reposRes] = await Promise.all([
+        const [userRes, reposRes, commitsRes] = await Promise.all([
           fetch('https://api.github.com/users/aikhe'),
           fetch('https://api.github.com/users/aikhe/repos?per_page=100'),
+          fetch(
+            'https://api.github.com/search/commits?q=author:aikhe&per_page=1'
+          ),
         ]);
         if (!userRes.ok || !reposRes.ok) return;
 
@@ -133,7 +43,14 @@
           0
         );
 
-        socials[GITHUB_INDEX].stats = [
+        let totalContributions = '—';
+        if (commitsRes.ok) {
+          const commitsData = await commitsRes.json();
+          totalContributions = String(commitsData.total_count ?? '—');
+        }
+
+        gitStats = [
+          { label: 'CONTRIBUTION', value: totalContributions },
           { label: 'STARS', value: String(totalStars) },
           { label: 'REPOS', value: String(user.public_repos) },
           { label: 'FOLLOWERS', value: String(user.followers) },
@@ -144,10 +61,13 @@
     })();
   });
 
-  let displayTexts = $state<string[]>(socials.map(s => s.name));
-  let intervals: (ReturnType<typeof setInterval> | null)[] = socials.map(
-    () => null
-  );
+  let displayTexts = $state<string[]>([]);
+  let intervals: (ReturnType<typeof setInterval> | null)[] = $state([]);
+
+  $effect(() => {
+    displayTexts = socials.map(s => s.name);
+    intervals = socials.map(() => null);
+  });
   let hoveredIndex = $state<number | null>(null);
   let isSocialRevealed = $state(false);
 
@@ -163,6 +83,7 @@
   );
 
   function startGlitch(index: number) {
+    if (socials[index]?.name === '') return;
     hoveredIndex = index;
     isSocialRevealed = false;
 
@@ -279,7 +200,7 @@
 <div class="socials" bind:this={container}>
   <div class="socials__grid">
     <div class="socials__col">
-      {#each socials.slice(0, 3) as social, i (social.name)}
+      {#each socials.slice(0, 3) as social, i (i)}
         <a
           href={social.href}
           target="_blank"
@@ -287,17 +208,18 @@
             ? 'external noopener noreferrer'
             : 'noopener noreferrer'}
           class="socials__link font--mono-link"
+          class:is-placeholder={social.name === ''}
           onmouseenter={() => startGlitch(i)}
           onmouseleave={() => stopGlitch(i)}
           bind:this={linkElements[i]}
         >
-          {displayTexts[i]}
+          {displayTexts[i] || 'EMPTY'}
           <div class="socials__box" bind:this={boxElements[i]}></div>
         </a>
       {/each}
     </div>
     <div class="socials__col">
-      {#each socials.slice(3, 6) as social, i (social.name)}
+      {#each socials.slice(3, 6) as social, i (i + 3)}
         <a
           href={social.href}
           target="_blank"
@@ -305,11 +227,12 @@
             ? 'external noopener noreferrer'
             : 'noopener noreferrer'}
           class="socials__link font--mono-link"
+          class:is-placeholder={social.name === ''}
           onmouseenter={() => startGlitch(i + 3)}
           onmouseleave={() => stopGlitch(i + 3)}
           bind:this={linkElements[i + 3]}
         >
-          {displayTexts[i + 3]}
+          {displayTexts[i + 3] || 'EMPTY'}
           <div class="socials__box" bind:this={boxElements[i + 3]}></div>
         </a>
       {/each}
@@ -350,6 +273,12 @@
     transition: color 0.1s ease;
     width: 100%;
     z-index: 1;
+  }
+
+  .socials__link.is-placeholder {
+    color: var(--color-text-muted);
+    cursor: default;
+    pointer-events: none;
   }
 
   .socials__link::before {

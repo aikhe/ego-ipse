@@ -1,6 +1,7 @@
 import type { PageServerLoad } from './$types';
 import type { Project } from '$lib/types/project';
-import type { SanityProject } from '$lib/types/sanity';
+import type { Social } from '$lib/types/social';
+import type { SanityProject, SanitySocial } from '$lib/types/sanity';
 
 export const prerender = false;
 
@@ -110,7 +111,73 @@ export const load: PageServerLoad = async ({ fetch }) => {
 
   const projects: Project[] = slots.map(slot => slot ?? emptyProject());
 
+  // ── Socials ───────────────────────────────────────────────
+  const socialQuery = `*[_type == "social"] | order(index asc) [0...6] {
+    name,
+    href,
+    external,
+    handle,
+    bioPrefix,
+    bioHighlight,
+    stats,
+    tags,
+    status,
+    "imageUrl": image.asset->url,
+    index
+  }`;
+
+  const SOCIAL_GRID = 6;
+  const socialSlots: (Social | null)[] = Array(SOCIAL_GRID).fill(null);
+
+  try {
+    const res = await fetch(
+      `${SANITY_URL}?query=${encodeURIComponent(socialQuery)}`
+    );
+    if (res.ok) {
+      const data = (await res.json()) as { result?: SanitySocial[] };
+      const rawSocials = data.result || [];
+
+      rawSocials.forEach((s: SanitySocial) => {
+        const slotIndex = Number(s.index ?? 1) - 1;
+        if (slotIndex >= 0 && slotIndex < SOCIAL_GRID) {
+          socialSlots[slotIndex] = {
+            name: s.name || '',
+            href: s.href || '',
+            external: s.external ?? true,
+            handle: s.handle,
+            bioPrefix: s.bioPrefix,
+            bioHighlight: s.bioHighlight,
+            stats: s.stats,
+            tags: s.tags,
+            status: s.status,
+            image: s.imageUrl || '',
+          };
+        }
+      });
+    } else {
+      console.error('Failed to fetch socials from Sanity', await res.text());
+    }
+  } catch (err) {
+    console.error('Error fetching socials data:', err);
+  }
+
+  const emptySocial = (): Social => ({
+    name: '',
+    href: '',
+    external: true,
+    handle: '',
+    bioPrefix: '',
+    bioHighlight: '',
+    stats: [],
+    tags: [],
+    status: '',
+    image: '',
+  });
+
+  const socials: Social[] = socialSlots.map(slot => slot ?? emptySocial());
+
   return {
     projects,
+    socials,
   };
 };

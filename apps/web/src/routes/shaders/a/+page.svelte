@@ -104,7 +104,9 @@
     </div>
     <div class="shader-controls__slider">
       <span class="shader-controls__label">
-        Inner Dist <span class="shader-controls__val">{innerDistortion.toFixed(2)}</span>
+        Inner Dist <span class="shader-controls__val"
+          >{innerDistortion.toFixed(2)}</span
+        >
       </span>
       <input
         type="range"
@@ -117,7 +119,9 @@
     </div>
     <div class="shader-controls__slider">
       <span class="shader-controls__label">
-        Outer Dist <span class="shader-controls__val">{outerDistortion.toFixed(2)}</span>
+        Outer Dist <span class="shader-controls__val"
+          >{outerDistortion.toFixed(2)}</span
+        >
       </span>
       <input
         type="range"
@@ -130,7 +134,9 @@
     </div>
     <div class="shader-controls__slider">
       <span class="shader-controls__label">
-        Outer Glow <span class="shader-controls__val">{outerGlow.toFixed(2)}</span>
+        Outer Glow <span class="shader-controls__val"
+          >{outerGlow.toFixed(2)}</span
+        >
       </span>
       <input
         type="range"
@@ -143,7 +149,9 @@
     </div>
     <div class="shader-controls__slider">
       <span class="shader-controls__label">
-        Inner Glow <span class="shader-controls__val">{innerGlow.toFixed(2)}</span>
+        Inner Glow <span class="shader-controls__val"
+          >{innerGlow.toFixed(2)}</span
+        >
       </span>
       <input
         type="range"

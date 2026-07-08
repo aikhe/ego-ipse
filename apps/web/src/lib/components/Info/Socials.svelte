@@ -23,37 +23,23 @@
     )
   );
 
-  // fetch github stats directly (browser IP, not shared Cloudflare IP)
   $effect(() => {
     (async () => {
       try {
-        const [userRes, reposRes, commitsRes] = await Promise.all([
-          fetch('https://api.github.com/users/aikhe'),
-          fetch('https://api.github.com/users/aikhe/repos?per_page=100'),
-          fetch(
-            'https://api.github.com/search/commits?q=author:aikhe&per_page=1'
-          ),
-        ]);
-        if (!userRes.ok || !reposRes.ok) return;
-
-        const user = await userRes.json();
-        const repos: { stargazers_count: number }[] = await reposRes.json();
-        const totalStars = repos.reduce(
-          (sum, r) => sum + r.stargazers_count,
-          0
-        );
-
-        let totalContributions = '—';
-        if (commitsRes.ok) {
-          const commitsData = await commitsRes.json();
-          totalContributions = String(commitsData.total_count ?? '—');
-        }
+        const res = await fetch('/api/github/stats');
+        if (!res.ok) return;
+        const data: {
+          contribution: string;
+          stars: string;
+          repos: string;
+          followers: string;
+        } = await res.json();
 
         gitStats = [
-          { label: 'CONTRIBUTION', value: totalContributions },
-          { label: 'STARS', value: String(totalStars) },
-          { label: 'REPOS', value: String(user.public_repos) },
-          { label: 'FOLLOWERS', value: String(user.followers) },
+          { label: 'CONTRIBUTION', value: data.contribution },
+          { label: 'STARS', value: data.stars },
+          { label: 'REPOS', value: data.repos },
+          { label: 'FOLLOWERS', value: data.followers },
         ];
       } catch {
         // keep placeholder on network error

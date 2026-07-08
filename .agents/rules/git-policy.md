@@ -33,7 +33,7 @@ Maintain a clean, technical, and descriptive commit/PR history following a stric
 - PR Descriptions MUST include:
   - `### Summary`: High-level overview.
   - `### Features`: Bulleted list of new functionality.
-  - `### Changes`: All commits message in bullet list.
+  - `### Changes`: Technical breakdown of changes.
   - `### Configuration`: (If applicable) code snippets for setup.
 
 ## Guidelines

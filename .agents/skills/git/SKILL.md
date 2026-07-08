@@ -29,7 +29,7 @@ This skill ensures that the commit history and PR documentation remain technical
 - PR Descriptions MUST include:
   - `### Summary`: High-level overview.
   - `### Features`: Bulleted list of new functionality.
-  - `### Changes`: Technical breakdown of modified files with [clickable links].
+  - `### Changes`: Technical breakdown of changes.
   - `### Configuration`: (If applicable) code snippets for setup.
 - **Automated Validation**: PR titles are enforced by **GitHub Actions**.
 - **CI Enforcement**: Merging is only allowed if the **CI Pipeline** (build/lint) is green.

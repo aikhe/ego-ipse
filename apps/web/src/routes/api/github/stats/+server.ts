@@ -57,13 +57,15 @@ export async function GET({ platform }: RequestEvent) {
     }
 
     return new Response(JSON.stringify({ contribution, stars, repos, followers }), {
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        'content-type': 'application/json',
+        'cache-control': 'public, s-maxage=3600, stale-while-revalidate=300',
+      },
     });
   } catch {
     return new Response(
       JSON.stringify({ contribution: '—', stars: '—', repos: '—', followers: '—' }),
       {
-        status: 500,
         headers: { 'content-type': 'application/json' },
       }
     );

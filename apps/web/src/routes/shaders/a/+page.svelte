@@ -2,7 +2,7 @@
   import { Canvas } from '@threlte/core';
   import GemSmokeBg from '$lib/shaders/gem-smoke/GemSmokeBg.svelte';
   import { getShaderColorFromString } from '$lib/shaders/gem-smoke/gem-smoke.js';
-  import type { Vec4, GemSmokeShape } from '$lib/shaders/gem-smoke/gem-smoke.js';
+  import type { GemSmokeShape } from '$lib/shaders/gem-smoke/gem-smoke.js';
 
   let colors = $state<string[]>(['#454545', '#141414', '#2e2e2e', '#000000']);
   let colorBack = $state('#ffffff');
@@ -16,7 +16,7 @@
   let angle = $state(0);
   let size = $state(0.72);
   let speed = $state(0.8);
-  let scale = $state(0.16);
+  let scale = $state(0.14);
 
   function updateColor(index: number, value: string) {
     const next = [...colors];

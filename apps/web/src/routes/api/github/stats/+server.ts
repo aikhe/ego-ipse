@@ -1,5 +1,3 @@
-import type { RequestEvent } from '@sveltejs/kit';
-
 const GITHUB_USERNAME = 'aikhe';
 
 interface GitHubUser {
@@ -15,18 +13,12 @@ interface GitHubSearch {
   total_count: number;
 }
 
-export async function GET({ platform }: RequestEvent) {
-  const token: string | undefined = platform?.env?.GITHUB_TOKEN;
+const headers = {
+  Accept: 'application/vnd.github+json',
+  'User-Agent': 'ego-ipse',
+};
 
-  const headers: Record<string, string> = {
-    Accept: 'application/vnd.github+json',
-    'User-Agent': 'ego-ipse',
-  };
-
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
+export async function GET() {
   try {
     const [userRes, reposRes, commitsRes] = await Promise.all([
       fetch('https://api.github.com/users/' + GITHUB_USERNAME, { headers }),

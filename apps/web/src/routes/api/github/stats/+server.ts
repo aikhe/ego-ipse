@@ -16,8 +16,7 @@ interface GitHubSearch {
 }
 
 export async function GET({ platform }: RequestEvent) {
-  const token: string | undefined =
-    platform?.env?.GITHUB_TOKEN ?? process.env.GITHUB_TOKEN;
+  const token: string | undefined = platform?.env?.GITHUB_TOKEN;
 
   const headers: Record<string, string> = {
     Accept: 'application/vnd.github+json',

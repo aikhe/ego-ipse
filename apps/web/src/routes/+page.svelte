@@ -36,7 +36,10 @@
     />
   </section>
 
-  <div class="scene-container">
+  <div
+    class="scene-container"
+    class:scene-container--hidden={uiState.layoutMode === 'smoke'}
+  >
     <Canvas
       dpr={typeof window !== 'undefined'
         ? Math.min(window.devicePixelRatio, 2)
@@ -80,5 +83,9 @@
     transform: scale(calc(1 / var(--page-stage-scale, 1)));
     transform-origin: top left;
     width: calc(var(--page-stage-width, 100vw) * var(--page-stage-scale, 1));
+  }
+
+  .scene-container--hidden {
+    display: none;
   }
 </style>

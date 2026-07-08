@@ -22,8 +22,18 @@ export async function GET() {
   try {
     const [userRes, reposRes, commitsRes] = await Promise.all([
       fetch('https://api.github.com/users/' + GITHUB_USERNAME, { headers }),
-      fetch('https://api.github.com/users/' + GITHUB_USERNAME + '/repos?per_page=100', { headers }),
-      fetch('https://api.github.com/search/commits?q=author:' + GITHUB_USERNAME + '&per_page=1', { headers }),
+      fetch(
+        'https://api.github.com/users/' +
+          GITHUB_USERNAME +
+          '/repos?per_page=100',
+        { headers }
+      ),
+      fetch(
+        'https://api.github.com/search/commits?q=author:' +
+          GITHUB_USERNAME +
+          '&per_page=1',
+        { headers }
+      ),
     ]);
 
     let contribution = '—';
@@ -47,15 +57,23 @@ export async function GET() {
       contribution = String(commitsData.total_count ?? '—');
     }
 
-    return new Response(JSON.stringify({ contribution, stars, repos, followers }), {
-      headers: {
-        'content-type': 'application/json',
-        'cache-control': 'public, s-maxage=3600, stale-while-revalidate=300',
-      },
-    });
+    return new Response(
+      JSON.stringify({ contribution, stars, repos, followers }),
+      {
+        headers: {
+          'content-type': 'application/json',
+          'cache-control': 'public, s-maxage=3600, stale-while-revalidate=300',
+        },
+      }
+    );
   } catch {
     return new Response(
-      JSON.stringify({ contribution: '—', stars: '—', repos: '—', followers: '—' }),
+      JSON.stringify({
+        contribution: '—',
+        stars: '—',
+        repos: '—',
+        followers: '—',
+      }),
       {
         headers: { 'content-type': 'application/json' },
       }

@@ -20,9 +20,11 @@
   let cursorSpeed = $state(0);
   let themeDisplayText = $state('LIGHT');
   let gridDisplayText = $state('HIDDEN');
+  let layoutDisplayText = $state('LAYERED');
   let headerEl = $state<HTMLElement>();
   let glitchInterval: ReturnType<typeof setInterval> | null = null;
   let gridGlitchInterval: ReturnType<typeof setInterval> | null = null;
+  let layoutGlitchInterval: ReturnType<typeof setInterval> | null = null;
 
   $effect(() => {
     if (glitchInterval) clearInterval(glitchInterval);
@@ -41,6 +43,16 @@
       revealSpeed: 3,
       tailFrames: 15,
       onUpdate: t => (gridDisplayText = t),
+    });
+  });
+
+  $effect(() => {
+    if (layoutGlitchInterval) clearInterval(layoutGlitchInterval);
+    layoutGlitchInterval = startGlitch({
+      text: uiState.layoutMode.toUpperCase(),
+      revealSpeed: 3,
+      tailFrames: 15,
+      onUpdate: t => (layoutDisplayText = t),
     });
   });
 
@@ -148,7 +160,11 @@
   });
 </script>
 
-<header class="header section-container font--mono-label" bind:this={headerEl}>
+<header
+  class="header section-container font--mono-label"
+  class:smoke-active={uiState.layoutMode === 'smoke'}
+  bind:this={headerEl}
+>
   <img class="header__logo size-5" src={logo} alt="Aikhe Logo Mark" />
 
   <div class="header__time-group header-anim">
@@ -215,9 +231,18 @@
       STATE: <span class="header__theme-value">{themeDisplayText}</span>
     </button>
     <div class="header__theme-group-extra">
-      <p class="header__layout-name">
-        LAYOUT <span class="header__theme-value">[LAYERED]</span>
-      </p>
+      <button
+        class="header__layout-name header__layout-toggle"
+        onclick={() => {
+          uiState.layoutMode =
+            uiState.layoutMode === 'layered' ? 'smoke' : 'layered';
+          getOpenPanel()?.track('layout_toggle', {
+            layout: uiState.layoutMode,
+          });
+        }}
+      >
+        LAYOUT <span class="header__theme-value">[{layoutDisplayText}]</span>
+      </button>
       <button
         class="header__layout-name header__grid-toggle"
         onclick={() => {
@@ -357,6 +382,18 @@
     width: 100%;
   }
 
+  .header__layout-toggle {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    display: block;
+    font: inherit;
+    padding: 0;
+    text-align: left;
+    width: 100%;
+  }
+
   .header__contact {
     grid-column: 12 / span 1;
     justify-self: flex-end;
@@ -383,6 +420,14 @@
 
   .header__layout-name {
     margin: 0;
+  }
+
+  .header.smoke-active {
+    left: 50%;
+    position: fixed;
+    top: 0;
+    transform: translateX(-50%);
+    z-index: 9999;
   }
 
   /* preserve spaces */

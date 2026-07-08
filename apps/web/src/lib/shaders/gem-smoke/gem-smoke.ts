@@ -397,12 +397,7 @@ export type GemSmokeShape = keyof typeof GemSmokeShapes;
 export function createFullScreenQuadGeometry(): THREE.BufferGeometry {
   const geo = new THREE.BufferGeometry();
   const verts = new Float32Array([
-    -1, -1, 0,
-     1, -1, 0,
-    -1,  1, 0,
-    -1,  1, 0,
-     1, -1, 0,
-     1,  1, 0,
+    -1, -1, 0, 1, -1, 0, -1, 1, 0, -1, 1, 0, 1, -1, 0, 1, 1, 0,
   ]);
   geo.setAttribute('position', new THREE.BufferAttribute(verts, 3));
   return geo;

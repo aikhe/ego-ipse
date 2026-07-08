@@ -15,7 +15,9 @@
   import logoSvg from '$lib/assets/logo.svg';
 
   let {
-    colors = ['#454545', '#141414', '#2e2e2e', '#000000'].map(getShaderColorFromString),
+    colors = ['#454545', '#141414', '#2e2e2e', '#000000'].map(
+      getShaderColorFromString
+    ),
     colorBack = getShaderColorFromString('#ffffff'),
     colorInner = getShaderColorFromString('#ffffff'),
     shape = 'circle' as GemSmokeShape,
@@ -50,9 +52,15 @@
       const off = i * 4;
       if (i < colors.length) {
         const c = colors[i];
-        arr[off] = c[0]; arr[off + 1] = c[1]; arr[off + 2] = c[2]; arr[off + 3] = c[3];
+        arr[off] = c[0];
+        arr[off + 1] = c[1];
+        arr[off + 2] = c[2];
+        arr[off + 3] = c[3];
       } else {
-        arr[off] = 0; arr[off + 1] = 0; arr[off + 2] = 0; arr[off + 3] = 1;
+        arr[off] = 0;
+        arr[off + 1] = 0;
+        arr[off + 2] = 0;
+        arr[off + 3] = 1;
       }
     }
     return arr;
@@ -170,9 +178,11 @@
   });
 
   let currentSpeed = $state(speed);
-  $effect(() => { currentSpeed = speed; });
+  $effect(() => {
+    currentSpeed = speed;
+  });
 
-  useTask((delta) => {
+  useTask(delta => {
     uniforms.u_time.value += delta * currentSpeed;
   });
 
@@ -184,7 +194,8 @@
         const imageUrl = URL.createObjectURL(processed.pngBlob);
         await new Promise<void>((resolve, reject) => {
           img.onload = () => resolve();
-          img.onerror = () => reject(new Error('Failed to load processed image'));
+          img.onerror = () =>
+            reject(new Error('Failed to load processed image'));
           img.src = imageUrl;
         });
         const tex = new THREE.Texture(img);

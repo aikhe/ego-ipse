@@ -10,6 +10,8 @@
   } from '$lib/utils/stageScale';
   import { uiState } from '$lib/state/ui.svelte';
   import Header from '$lib/components/Header/Header.svelte';
+  import { Canvas } from '@threlte/core';
+  import GemSmokeBg from '$lib/shaders/gem-smoke/GemSmokeBg.svelte';
 
   import type { LayoutProps } from './$types';
 
@@ -33,6 +35,10 @@
     }
     if (event.shiftKey && event.key === 'T') {
       toggleTheme();
+    }
+    if (event.shiftKey && event.key === 'L') {
+      uiState.layoutMode =
+        uiState.layoutMode === 'layered' ? 'smoke' : 'layered';
     }
   }
 
@@ -107,7 +113,7 @@
   >
     <Header {theme} {toggleTheme} />
 
-    <main>
+    <main class:main--smoke={uiState.layoutMode === 'smoke'}>
       {@render children()}
     </main>
 
@@ -129,6 +135,14 @@
     </div>
   {/if}
 
+  {#if uiState.layoutMode === 'smoke'}
+    <div class="gem-smoke-overlay">
+      <Canvas>
+        <GemSmokeBg scale={0.14} speed={0.8} />
+      </Canvas>
+    </div>
+  {/if}
+
   <div class="stripe-gutter-outer stripe-gutter-outer--left"></div>
   <div class="stripe-gutter-outer stripe-gutter-outer--right"></div>
 </div>
@@ -145,6 +159,7 @@
     height: var(--page-stage-height, 100vh);
     position: relative;
     width: var(--page-stage-width, var(--container-max-width));
+    z-index: 2;
   }
 
   .grid-overlay {
@@ -221,7 +236,7 @@
     mask-repeat: repeat;
     mask-size: 7px 7px;
     pointer-events: none;
-    position: fixed;
+    position: absolute;
     top: 0;
     width: max(
       0px,
@@ -229,7 +244,7 @@
         (100vw - (var(--container-max-width) * var(--page-stage-scale, 1))) / 2
       )
     );
-    z-index: -1000;
+    z-index: 1;
   }
 
   .stripe-gutter-outer--left {
@@ -238,5 +253,16 @@
 
   .stripe-gutter-outer--right {
     right: 0;
+  }
+
+  .gem-smoke-overlay {
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 0;
+  }
+
+  .main--smoke {
+    padding-top: 4.8rem;
   }
 </style>

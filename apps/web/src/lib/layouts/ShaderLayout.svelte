@@ -16,30 +16,37 @@
   const darkColorInner = getShaderColorFromString('#0a0a0a');
   const lightColorInner = getShaderColorFromString('#fafafa');
 
-  let smokeColors = $derived(theme === 'dark' ? darkColors : lightColors);
-  let smokeColorInner = $derived(
+  let shaderColors = $derived(theme === 'dark' ? darkColors : lightColors);
+  let shaderColorInner = $derived(
     theme === 'dark' ? darkColorInner : lightColorInner
   );
-  let smokeOuterGlow = $derived(theme === 'dark' ? 0.4 : 0.26);
+  let shaderOuterGlow = $derived(theme === 'dark' ? 0.4 : 0.26);
+
+  let ready = $state(false);
+  onMount(() => {
+    ready = true;
+  });
 </script>
 
-{#if uiState.layoutMode === 'smoke'}
-  <div class="gem-smoke-overlay">
-    <Canvas>
-      <GemSmokeBg
-        scale={0.14}
-        speed={0.8}
-        colors={smokeColors}
-        colorBack={[1, 1, 1, 0]}
-        colorInner={smokeColorInner}
-        outerGlow={smokeOuterGlow}
-      />
-    </Canvas>
-  </div>
-{/if}
+<div
+  class="gem-shader-overlay"
+  class:gem-shader-overlay--hidden={ready && uiState.layoutMode !== 'shader'}
+  class:gem-shader-overlay--initial={!ready}
+>
+  <Canvas>
+    <GemSmokeBg
+      scale={0.14}
+      speed={0.8}
+      colors={shaderColors}
+      colorBack={[1, 1, 1, 0]}
+      colorInner={shaderColorInner}
+      outerGlow={shaderOuterGlow}
+    />
+  </Canvas>
+</div>
 
 <style>
-  .gem-smoke-overlay {
+  .gem-shader-overlay {
     height: calc(var(--page-stage-height, 100vh) * var(--page-stage-scale, 1));
     inset: 0;
     pointer-events: none;

@@ -57,6 +57,6 @@
     grid-template-columns: repeat(12, 1fr);
     height: calc(var(--page-stage-height, 100vh) - 4.8rem);
     padding-bottom: 2rem;
-    z-index: 1;
+    z-index: 3;
   }
 </style>

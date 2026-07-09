@@ -15,7 +15,7 @@
 
 <div
   class="scene-container"
-  class:scene-container--hidden={uiState.layoutMode === 'smoke'}
+  class:scene-container--hidden={uiState.layoutMode === 'shader'}
 >
   <Canvas
     dpr={typeof window !== 'undefined'

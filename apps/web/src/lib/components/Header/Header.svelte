@@ -162,7 +162,7 @@
 
 <header
   class="header section-container font--mono-label"
-  class:smoke-active={uiState.layoutMode === 'smoke'}
+  class:shader-active={uiState.layoutMode === 'shader'}
   bind:this={headerEl}
 >
   <img class="header__logo size-5" src={logo} alt="Aikhe Logo Mark" />
@@ -235,7 +235,7 @@
         class="header__layout-name header__layout-toggle"
         onclick={() => {
           uiState.layoutMode =
-            uiState.layoutMode === 'layered' ? 'smoke' : 'layered';
+            uiState.layoutMode === 'layered' ? 'shader' : 'layered';
           getOpenPanel()?.track('layout_toggle', {
             layout: uiState.layoutMode,
           });
@@ -422,7 +422,7 @@
     margin: 0;
   }
 
-  .header.smoke-active {
+  .header.shader-active {
     left: 50%;
     position: fixed;
     top: 0;

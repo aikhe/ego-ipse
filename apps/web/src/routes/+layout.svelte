@@ -10,7 +10,7 @@
   } from '$lib/utils/stageScale';
   import { uiState } from '$lib/state/ui.svelte';
   import Header from '$lib/components/Header/Header.svelte';
-  import SmokeLayout from '$lib/layouts/SmokeLayout.svelte';
+  import ShaderLayout from '$lib/layouts/ShaderLayout.svelte';
   import GridBackground from '$lib/layouts/GridBackground.svelte';
   import GridOverlay from '$lib/layouts/GridOverlay.svelte';
   import StripeGutter from '$lib/layouts/StripeGutter.svelte';
@@ -40,7 +40,11 @@
     }
     if (event.shiftKey && event.key === 'L') {
       uiState.layoutMode =
-        uiState.layoutMode === 'layered' ? 'smoke' : 'layered';
+        uiState.layoutMode === 'layered' ? 'shader' : 'layered';
+    }
+    if (event.shiftKey && event.key === 'F') {
+      uiState.layoutMode =
+        uiState.layoutMode === 'layered' ? 'shader' : 'layered';
     }
   }
 
@@ -115,7 +119,7 @@
   >
     <Header {theme} {toggleTheme} />
 
-    <main class:main--smoke={uiState.layoutMode === 'smoke'}>
+    <main class:main--shader={uiState.layoutMode === 'shader'}>
       {@render children()}
     </main>
 
@@ -123,7 +127,7 @@
 
     <StripeGutter />
 
-    <SmokeLayout {theme} />
+    <ShaderLayout {theme} />
   </div>
 
   <GridOverlay />
@@ -144,7 +148,7 @@
     z-index: 2;
   }
 
-  .main--smoke {
+  .main--shader {
     padding-top: 4.8rem;
   }
 </style>

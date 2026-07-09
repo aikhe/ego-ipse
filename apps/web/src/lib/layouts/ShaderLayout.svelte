@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { Canvas } from '@threlte/core';
   import GemSmokeBg from '$lib/shaders/gem-smoke/GemSmokeBg.svelte';
   import { getShaderColorFromString } from '$lib/shaders/gem-smoke/gem-smoke.js';
@@ -47,5 +48,14 @@
     transform-origin: top left;
     width: calc(var(--page-stage-width, 100vw) * var(--page-stage-scale, 1));
     z-index: -50;
+  }
+
+  .gem-shader-overlay--initial {
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  .gem-shader-overlay--hidden {
+    display: none;
   }
 </style>

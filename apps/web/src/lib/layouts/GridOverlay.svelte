@@ -18,8 +18,8 @@
     inset: 0;
     margin-inline: auto;
     pointer-events: none;
-    position: absolute;
-    z-index: 9999;
+    position: fixed;
+    z-index: 2147483647;
   }
 
   .grid-column {

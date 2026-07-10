@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { Canvas } from '@threlte/core';
   import * as THREE from 'three';
   import Scene from '$lib/components/Poster/Scene.svelte';
@@ -11,11 +12,17 @@
     isShifted: boolean;
     onposterclick: (i: number) => void;
   } = $props();
+
+  let ready = $state(false);
+  onMount(() => {
+    ready = true;
+  });
 </script>
 
 <div
   class="scene-container"
-  class:scene-container--hidden={uiState.layoutMode === 'shader'}
+  class:scene-container--hidden={ready && uiState.layoutMode === 'shader'}
+  class:scene-container--initial={!ready}
 >
   <Canvas
     dpr={typeof window !== 'undefined'
@@ -35,6 +42,11 @@
     transform: scale(calc(1 / var(--page-stage-scale, 1)));
     transform-origin: top left;
     width: calc(var(--page-stage-width, 100vw) * var(--page-stage-scale, 1));
+  }
+
+  .scene-container--initial {
+    pointer-events: none;
+    visibility: hidden;
   }
 
   .scene-container--hidden {

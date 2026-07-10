@@ -30,7 +30,7 @@
 
 <div
   class="gem-shader-overlay"
-  class:gem-shader-overlay--hidden={ready && uiState.layoutMode !== 'shader'}
+  class:gem-shader-overlay--hidden={uiState.layoutMode !== 'shader'}
   class:gem-shader-overlay--initial={!ready}
 >
   <Canvas>

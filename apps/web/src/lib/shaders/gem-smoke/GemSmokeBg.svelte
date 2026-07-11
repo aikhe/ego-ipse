@@ -110,6 +110,7 @@
     fragmentShader: gemSmokeFragmentShader,
     depthWrite: false,
     depthTest: false,
+    transparent: true,
   });
 
   $effect(() => {

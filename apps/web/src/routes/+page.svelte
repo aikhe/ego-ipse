@@ -26,9 +26,7 @@
 </script>
 
 <div class="page-shell">
-  <section
-    class="hero-section section-container pointer-events-none relative z-20"
-  >
+  <section class="hero-section section-container pointer-events-none relative">
     <Hero
       projects={data.projects || []}
       socials={data.socials || []}
@@ -74,6 +72,7 @@
     grid-template-columns: repeat(12, 1fr);
     height: calc(var(--page-stage-height, 100vh) - 4.8rem);
     padding-bottom: 2rem;
+    z-index: 1;
   }
 
   .scene-container {

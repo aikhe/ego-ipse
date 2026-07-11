@@ -31,6 +31,11 @@
     document.documentElement.setAttribute('data-theme', theme);
   });
 
+  function toggleLayout() {
+    uiState.layoutMode =
+      uiState.layoutMode === 'layered' ? 'shader' : 'layered';
+  }
+
   function handleKeydown(event: KeyboardEvent) {
     if (event.shiftKey && event.key === 'G') {
       uiState.gridOverlay = !uiState.gridOverlay;
@@ -38,13 +43,8 @@
     if (event.shiftKey && event.key === 'T') {
       toggleTheme();
     }
-    if (event.shiftKey && event.key === 'L') {
-      uiState.layoutMode =
-        uiState.layoutMode === 'layered' ? 'shader' : 'layered';
-    }
-    if (event.shiftKey && event.key === 'F') {
-      uiState.layoutMode =
-        uiState.layoutMode === 'layered' ? 'shader' : 'layered';
+    if (event.shiftKey && (event.key === 'L' || event.key === 'F')) {
+      toggleLayout();
     }
   }
 

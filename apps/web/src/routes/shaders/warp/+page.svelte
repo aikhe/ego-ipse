@@ -240,23 +240,8 @@
 </div>
 
 <style>
-  :global(.app-viewport) {
-    overflow-y: auto !important;
-  }
-
-  :global(.app-stage) {
-    height: auto !important;
-    overflow: visible !important;
-    transform: none !important;
-    width: 100% !important;
-  }
-
-  :global(.header) {
-    left: 0 !important;
-    position: fixed !important;
-    right: 0 !important;
-    top: 0 !important;
-    z-index: 50 !important;
+  :global(.main--shader) {
+    padding-top: 0 !important;
   }
 
   .shaders-section {
@@ -284,7 +269,7 @@
     padding: 0.6rem 0.75rem;
     position: absolute;
     right: 1rem;
-    top: 4rem;
+    top: 5rem;
     width: 140px;
     z-index: 5;
   }

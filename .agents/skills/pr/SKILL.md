@@ -22,6 +22,7 @@
 ## Review Comment Handling
 
 When Copilot or other reviewers leave feedback on a PR:
+
 - Evaluate each comment — address valid concerns (bugs, memory leaks, duplication) and acknowledge false positives.
 - Push fixes as separate, focused commits (one concern per commit where practical).
 - Post a summary comment on the PR listing what was addressed and how.

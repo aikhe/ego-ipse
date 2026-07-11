@@ -34,6 +34,7 @@ Maintain a clean, technical, and descriptive commit/PR history following a stric
   - `### Summary`: High-level overview.
   - `### Features`: Bulleted list of new functionality.
   - `### Changes`: Technical breakdown of changes.
+  - `### Verification`: Validation steps and results (lint, typecheck, build, review comments addressed).
   - `### Configuration`: (If applicable) code snippets for setup.
 
 ## Guidelines

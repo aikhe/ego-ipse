@@ -24,6 +24,7 @@ This repository already has a local agent system under `.agents/`. Use this file
 - `tests`: unit tests, component tests, e2e checks.
 - `sync`: Sanity schema and frontend data synchronization.
 - `git`: commit and PR formatting.
+- `pr`: pull request creation with structured descriptions and verification.
 - `caveman`: ultra-brief responses when requested.
 
 ## Workflow Map

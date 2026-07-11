@@ -12,11 +12,27 @@
   import Header from '$lib/components/Header/Header.svelte';
   import { Canvas } from '@threlte/core';
   import GemSmokeBg from '$lib/shaders/gem-smoke/GemSmokeBg.svelte';
+  import { getShaderColorFromString } from '$lib/shaders/gem-smoke/gem-smoke.js';
 
   import type { LayoutProps } from './$types';
 
+  const lightColors = ['#454545', '#141414', '#2e2e2e', '#000000'].map(
+    getShaderColorFromString
+  );
+  const darkColors = ['#9e9e9e', '#c2c2c2', '#e8e8e8', '#ffffff'].map(
+    getShaderColorFromString
+  );
+
+  const darkColorInner = getShaderColorFromString('#0a0a0a');
+  const lightColorInner = getShaderColorFromString('#fafafa');
+
   let { children }: LayoutProps = $props();
   let theme = $state('light');
+  let smokeColors = $derived(theme === 'dark' ? darkColors : lightColors);
+  let smokeColorInner = $derived(
+    theme === 'dark' ? darkColorInner : lightColorInner
+  );
+  let smokeOuterGlow = $derived(theme === 'dark' ? 0.4 : 0.26);
   let stageScale = $state(1);
   let stageHeight = $state<number | null>(null);
   let stageOffsetX = $state(0);
@@ -129,7 +145,14 @@
     {#if uiState.layoutMode === 'smoke'}
       <div class="gem-smoke-overlay">
         <Canvas>
-          <GemSmokeBg scale={0.14} speed={0.8} colorBack={[1, 1, 1, 0]} />
+          <GemSmokeBg
+            scale={0.14}
+            speed={0.8}
+            colors={smokeColors}
+            colorBack={[1, 1, 1, 0]}
+            colorInner={smokeColorInner}
+            outerGlow={smokeOuterGlow}
+          />
         </Canvas>
       </div>
     {/if}

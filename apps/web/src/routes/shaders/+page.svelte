@@ -30,7 +30,7 @@
     flex-direction: column;
     gap: 2rem;
     justify-content: center;
-    min-height: 100dvh;
+    min-height: calc(100dvh - 4.8rem);
     padding: 2rem;
   }
 

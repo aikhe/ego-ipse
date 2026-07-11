@@ -49,8 +49,50 @@ Maintain a clean, technical, and descriptive commit/PR history following a stric
 - `feat(threlte): scene interactions & perspective + load gltf model init`
 - `fix(svelte): resolve each_key_duplicate error & refine dark mode overlay colors`
 
+### PR Description Example
+
+````markdown
+### Summary
+
+Integrates the gem-smoke WebGL shader as a full-screen background effect with
+a new "shader" layout mode, theme-reactive colors, and extracted layout
+components — cleaning up the root layout significantly.
+
+### Features
+
+- **Shader layout mode**: Toggle between `layered` (3D poster scene) and
+  `shader` (gem-smoke WebGL background) modes via `Shift+L`, `Shift+F`, or
+  the header button. `shader` is now the default layout.
+- **Theme-reactive shader**: Gem-smoke colors, inner glow, and outer glow
+  intensity adapt to light/dark theme automatically.
+- **Instant toggle**: Canvas stays mounted — toggling is a CSS-only
+  operation with no WebGL context recreation.
+- **Transparent background**: Shader background alpha = 0, allowing grid
+  lines and page background to show through.
+
+### Changes
+
+- **Layout extraction**: `ShaderLayout`, `SceneLayout`, `GridBackground`,
+  `GridOverlay`, `StripeGutter` components under `src/lib/layouts/`
+- **Root layout**: 295 → 150 lines; inline blocks replaced with components
+- **Homepage**: 92 → 62 lines; inline Canvas/Scene replaced with SceneLayout
+- **State**: LayoutMode default changed to `'shader'`
+- **Stacking**: Shader at z-index -50, hero at z-index 3
+
+### Configuration
+
+```ts
+// apps/web/src/lib/state/ui.svelte.ts
+export type LayoutMode = 'layered' | 'shader';
+layoutMode: 'shader' as LayoutMode;
+```
+````
+
+```
+
 ## Anti-patterns
 
 - Committing without explicit "go ahead" from the USER.
 - Using multi-line commit messages with summaries.
 - Merging PRs with failing CI checks (Red ❌).
+```

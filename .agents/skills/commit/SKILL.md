@@ -32,21 +32,3 @@ Follow the conventional commits standard with specific style guidelines:
 
 3. **Execute the Commit**
    - Run the git commit command to commit the changes.
-
-## Pull Request Workflow
-
-1. **Check that the branch is pushed** — verify with `git status` and `git branch -a`.
-
-2. **Draft the PR body as a markdown file** — write the body to a `.md` temp file (e.g. `pr_body.md`). This avoids shell escaping issues with backticks and inline code when passing to `gh`.
-
-3. **Create or edit the PR using the file**
-   - Create: `gh pr create --title "<title>" --body-file <path/to/pr_body.md>`
-   - Edit: `gh pr edit <number> --body-file <path/to/pr_body.md>`
-
-4. **PR Title** follows the same format as commit messages.
-
-5. **PR Description** MUST include:
-   - `### Summary`: High-level overview.
-   - `### Features`: Bulleted list of new functionality.
-   - `### Changes`: Technical breakdown of changes.
-   - `### Configuration`: (If applicable) code snippets for setup.

@@ -188,11 +188,12 @@
   });
 
   onMount(() => {
+    let imageUrl: string | undefined;
     (async () => {
       try {
         const processed = await toProcessedGemSmoke(logoSvg);
         const img = new Image();
-        const imageUrl = URL.createObjectURL(processed.pngBlob);
+        imageUrl = URL.createObjectURL(processed.pngBlob);
         await new Promise<void>((resolve, reject) => {
           img.onload = () => resolve();
           img.onerror = () =>
@@ -214,6 +215,7 @@
     })();
 
     return () => {
+      if (imageUrl) URL.revokeObjectURL(imageUrl);
       imageTexture?.dispose();
       material.dispose();
       geometry.dispose();

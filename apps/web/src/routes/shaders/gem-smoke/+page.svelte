@@ -67,11 +67,12 @@
   }
 
   onMount(() => {
+    let imageUrl: string | undefined;
     if (canvasCDiv) {
       (async () => {
         try {
           const processed = await toProcessedGemSmoke(logoSvg);
-          const imageUrl = URL.createObjectURL(processed.pngBlob);
+          imageUrl = URL.createObjectURL(processed.pngBlob);
           const img = new Image();
           await new Promise<void>((resolve, reject) => {
             img.onload = () => resolve();
@@ -97,6 +98,7 @@
     }
 
     return () => {
+      if (imageUrl) URL.revokeObjectURL(imageUrl);
       try {
         mountGem?.dispose();
       } catch {

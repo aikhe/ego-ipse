@@ -10,7 +10,7 @@
     GemSmokeShapes,
     type Vec4,
     type GemSmokeShape,
-  } from './gem-smoke.js';
+  } from './gem-smoke.ts';
   import { toProcessedGemSmoke } from '@paper-design/shaders';
   import logoSvg from '$lib/assets/logo.svg';
 

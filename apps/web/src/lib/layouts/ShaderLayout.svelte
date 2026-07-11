@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { Canvas } from '@threlte/core';
   import GemSmokeBg from '$lib/shaders/gem-smoke/GemSmokeBg.svelte';
-  import { getShaderColorFromString } from '$lib/shaders/gem-smoke/gem-smoke.js';
+  import { getShaderColorFromString } from '$lib/shaders/gem-smoke/gem-smoke.ts';
   import { uiState } from '$lib/state/ui.svelte';
 
   let { theme }: { theme: string } = $props();

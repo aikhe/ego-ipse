@@ -1,8 +1,8 @@
 <script lang="ts">
   import { Canvas } from '@threlte/core';
   import GemSmokeBg from '$lib/shaders/gem-smoke/GemSmokeBg.svelte';
-  import { getShaderColorFromString } from '$lib/shaders/gem-smoke/gem-smoke.js';
-  import type { GemSmokeShape } from '$lib/shaders/gem-smoke/gem-smoke.js';
+  import { getShaderColorFromString } from '$lib/shaders/gem-smoke/gem-smoke.ts';
+  import type { GemSmokeShape } from '$lib/shaders/gem-smoke/gem-smoke.ts';
 
   let colors = $state<string[]>(['#454545', '#141414', '#2e2e2e', '#000000']);
   let colorBack = $state('#ffffff');

@@ -125,6 +125,14 @@
 
     <div class="stripe-gutter stripe-gutter--left"></div>
     <div class="stripe-gutter stripe-gutter--right"></div>
+
+    {#if uiState.layoutMode === 'smoke'}
+      <div class="gem-smoke-overlay">
+        <Canvas>
+          <GemSmokeBg scale={0.14} speed={0.8} colorBack={[1, 1, 1, 0]} />
+        </Canvas>
+      </div>
+    {/if}
   </div>
 
   {#if uiState.gridOverlay}
@@ -132,14 +140,6 @@
       {#each Array.from(Array(12).keys()) as i (i)}
         <div class="grid-column"></div>
       {/each}
-    </div>
-  {/if}
-
-  {#if uiState.layoutMode === 'smoke'}
-    <div class="gem-smoke-overlay">
-      <Canvas>
-        <GemSmokeBg scale={0.14} speed={0.8} />
-      </Canvas>
     </div>
   {/if}
 
@@ -256,10 +256,14 @@
   }
 
   .gem-smoke-overlay {
+    height: calc(var(--page-stage-height, 100vh) * var(--page-stage-scale, 1));
     inset: 0;
     pointer-events: none;
     position: absolute;
-    z-index: 0;
+    transform: scale(calc(1 / var(--page-stage-scale, 1)));
+    transform-origin: top left;
+    width: calc(var(--page-stage-width, 100vw) * var(--page-stage-scale, 1));
+    z-index: -50;
   }
 
   .main--smoke {

@@ -30,6 +30,7 @@
     size = 0.72,
     speed = 0.8,
     scale = 0.16,
+    running = true,
   }: {
     colors?: Vec4[];
     colorBack?: Vec4;
@@ -44,6 +45,7 @@
     size?: number;
     speed?: number;
     scale?: number;
+    running?: boolean;
   } = $props();
 
   function padColorsTo6(colors: Vec4[]): Float32Array {
@@ -183,9 +185,14 @@
     currentSpeed = speed;
   });
 
-  useTask(delta => {
-    uniforms.u_time.value += delta * currentSpeed;
-  });
+  useTask(
+    delta => {
+      uniforms.u_time.value += delta * currentSpeed;
+    },
+    {
+      running: () => running,
+    }
+  );
 
   onMount(() => {
     let imageUrl: string | undefined;

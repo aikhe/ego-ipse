@@ -61,7 +61,7 @@
     gsap.killTweensOf(innerDistortionTarget);
     gsap.to(innerDistortionTarget, {
       value: target,
-      duration: 5,
+      duration: 4,
       ease: glowEasing,
       overwrite: 'auto',
     });

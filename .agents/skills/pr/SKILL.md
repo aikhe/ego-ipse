@@ -1,4 +1,7 @@
-# Skill: PR
+---
+name: pr
+description: Pull request creation with structured descriptions and verification
+---
 
 ## Pull Request Workflow
 

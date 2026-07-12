@@ -37,8 +37,8 @@
     gsap.killTweensOf(glowTarget);
     gsap.to(glowTarget, {
       value: outerTarget,
-      duration: 3.2,
-      delay: 0.25,
+      duration: 3,
+      delay: 0.2,
       ease: glowEasing,
       overwrite: 'auto',
     });
@@ -49,7 +49,7 @@
     gsap.killTweensOf(innerGlowTarget);
     gsap.to(innerGlowTarget, {
       value: innerTarget,
-      duration: 1.6,
+      duration: 1.4,
       ease: glowEasing,
       overwrite: 'auto',
     });
@@ -73,8 +73,8 @@
     gsap.killTweensOf(outerDistortionTarget);
     gsap.to(outerDistortionTarget, {
       value: target,
-      duration: 3.2,
-      delay: 0.25,
+      duration: 4,
+      delay: 0.28,
       ease: glowEasing,
       overwrite: 'auto',
     });

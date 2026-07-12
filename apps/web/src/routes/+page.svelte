@@ -23,8 +23,6 @@
   });
 </script>
 
-<ShaderLayout theme={uiState.theme} />
-
 <div class="page-shell">
   <section class="hero-section section-container pointer-events-none relative">
     <Hero
@@ -39,6 +37,8 @@
     onposterclick={i => (selectedPoster = i)}
   />
 </div>
+
+<ShaderLayout theme={uiState.theme} />
 
 {#if selectedPoster !== null}
   <PosterOverlay

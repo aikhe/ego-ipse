@@ -4,6 +4,7 @@
   import * as THREE from 'three';
   import Scene from '$lib/components/Poster/Scene.svelte';
   import { uiState } from '$lib/state/ui.svelte';
+  import RenderPauser from './RenderPauser.svelte';
 
   let {
     isShifted,
@@ -30,6 +31,7 @@
       : 1}
     toneMapping={THREE.NoToneMapping}
   >
+    <RenderPauser active={uiState.layoutMode === 'layered'} />
     <Scene {isShifted} {onposterclick} />
   </Canvas>
 </div>

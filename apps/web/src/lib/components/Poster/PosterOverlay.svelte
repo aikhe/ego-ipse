@@ -263,7 +263,7 @@
     justify-content: center;
     position: fixed;
     user-select: none;
-    z-index: 1000;
+    z-index: 10010;
   }
 
   .poster-overlay__container {
@@ -343,7 +343,7 @@
     position: fixed;
     right: 2.4rem;
     top: 2.4rem;
-    z-index: 1001;
+    z-index: 10011;
   }
 
   .poster-overlay__close:hover {

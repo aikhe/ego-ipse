@@ -4,6 +4,7 @@
   import GemSmokeBg from '$lib/shaders/gem-smoke/GemSmokeBg.svelte';
   import { getShaderColorFromString } from '$lib/shaders/gem-smoke/gem-smoke.ts';
   import { uiState } from '$lib/state/ui.svelte';
+  import RenderPauser from './RenderPauser.svelte';
 
   let { theme }: { theme: string } = $props();
 
@@ -33,7 +34,12 @@
   class:gem-shader-overlay--hidden={uiState.layoutMode !== 'shader'}
   class:gem-shader-overlay--initial={!ready}
 >
-  <Canvas>
+  <Canvas
+    dpr={typeof window !== 'undefined'
+      ? Math.min(window.devicePixelRatio, 1.5)
+      : 1}
+  >
+    <RenderPauser active={uiState.layoutMode === 'shader'} />
     <GemSmokeBg
       scale={0.14}
       speed={0.8}
@@ -41,6 +47,7 @@
       colorBack={[1, 1, 1, 0]}
       colorInner={shaderColorInner}
       outerGlow={shaderOuterGlow}
+      running={uiState.layoutMode === 'shader'}
     />
   </Canvas>
 </div>

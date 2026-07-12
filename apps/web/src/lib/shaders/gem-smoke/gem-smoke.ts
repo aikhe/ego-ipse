@@ -340,8 +340,8 @@ void main() {
   vec3 color = gradient.rgb * smokeMask;
   float opacity = gradient.a * smokeMask;
 
-  float innerOpacity = u_colorInner.a * imgAlpha;
-  vec3 innerColor = u_colorInner.rgb * innerOpacity;
+  float innerOpacity = u_colorInner.a * imgAlpha * u_innerGlow;
+  vec3 innerColor = u_colorInner.rgb * u_colorInner.a * imgAlpha;
   color += innerColor * (1.0 - opacity);
   opacity += innerOpacity * (1.0 - opacity);
 

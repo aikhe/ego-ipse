@@ -1,12 +1,16 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { Canvas } from '@threlte/core';
   import GemSmokeBg from '$lib/shaders/gem-smoke/GemSmokeBg.svelte';
   import { getShaderColorFromString } from '$lib/shaders/gem-smoke/gem-smoke.ts';
   import { uiState } from '$lib/state/ui.svelte';
   import RenderPauser from './RenderPauser.svelte';
+  import gsap from 'gsap';
 
-  let { theme }: { theme: string } = $props();
+  let {
+    theme,
+    glowEasing = 'power3.out',
+  }: { theme: string; glowEasing?: string } = $props();
 
   const lightColors = ['#454545', '#141414', '#2e2e2e', '#000000'].map(
     getShaderColorFromString
@@ -21,7 +25,39 @@
   let shaderColorInner = $derived(
     theme === 'dark' ? darkColorInner : lightColorInner
   );
-  let shaderOuterGlow = $derived(theme === 'dark' ? 0.4 : 0.26);
+  let baseGlow = $derived(theme === 'dark' ? 0.4 : 0.26);
+  let glowTarget = $state({ value: baseGlow });
+  let innerGlowTarget = $state({ value: 1 });
+
+  $effect(() => {
+    if (uiState.layoutMode !== 'shader') return;
+    const outerTarget = uiState.isProjectView ? 0 : baseGlow;
+    gsap.killTweensOf(glowTarget);
+    gsap.to(glowTarget, {
+      value: outerTarget,
+      duration: 1.6,
+      delay: 0.25,
+      ease: glowEasing,
+      overwrite: 'auto',
+    });
+  });
+
+  $effect(() => {
+    if (uiState.layoutMode !== 'shader') return;
+    const innerTarget = uiState.isProjectView ? 0 : 1;
+    gsap.killTweensOf(innerGlowTarget);
+    gsap.to(innerGlowTarget, {
+      value: innerTarget,
+      duration: 0.8,
+      ease: glowEasing,
+      overwrite: 'auto',
+    });
+  });
+
+  onDestroy(() => {
+    gsap.killTweensOf(glowTarget);
+    gsap.killTweensOf(innerGlowTarget);
+  });
 
   let ready = $state(false);
   onMount(() => {
@@ -46,7 +82,8 @@
       colors={shaderColors}
       colorBack={[1, 1, 1, 0]}
       colorInner={shaderColorInner}
-      outerGlow={shaderOuterGlow}
+      outerGlow={glowTarget.value}
+      innerGlow={innerGlowTarget.value}
       running={uiState.layoutMode === 'shader'}
     />
   </Canvas>

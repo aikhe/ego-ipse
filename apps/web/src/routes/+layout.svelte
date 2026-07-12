@@ -8,9 +8,8 @@
     STAGE_DESIGN_WIDTH,
     STAGE_MIN_SCALE,
   } from '$lib/utils/stageScale';
-  import { uiState } from '$lib/state/ui.svelte';
+  import { uiState, toggleTheme } from '$lib/state/ui.svelte';
   import Header from '$lib/components/Header/Header.svelte';
-  import ShaderLayout from '$lib/layouts/ShaderLayout.svelte';
   import GridBackground from '$lib/layouts/GridBackground.svelte';
   import GridOverlay from '$lib/layouts/GridOverlay.svelte';
   import StripeGutter from '$lib/layouts/StripeGutter.svelte';
@@ -18,17 +17,12 @@
   import type { LayoutProps } from './$types';
 
   let { children }: LayoutProps = $props();
-  let theme = $state('light');
   let stageScale = $state(1);
   let stageHeight = $state<number | null>(null);
   let stageOffsetX = $state(0);
 
-  function toggleTheme() {
-    theme = theme === 'dark' ? 'light' : 'dark';
-  }
-
   $effect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute('data-theme', uiState.theme);
   });
 
   function toggleLayout() {
@@ -117,7 +111,7 @@
     class="app-stage"
     style={`--page-stage-scale: ${stageScale}; ${stageHeight === null ? '' : `--page-stage-height: ${stageHeight}px;`} --page-stage-offset-x: ${stageOffsetX}px; transform: translateX(${stageOffsetX}px) scale(${stageScale}); transform-origin: top left;`}
   >
-    <Header {theme} {toggleTheme} />
+    <Header theme={uiState.theme} {toggleTheme} />
 
     <main class:main--shader={uiState.layoutMode === 'shader'}>
       {@render children()}
@@ -126,8 +120,6 @@
     <GridBackground />
 
     <StripeGutter />
-
-    <ShaderLayout {theme} />
   </div>
 
   <GridOverlay />

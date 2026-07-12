@@ -1,6 +1,7 @@
 <script lang="ts">
   import Hero from '$lib/layouts/Hero.svelte';
   import SceneLayout from '$lib/layouts/SceneLayout.svelte';
+  import ShaderLayout from '$lib/layouts/ShaderLayout.svelte';
   import PosterOverlay from '$lib/components/Poster/PosterOverlay.svelte';
   import { getOpenPanel } from '$lib/analytics';
 
@@ -21,6 +22,8 @@
     }
   });
 </script>
+
+<ShaderLayout theme={uiState.theme} />
 
 <div class="page-shell">
   <section class="hero-section section-container pointer-events-none relative">

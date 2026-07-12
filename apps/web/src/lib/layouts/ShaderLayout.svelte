@@ -28,6 +28,8 @@
   let baseGlow = $derived(theme === 'dark' ? 0.4 : 0.26);
   let glowTarget = $state({ value: baseGlow });
   let innerGlowTarget = $state({ value: 1 });
+  let innerDistortionTarget = $state({ value: 1 });
+  let outerDistortionTarget = $state({ value: 1 });
 
   $effect(() => {
     if (uiState.layoutMode !== 'shader') return;
@@ -35,8 +37,19 @@
     gsap.killTweensOf(glowTarget);
     gsap.to(glowTarget, {
       value: outerTarget,
-      duration: 1.6,
+      duration: 3.2,
       delay: 0.25,
+      ease: glowEasing,
+      overwrite: 'auto',
+    });
+  });
+  $effect(() => {
+    if (uiState.layoutMode !== 'shader') return;
+    const innerTarget = uiState.isProjectView ? 0 : 1;
+    gsap.killTweensOf(innerGlowTarget);
+    gsap.to(innerGlowTarget, {
+      value: innerTarget,
+      duration: 1.6,
       ease: glowEasing,
       overwrite: 'auto',
     });
@@ -44,11 +57,24 @@
 
   $effect(() => {
     if (uiState.layoutMode !== 'shader') return;
-    const innerTarget = uiState.isProjectView ? 0 : 1;
-    gsap.killTweensOf(innerGlowTarget);
-    gsap.to(innerGlowTarget, {
-      value: innerTarget,
-      duration: 0.8,
+    const target = uiState.isProjectView ? 0 : 1;
+    gsap.killTweensOf(innerDistortionTarget);
+    gsap.to(innerDistortionTarget, {
+      value: target,
+      duration: 5,
+      ease: glowEasing,
+      overwrite: 'auto',
+    });
+  });
+
+  $effect(() => {
+    if (uiState.layoutMode !== 'shader') return;
+    const target = uiState.isProjectView ? 0 : 1;
+    gsap.killTweensOf(outerDistortionTarget);
+    gsap.to(outerDistortionTarget, {
+      value: target,
+      duration: 3.2,
+      delay: 0.25,
       ease: glowEasing,
       overwrite: 'auto',
     });
@@ -57,6 +83,8 @@
   onDestroy(() => {
     gsap.killTweensOf(glowTarget);
     gsap.killTweensOf(innerGlowTarget);
+    gsap.killTweensOf(innerDistortionTarget);
+    gsap.killTweensOf(outerDistortionTarget);
   });
 
   let ready = $state(false);
@@ -84,6 +112,8 @@
       colorInner={shaderColorInner}
       outerGlow={glowTarget.value}
       innerGlow={innerGlowTarget.value}
+      innerDistortion={innerDistortionTarget.value}
+      outerDistortion={outerDistortionTarget.value}
       running={uiState.layoutMode === 'shader'}
     />
   </Canvas>

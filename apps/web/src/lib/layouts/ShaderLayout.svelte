@@ -32,7 +32,10 @@
   let outerDistortionTarget = $state({ value: 1 });
 
   $effect(() => {
-    if (uiState.layoutMode !== 'shader') return;
+    if (uiState.layoutMode !== 'shader') {
+      gsap.killTweensOf(glowTarget);
+      return;
+    }
     const outerTarget = uiState.isProjectView ? 0 : baseGlow;
     gsap.killTweensOf(glowTarget);
     gsap.to(glowTarget, {
@@ -44,7 +47,10 @@
     });
   });
   $effect(() => {
-    if (uiState.layoutMode !== 'shader') return;
+    if (uiState.layoutMode !== 'shader') {
+      gsap.killTweensOf(innerGlowTarget);
+      return;
+    }
     const innerTarget = uiState.isProjectView ? 0 : 1;
     gsap.killTweensOf(innerGlowTarget);
     gsap.to(innerGlowTarget, {
@@ -56,7 +62,10 @@
   });
 
   $effect(() => {
-    if (uiState.layoutMode !== 'shader') return;
+    if (uiState.layoutMode !== 'shader') {
+      gsap.killTweensOf(innerDistortionTarget);
+      return;
+    }
     const target = uiState.isProjectView ? 0 : 1;
     gsap.killTweensOf(innerDistortionTarget);
     gsap.to(innerDistortionTarget, {
@@ -68,7 +77,10 @@
   });
 
   $effect(() => {
-    if (uiState.layoutMode !== 'shader') return;
+    if (uiState.layoutMode !== 'shader') {
+      gsap.killTweensOf(outerDistortionTarget);
+      return;
+    }
     const target = uiState.isProjectView ? 0 : 1;
     gsap.killTweensOf(outerDistortionTarget);
     gsap.to(outerDistortionTarget, {

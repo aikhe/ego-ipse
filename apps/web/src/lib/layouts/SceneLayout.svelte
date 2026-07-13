@@ -4,7 +4,7 @@
   import * as THREE from 'three';
   import Scene from '$lib/components/Poster/Scene.svelte';
   import { uiState } from '$lib/state/ui.svelte';
-  import RenderPauser from './RenderPauser.svelte';
+  import RenderPauser from '$lib/components/Shaders/RenderPauser.svelte';
 
   let {
     isShifted,

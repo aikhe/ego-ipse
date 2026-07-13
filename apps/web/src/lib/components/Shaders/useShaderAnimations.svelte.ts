@@ -1,3 +1,4 @@
+import { onDestroy } from 'svelte';
 import { uiState } from '$lib/state/ui.svelte';
 import gsap from 'gsap';
 
@@ -117,6 +118,13 @@ export function useShaderAnimations() {
       ease: shouldShow ? ease : outerEase,
       overwrite: 'auto',
     });
+  });
+
+  onDestroy(() => {
+    gsap.killTweensOf(glowTarget);
+    gsap.killTweensOf(innerGlowTarget);
+    gsap.killTweensOf(innerDistortionTarget);
+    gsap.killTweensOf(outerDistortionTarget);
   });
 
   return {

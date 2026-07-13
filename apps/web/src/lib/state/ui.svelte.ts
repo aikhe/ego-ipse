@@ -6,6 +6,7 @@ export const uiState = $state({
   gridOverlay: false,
   layoutMode: 'shader' as LayoutMode,
   theme: 'light' as Theme,
+  isShaderShifted: false,
 });
 
 export function toggleTheme() {

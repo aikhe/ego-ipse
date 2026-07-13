@@ -119,8 +119,11 @@
 
     <GridBackground />
 
-    <StripeGutter />
+    <div class="stripe-gutter-inner stripe-gutter-inner--left"></div>
+    <div class="stripe-gutter-inner stripe-gutter-inner--right"></div>
   </div>
+
+  <StripeGutter />
 
   <GridOverlay />
 </div>
@@ -142,5 +145,26 @@
 
   .main--shader {
     padding-top: 4.8rem;
+  }
+
+  .stripe-gutter-inner {
+    background-color: var(--color-overlay-10);
+    bottom: 0;
+    mask-image: url('$lib/assets/stripe.svg');
+    mask-repeat: repeat;
+    mask-size: 7px 7px;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    width: calc((100% - var(--container-width)) / 2);
+    z-index: -999;
+  }
+
+  .stripe-gutter-inner--left {
+    left: 0;
+  }
+
+  .stripe-gutter-inner--right {
+    right: 0;
   }
 </style>

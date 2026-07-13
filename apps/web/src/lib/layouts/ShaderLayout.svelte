@@ -1,102 +1,38 @@
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount } from 'svelte';
   import { Canvas } from '@threlte/core';
   import GemSmokeBg from '$lib/shaders/gem-smoke/GemSmokeBg.svelte';
-  import { getShaderColorFromString } from '$lib/shaders/gem-smoke/gem-smoke.ts';
+  import RenderPauser from '$lib/components/Shaders/RenderPauser.svelte';
   import { uiState } from '$lib/state/ui.svelte';
-  import RenderPauser from './RenderPauser.svelte';
-  import gsap from 'gsap';
+  import { createShaderColors } from '$lib/components/Shaders/shaderColors.svelte';
+  import { useShaderAnimations } from '$lib/components/Shaders/useShaderAnimations.svelte';
 
   let {
     theme,
     glowEasing = 'power3.out',
-  }: { theme: string; glowEasing?: string } = $props();
+    outerDistEaseOut = 'cubic-bezier(1, 0.002, 0.636, 0.996)',
+  }: {
+    theme: string;
+    glowEasing?: string;
+    outerDistEaseOut?: string;
+  } = $props();
 
-  const lightColors = ['#454545', '#141414', '#2e2e2e', '#000000'].map(
-    getShaderColorFromString
-  );
-  const darkColors = ['#9e9e9e', '#c2c2c2', '#e8e8e8', '#ffffff'].map(
-    getShaderColorFromString
-  );
-  const darkColorInner = getShaderColorFromString('#0a0a0a');
-  const lightColorInner = getShaderColorFromString('#fafafa');
+  const colors = $derived.by(() => createShaderColors(theme));
 
-  let shaderColors = $derived(theme === 'dark' ? darkColors : lightColors);
-  let shaderColorInner = $derived(
-    theme === 'dark' ? darkColorInner : lightColorInner
-  );
-  let baseGlow = $derived(theme === 'dark' ? 0.4 : 0.26);
-  let glowTarget = $state({ value: baseGlow });
-  let innerGlowTarget = $state({ value: 1 });
-  let innerDistortionTarget = $state({ value: 1 });
-  let outerDistortionTarget = $state({ value: 1 });
+  const {
+    glowTarget,
+    innerGlowTarget,
+    innerDistortionTarget,
+    outerDistortionTarget,
+    setAnimationConfig,
+  } = useShaderAnimations();
 
   $effect(() => {
-    if (uiState.layoutMode !== 'shader') {
-      gsap.killTweensOf(glowTarget);
-      return;
-    }
-    const outerTarget = uiState.isProjectView ? 0 : baseGlow;
-    gsap.killTweensOf(glowTarget);
-    gsap.to(glowTarget, {
-      value: outerTarget,
-      duration: 3,
-      delay: 0.2,
-      ease: glowEasing,
-      overwrite: 'auto',
+    setAnimationConfig({
+      baseGlow: colors.baseGlow,
+      glowEasing,
+      outerDistEaseOut,
     });
-  });
-  $effect(() => {
-    if (uiState.layoutMode !== 'shader') {
-      gsap.killTweensOf(innerGlowTarget);
-      return;
-    }
-    const innerTarget = uiState.isProjectView ? 0 : 1;
-    gsap.killTweensOf(innerGlowTarget);
-    gsap.to(innerGlowTarget, {
-      value: innerTarget,
-      duration: 1.4,
-      ease: glowEasing,
-      overwrite: 'auto',
-    });
-  });
-
-  $effect(() => {
-    if (uiState.layoutMode !== 'shader') {
-      gsap.killTweensOf(innerDistortionTarget);
-      return;
-    }
-    const target = uiState.isProjectView ? 0 : 1;
-    gsap.killTweensOf(innerDistortionTarget);
-    gsap.to(innerDistortionTarget, {
-      value: target,
-      duration: 4,
-      ease: glowEasing,
-      overwrite: 'auto',
-    });
-  });
-
-  $effect(() => {
-    if (uiState.layoutMode !== 'shader') {
-      gsap.killTweensOf(outerDistortionTarget);
-      return;
-    }
-    const target = uiState.isProjectView ? 0 : 1;
-    gsap.killTweensOf(outerDistortionTarget);
-    gsap.to(outerDistortionTarget, {
-      value: target,
-      duration: 4,
-      delay: 0.28,
-      ease: glowEasing,
-      overwrite: 'auto',
-    });
-  });
-
-  onDestroy(() => {
-    gsap.killTweensOf(glowTarget);
-    gsap.killTweensOf(innerGlowTarget);
-    gsap.killTweensOf(innerDistortionTarget);
-    gsap.killTweensOf(outerDistortionTarget);
   });
 
   let ready = $state(false);
@@ -109,6 +45,7 @@
   class="gem-shader-overlay"
   class:gem-shader-overlay--hidden={uiState.layoutMode !== 'shader'}
   class:gem-shader-overlay--initial={!ready}
+  class:gem-shader-overlay--right={uiState.isShaderShifted}
 >
   <Canvas
     dpr={typeof window !== 'undefined'
@@ -119,14 +56,15 @@
     <GemSmokeBg
       scale={0.14}
       speed={0.8}
-      colors={shaderColors}
+      colors={colors.shaderColors}
       colorBack={[1, 1, 1, 0]}
-      colorInner={shaderColorInner}
+      colorInner={colors.shaderColorInner}
       outerGlow={glowTarget.value}
       innerGlow={innerGlowTarget.value}
       innerDistortion={innerDistortionTarget.value}
       outerDistortion={outerDistortionTarget.value}
       running={uiState.layoutMode === 'shader'}
+      offsetX={uiState.isShaderShifted ? 0.245 : 0}
     />
   </Canvas>
 </div>
@@ -141,6 +79,10 @@
     transform-origin: top left;
     width: calc(var(--page-stage-width, 100vw) * var(--page-stage-scale, 1));
     z-index: -50;
+  }
+
+  .gem-shader-overlay--right {
+    clip-path: inset(0 0 0 50%);
   }
 
   .gem-shader-overlay--initial {

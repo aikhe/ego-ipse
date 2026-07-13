@@ -47,7 +47,6 @@ void main() {
   givenBoxSize = max(givenBoxSize, vec2(1.)) * u_pixelRatio;
   float r = u_rotation * 3.14159265358979323846 / 180.;
   mat2 graphicRotation = mat2(cos(r), sin(r), -sin(r), cos(r));
-  vec2 graphicOffset = vec2(-u_offsetX, u_offsetY);
   vec2 screenOffset = vec2(-u_offsetX, u_offsetY);
 
   float fixedRatio = 1.;
@@ -94,7 +93,7 @@ void main() {
   vec2 patternBoxScale = u_resolution.xy / v_patternBoxSize;
 
   v_patternUV = uv;
-  v_patternUV += graphicOffset / patternBoxScale;
+  v_patternUV += screenOffset / patternBoxScale;
   v_patternUV += boxOrigin;
   v_patternUV -= boxOrigin / patternBoxScale;
   v_patternUV *= u_resolution.xy;

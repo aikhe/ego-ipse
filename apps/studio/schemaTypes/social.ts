@@ -1,5 +1,12 @@
 import {defineType, defineField} from 'sanity'
 
+interface ValidationContext {
+  getClient(options: {apiVersion: string}): {
+    fetch(query: string, params: Record<string, unknown>): Promise<number>
+  }
+  document?: {_id?: string}
+}
+
 export default defineType({
   title: 'Socials',
   name: 'social',
@@ -129,7 +136,7 @@ export default defineType({
       validation: (Rule) =>
         Rule.required().custom(async (value, context) => {
           if (!value) return true
-          const client = (context as any).getClient({apiVersion: '2022-03-07'})
+          const client = (context as ValidationContext).getClient({apiVersion: '2022-03-07'})
           const id = context.document?._id || ''
           const baseId = id.startsWith('drafts.') ? id.slice(7) : id
           const count = await client.fetch(

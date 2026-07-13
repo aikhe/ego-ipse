@@ -189,10 +189,7 @@
     }
   });
 
-  let currentSpeed = $state(speed);
-  $effect(() => {
-    currentSpeed = speed;
-  });
+  let currentSpeed = $derived(speed);
 
   useTask(
     delta => {

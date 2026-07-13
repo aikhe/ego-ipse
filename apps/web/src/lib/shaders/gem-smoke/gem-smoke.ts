@@ -48,6 +48,7 @@ void main() {
   float r = u_rotation * 3.14159265358979323846 / 180.;
   mat2 graphicRotation = mat2(cos(r), sin(r), -sin(r), cos(r));
   vec2 graphicOffset = vec2(-u_offsetX, u_offsetY);
+  vec2 screenOffset = vec2(-u_offsetX, u_offsetY);
 
   float fixedRatio = 1.;
   vec2 fixedRatioBoxGivenSize = vec2(
@@ -58,10 +59,9 @@ void main() {
   v_objectBoxSize = getBoxSize(fixedRatio, fixedRatioBoxGivenSize).xy;
   vec2 objectWorldScale = u_resolution.xy / v_objectBoxSize;
 
-  v_objectUV = uv;
+  v_objectUV = uv + screenOffset;
   v_objectUV *= objectWorldScale;
   v_objectUV += boxOrigin * (objectWorldScale - 1.);
-  v_objectUV += graphicOffset;
   v_objectUV /= u_scale;
   v_objectUV = graphicRotation * v_objectUV;
 
@@ -73,10 +73,9 @@ void main() {
   vec2 responsiveBoxSize = getBoxSize(responsiveRatio, v_responsiveBoxGivenSize).xy;
   vec2 responsiveBoxScale = u_resolution.xy / responsiveBoxSize;
 
-  v_responsiveUV = uv;
+  v_responsiveUV = uv + screenOffset;
   v_responsiveUV *= responsiveBoxScale;
   v_responsiveUV += boxOrigin * (responsiveBoxScale - 1.);
-  v_responsiveUV += graphicOffset;
   v_responsiveUV /= u_scale;
   v_responsiveUV.x *= responsiveRatio;
   v_responsiveUV = graphicRotation * v_responsiveUV;
@@ -120,10 +119,9 @@ void main() {
   imageBoxSize.y = imageBoxSize.x / u_imageAspectRatio;
   vec2 imageBoxScale = u_resolution.xy / imageBoxSize;
 
-  v_imageUV = uv;
+  v_imageUV = uv + screenOffset;
   v_imageUV *= imageBoxScale;
   v_imageUV += boxOrigin * (imageBoxScale - 1.);
-  v_imageUV += graphicOffset;
   v_imageUV /= u_scale;
   v_imageUV.x *= u_imageAspectRatio;
   v_imageUV = graphicRotation * v_imageUV;

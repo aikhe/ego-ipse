@@ -11,12 +11,7 @@
     pointer-events: none;
     position: fixed;
     top: 0;
-    width: max(
-      0px,
-      calc(
-        (100vw - (var(--container-max-width) * var(--page-stage-scale, 1))) / 2
-      )
-    );
+    width: max(0px, var(--page-stage-offset-x, 0px));
     z-index: 1;
   }
 

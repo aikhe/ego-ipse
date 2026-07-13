@@ -51,7 +51,7 @@ export function useShaderAnimations() {
     const ease = config.glowEasing;
     const shouldShow = uiState.isProjectView === uiState.isShaderShifted;
     const outerTarget = shouldShow ? bg : 0;
-    const duration = shouldShow ? 1.4 : 2;
+    const duration = shouldShow ? 1.4 : (uiState.theme === 'light' ? 1.6 : 2);
 
     gsap.killTweensOf(glowTarget);
     gsap.to(glowTarget, {

@@ -17,7 +17,7 @@
     outerDistEaseOut?: string;
   } = $props();
 
-  const colors = $derived.by(() => createShaderColors(theme));
+  const colors = $derived(createShaderColors(theme));
 
   const {
     glowTarget,

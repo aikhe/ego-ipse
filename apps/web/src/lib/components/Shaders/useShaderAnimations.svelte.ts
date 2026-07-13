@@ -88,7 +88,7 @@ export function useShaderAnimations() {
     }
     const ease = config.glowEasing;
     const shouldShow = uiState.isProjectView === uiState.isShaderShifted;
-    const target = shouldShow ? 1 : 0;
+    const target = shouldShow ? 1 : 0.1;
 
     gsap.killTweensOf(innerDistortionTarget);
     gsap.to(innerDistortionTarget, {

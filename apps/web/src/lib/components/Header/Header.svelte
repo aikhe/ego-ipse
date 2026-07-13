@@ -106,10 +106,15 @@
       if (lastTime) {
         const dt = e.timeStamp - lastTime;
         if (dt > 0) {
-          const dist = Math.sqrt(
-            (e.clientX - lastX) ** 2 + (e.clientY - lastY) ** 2
-          );
-          cursorSpeed = Math.round(dist / dt);
+          if (dt > 100) {
+            // skip stale dt after pause — keep last known speed
+          } else {
+            const dist = Math.sqrt(
+              (e.clientX - lastX) ** 2 + (e.clientY - lastY) ** 2
+            );
+            const s = Math.round((dist / dt) * 1000);
+            if (s > 0) cursorSpeed = s;
+          }
         }
       }
 
@@ -213,7 +218,7 @@
 
   <div class="header__cursor-group">
     <p class="header__cursor-coords">
-      X:{cursorX} Y:{cursorY} Z:000 {cursorSpeed}px/ms
+      X:{cursorX} Y:{cursorY} Z:000 {cursorSpeed}px/s
     </p>
     <div class="header__cursor-group-extra">
       <p class="header__cursor-timer">{uptime}</p>

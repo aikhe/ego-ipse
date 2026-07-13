@@ -30,6 +30,8 @@
     size = 0.72,
     speed = 0.8,
     scale = 0.16,
+    offsetX = 0,
+    offsetY = 0,
     running = true,
   }: {
     colors?: Vec4[];
@@ -45,6 +47,8 @@
     size?: number;
     speed?: number;
     scale?: number;
+    offsetX?: number;
+    offsetY?: number;
     running?: boolean;
   } = $props();
 
@@ -116,7 +120,7 @@
   });
 
   $effect(() => {
-    const s = threlteSize.current;
+    const s = $threlteSize;
     const dpr = renderer.getPixelRatio();
     const pw = Math.round(s.width * dpr);
     const ph = Math.round(s.height * dpr);
@@ -171,6 +175,11 @@
 
   $effect(() => {
     uniforms.u_shape.value = GemSmokeShapes[shape];
+  });
+
+  $effect(() => {
+    uniforms.u_offsetX.value = offsetX;
+    uniforms.u_offsetY.value = offsetY;
   });
 
   $effect(() => {

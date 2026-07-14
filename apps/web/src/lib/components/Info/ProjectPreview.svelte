@@ -75,6 +75,16 @@
     }
   });
 
+  // observe data-theme attribute changes and sync colors into the live shader
+  $effect(() => {
+    const observer = new MutationObserver(() => syncThemeColors());
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    return () => observer.disconnect();
+  });
+
   $effect(() => {
     if (container && (posX || posY)) {
       gsap.to(container, {
@@ -88,6 +98,13 @@
 
   function getCSSColor(name: string): string {
     return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  // push fresh CSS custom property colors into the live shader uniforms
+  function syncThemeColors() {
+    if (!webglMaterial) return;
+    webglMaterial.uniforms.uColor.value.set(getCSSColor('--color-smoke'));
+    webglMaterial.uniforms.uBgColor.value.set(getCSSColor('--color-bg-smoke'));
   }
 
   function renderWebGL() {
@@ -169,6 +186,16 @@
     webglActive = false;
   }
 
+  // resets the shader state without destroying the renderer — used on project switch
+  function resetWebGL() {
+    if (!webglMaterial) return;
+    // new random seed so every reveal looks different
+    webglMaterial.uniforms.uSeed.value.set(Math.random() * 1000, Math.random() * 1000);
+    // restart progress and clock
+    webglMaterial.uniforms.uProgress.value = 0;
+    startTime = 0;
+  }
+
   async function show() {
     await tick();
     if (!container) return;
@@ -221,7 +248,12 @@
 
     // webgl shader reveal — canvas is an alpha mask over the native img
     if (project?.image) {
-      initWebGL();
+      if (webglActive) {
+        // already running — just reset uniforms without destroying the renderer
+        resetWebGL();
+      } else {
+        initWebGL();
+      }
 
       if (webglMaterial) {
         tl.to(

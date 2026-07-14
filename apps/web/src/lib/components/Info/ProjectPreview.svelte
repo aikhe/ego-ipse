@@ -296,6 +296,7 @@
       if (webglMaterial) {
         shaderTween = gsap.to(webglMaterial.uniforms.uProgress, {
           value: 1,
+          delay: uiState.sfxEffect === 'GRID' ? 0.4 : 0.3,
           duration: uiState.sfxEffect === 'GRID' ? 1.4 : 2.4,
           ease: 'cubic-bezier(0.66, 0, 0.34, 1)',
           onUpdate: renderWebGL,

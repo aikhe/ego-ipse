@@ -1,7 +1,16 @@
 <script lang="ts">
+  import * as THREE from 'three';
   import { tick } from 'svelte';
   import gsap from 'gsap';
-  import { runTileReveal } from '$lib/utils/tiles';
+  import { uiState } from '$lib/state/ui.svelte';
+  import {
+    vertexShader as smokeVertex,
+    fragmentShader as smokeFragment,
+  } from '$lib/shaders/preview-reveal/preview-reveal';
+  import {
+    vertexShader as gridVertex,
+    fragmentShader as gridFragment,
+  } from '$lib/shaders/preview-reveal-grid/preview-reveal-grid';
   import type { Social } from '$lib/types/social';
 
   interface Props {
@@ -18,8 +27,15 @@
   let lastName = '';
   let displaySocial = $state<Social | null>(null);
 
-  const COLS = 20;
-  const ROWS = 20;
+  // WebGL shader state
+  let webglRenderer: THREE.WebGLRenderer | null = null;
+  let webglScene: THREE.Scene | null = null;
+  let webglCamera: THREE.OrthographicCamera | null = null;
+  let webglMesh: THREE.Mesh | null = null;
+  let webglMaterial: THREE.ShaderMaterial | null = null;
+  let webglActive = false;
+  let animationFrameId = 0;
+  let startTime = 0;
 
   $effect(() => {
     if (container) {
@@ -35,6 +51,151 @@
       }
     }
   });
+
+  function getCSSColor(name: string): string {
+    return getComputedStyle(document.documentElement)
+      .getPropertyValue(name)
+      .trim();
+  }
+
+  function syncThemeColors() {
+    if (!webglMaterial) return;
+    webglMaterial.uniforms.uColor.value.set(getCSSColor('--color-smoke'));
+    webglMaterial.uniforms.uBgColor.value.set(getCSSColor('--color-bg-smoke'));
+  }
+
+  function renderWebGL() {
+    if (webglRenderer && webglScene && webglCamera) {
+      webglRenderer.render(webglScene, webglCamera);
+    }
+  }
+
+  function renderLoop(timestamp: number) {
+    if (
+      !webglActive ||
+      !webglRenderer ||
+      !webglScene ||
+      !webglCamera ||
+      !webglMaterial
+    )
+      return;
+
+    if (!startTime) startTime = timestamp;
+    const elapsed = (timestamp - startTime) / 1000;
+
+    if (webglMaterial.uniforms.uTime) {
+      webglMaterial.uniforms.uTime.value = elapsed;
+    }
+    webglRenderer.render(webglScene, webglCamera);
+
+    animationFrameId = requestAnimationFrame(renderLoop);
+  }
+
+  function initWebGL() {
+    if (!canvas || webglActive) return;
+
+    const parent = canvas.parentElement;
+    if (!parent) return;
+    const w = parent.offsetWidth || 200;
+    const h = parent.offsetHeight || 150;
+    const gridColor = new THREE.Color(getCSSColor('--color-smoke'));
+    const bgColor = new THREE.Color(getCSSColor('--color-bg-smoke'));
+
+    webglRenderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      powerPreference: 'high-performance',
+    });
+    webglRenderer.setPixelRatio(window.devicePixelRatio);
+    webglRenderer.setSize(w, h, false);
+
+    webglScene = new THREE.Scene();
+    webglCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 10);
+    webglCamera.position.z = 1;
+
+    const isGrid = uiState.sfxEffect === 'GRID';
+    const [vShader, fShader] = isGrid
+      ? [gridVertex, gridFragment]
+      : [smokeVertex, smokeFragment];
+
+    const uniforms: Record<string, THREE.Uniform> = {
+      uContainerRes: new THREE.Uniform(new THREE.Vector2(w, h)),
+      uProgress: new THREE.Uniform(0),
+      uColor: new THREE.Uniform(gridColor),
+      uBgColor: new THREE.Uniform(bgColor),
+    };
+
+    if (isGrid) {
+      uniforms.uGridSize = new THREE.Uniform(8);
+    } else {
+      uniforms.uTime = new THREE.Uniform(0);
+      uniforms.uSeed = new THREE.Uniform(
+        new THREE.Vector2(Math.random() * 1000, Math.random() * 1000)
+      );
+    }
+
+    webglMaterial = new THREE.ShaderMaterial({
+      vertexShader: vShader,
+      fragmentShader: fShader,
+      uniforms,
+      transparent: true,
+      depthWrite: false,
+      depthTest: false,
+    });
+
+    const geometry = new THREE.PlaneGeometry(2, 2);
+    webglMesh = new THREE.Mesh(geometry, webglMaterial);
+    webglScene.add(webglMesh);
+
+    webglActive = true;
+    startTime = performance.now();
+    renderLoop(startTime);
+  }
+
+  function destroyWebGL() {
+    if (webglMesh) {
+      webglMesh.geometry.dispose();
+      webglScene?.remove(webglMesh);
+      webglMesh = null;
+    }
+    if (webglMaterial) {
+      webglMaterial.dispose();
+      webglMaterial = null;
+    }
+    if (webglRenderer) {
+      webglRenderer.dispose();
+      webglRenderer = null;
+    }
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = 0;
+    }
+    startTime = 0;
+    webglScene = null;
+    webglCamera = null;
+    webglActive = false;
+  }
+
+  function resetWebGL() {
+    if (!webglMaterial || !canvas) return;
+    const parent = canvas.parentElement;
+    if (parent) {
+      const w = parent.offsetWidth || 200;
+      const h = parent.offsetHeight || 150;
+      if (webglRenderer) {
+        webglRenderer.setSize(w, h, false);
+      }
+      webglMaterial.uniforms.uContainerRes.value.set(w, h);
+    }
+    if (webglMaterial.uniforms.uSeed) {
+      webglMaterial.uniforms.uSeed.value.set(
+        Math.random() * 1000,
+        Math.random() * 1000
+      );
+    }
+    webglMaterial.uniforms.uProgress.value = 0;
+    startTime = 0;
+  }
 
   async function show() {
     await tick();
@@ -84,8 +245,26 @@
       );
     }
 
-    if (canvas) {
-      runTileReveal(canvas, tl, COLS, ROWS, true, 0.6, '<0.15');
+    // webgl shader reveal
+    if (canvas && displaySocial?.image) {
+      if (webglActive) {
+        resetWebGL();
+      } else {
+        initWebGL();
+      }
+
+      if (webglMaterial) {
+        tl.to(
+          webglMaterial.uniforms.uProgress,
+          {
+            value: 1,
+            duration: uiState.sfxEffect === 'GRID' ? 1.4 : 2.2,
+            ease: 'cubic-bezier(0.66, 0, 0.34, 1)',
+            onUpdate: renderWebGL,
+          },
+          '<0.0'
+        );
+      }
     }
   }
 
@@ -104,8 +283,19 @@
       });
     }
 
-    if (canvas && tl) {
-      runTileReveal(canvas, tl, COLS, ROWS, false, 0.25, '<');
+    // reverse webgl reveal
+    if (webglMaterial) {
+      tl.to(
+        webglMaterial.uniforms.uProgress,
+        {
+          value: 0,
+          duration: 0.3,
+          ease: 'power2.in',
+          onUpdate: renderWebGL,
+          onComplete: destroyWebGL,
+        },
+        '<'
+      );
     }
 
     // collapse container
@@ -120,6 +310,42 @@
       '-=0.1'
     );
   }
+
+  // observe data-theme attribute changes and sync colors into the live shader
+  $effect(() => {
+    const observer = new MutationObserver(() => syncThemeColors());
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    return () => observer.disconnect();
+  });
+
+  // swap shader live when effect type changes
+  $effect(() => {
+    if (webglActive && uiState.sfxEffect) {
+      if (tl) tl.kill();
+      const prevProgress = webglMaterial?.uniforms.uProgress.value ?? 0;
+      destroyWebGL();
+      initWebGL();
+      if (webglMaterial) {
+        webglMaterial.uniforms.uProgress.value = 0;
+        gsap.to(webglMaterial.uniforms.uProgress, {
+          value: prevProgress,
+          duration: uiState.sfxEffect === 'GRID' ? 0.15 : 0.4,
+          ease: 'power2.out',
+          onUpdate: renderWebGL,
+        });
+      }
+    }
+  });
+
+  // cleanup webgl on component destroy
+  $effect(() => {
+    return () => {
+      destroyWebGL();
+    };
+  });
 </script>
 
 <div class="social-card" bind:this={container}>

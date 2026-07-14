@@ -185,7 +185,7 @@
     };
 
     if (isGrid) {
-      uniforms.uGridSize = new THREE.Uniform(8);
+      uniforms.uGridSize = new THREE.Uniform(12);
     } else {
       uniforms.uTime = new THREE.Uniform(0);
       uniforms.uSeed = new THREE.Uniform(
@@ -237,7 +237,17 @@
 
   // resets the shader state without destroying the renderer — used on project switch
   function resetWebGL() {
-    if (!webglMaterial) return;
+    if (!webglMaterial || !canvas) return;
+    // sync container resolution to current project dimensions
+    const parent = canvas.parentElement;
+    if (parent) {
+      const w = parent.offsetWidth || 200;
+      const h = parent.offsetHeight || 150;
+      if (webglRenderer) {
+        webglRenderer.setSize(w, h, false);
+      }
+      webglMaterial.uniforms.uContainerRes.value.set(w, h);
+    }
     // new random seed so every reveal looks different
     if (webglMaterial.uniforms.uSeed) {
       webglMaterial.uniforms.uSeed.value.set(
@@ -314,7 +324,7 @@
           webglMaterial.uniforms.uProgress,
           {
             value: 1,
-            duration: uiState.sfxEffect === 'GRID' ? 1.2 : 2.4,
+            duration: uiState.sfxEffect === 'GRID' ? 1.4 : 2.4,
             ease: 'cubic-bezier(0.66, 0, 0.34, 1)',
             onUpdate: renderWebGL,
           },

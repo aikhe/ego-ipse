@@ -21,10 +21,12 @@
   let themeDisplayText = $state('LIGHT');
   let gridDisplayText = $state('HIDDEN');
   let layoutDisplayText = $state('LAYERED');
+  let sfxDisplayText = $state('SMOKE');
   let headerEl = $state<HTMLElement>();
   let glitchInterval: ReturnType<typeof setInterval> | null = null;
   let gridGlitchInterval: ReturnType<typeof setInterval> | null = null;
   let layoutGlitchInterval: ReturnType<typeof setInterval> | null = null;
+  let sfxGlitchInterval: ReturnType<typeof setInterval> | null = null;
 
   $effect(() => {
     if (glitchInterval) clearInterval(glitchInterval);
@@ -53,6 +55,16 @@
       revealSpeed: 3,
       tailFrames: 15,
       onUpdate: t => (layoutDisplayText = t),
+    });
+  });
+
+  $effect(() => {
+    if (sfxGlitchInterval) clearInterval(sfxGlitchInterval);
+    sfxGlitchInterval = startGlitch({
+      text: uiState.sfxEffect,
+      revealSpeed: 3,
+      tailFrames: 15,
+      onUpdate: t => (sfxDisplayText = t),
     });
   });
 
@@ -259,7 +271,7 @@
             });
           }}
         >
-          EFFECT: <span class="header__theme-value">[{uiState.sfxEffect}]</span>
+          EFFECT: <span class="header__theme-value">[{sfxDisplayText}]</span>
         </button>
       {/if}
       <button

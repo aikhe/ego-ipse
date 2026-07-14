@@ -22,7 +22,6 @@
   let gridDisplayText = $state('HIDDEN');
   let layoutDisplayText = $state('LAYERED');
   let headerEl = $state<HTMLElement>();
-  let sfxEffect = $state('SMOKE');
   let glitchInterval: ReturnType<typeof setInterval> | null = null;
   let gridGlitchInterval: ReturnType<typeof setInterval> | null = null;
   let layoutGlitchInterval: ReturnType<typeof setInterval> | null = null;
@@ -253,11 +252,14 @@
         <button
           class="header__layout-name header__sfx-toggle"
           onclick={() => {
-            sfxEffect = sfxEffect === 'SMOKE' ? 'GRID' : 'SMOKE';
-            getOpenPanel()?.track('sfx_effect_toggle', { effect: sfxEffect });
+            uiState.sfxEffect =
+              uiState.sfxEffect === 'SMOKE' ? 'GRID' : 'SMOKE';
+            getOpenPanel()?.track('sfx_effect_toggle', {
+              effect: uiState.sfxEffect,
+            });
           }}
         >
-          EFFECT: <span class="header__theme-value">[{sfxEffect}]</span>
+          EFFECT: <span class="header__theme-value">[{uiState.sfxEffect}]</span>
         </button>
       {/if}
       <button

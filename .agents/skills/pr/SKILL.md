@@ -15,10 +15,10 @@ description: Pull request creation with structured descriptions and verification
 
 4. **PR Title** follows the conventional commit format (`<type>(<scope>): <description>`).
 
-5. **PR Description** MUST include:
+5. **PR Description** MUST NOT use hyphens anywhere in the body. Use asterisks for bullet lists instead. MUST include:
    - `### Summary`: High-level overview.
    - `### Features`: Bulleted list of new functionality.
-   - `### Changes`: Technical breakdown of changes.
+    - `### Changes`: Table format (`| File | Change |`) with technical breakdown.
    - `### Verification`: Validation steps and results (e.g. lint, typecheck, build, review comments addressed).
    - `### Configuration`: (If applicable) code snippets for setup.
 

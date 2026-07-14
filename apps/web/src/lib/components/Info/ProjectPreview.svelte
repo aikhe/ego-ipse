@@ -260,7 +260,7 @@
           webglMaterial.uniforms.uProgress,
           {
             value: 1,
-            duration: 3,
+            duration: 2.4,
             ease: 'cubic-bezier(0.66, 0, 0.34, 1)',
             onUpdate: renderWebGL,
           },

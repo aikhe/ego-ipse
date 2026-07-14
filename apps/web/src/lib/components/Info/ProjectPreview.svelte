@@ -2,10 +2,15 @@
   import * as THREE from 'three';
   import { tick } from 'svelte';
   import gsap from 'gsap';
+  import { uiState } from '$lib/state/ui.svelte';
   import {
-    vertexShader,
-    fragmentShader,
+    vertexShader as smokeVertex,
+    fragmentShader as smokeFragment,
   } from '$lib/shaders/preview-reveal/preview-reveal';
+  import {
+    vertexShader as gridVertex,
+    fragmentShader as gridFragment,
+  } from '$lib/shaders/preview-reveal-grid/preview-reveal-grid';
 
   interface Props {
     project?: {
@@ -49,12 +54,21 @@
   let startTime = 0;
 
   function renderLoop(timestamp: number) {
-    if (!webglActive || !webglRenderer || !webglScene || !webglCamera || !webglMaterial) return;
+    if (
+      !webglActive ||
+      !webglRenderer ||
+      !webglScene ||
+      !webglCamera ||
+      !webglMaterial
+    )
+      return;
 
     if (!startTime) startTime = timestamp;
     const elapsed = (timestamp - startTime) / 1000;
 
-    webglMaterial.uniforms.uTime.value = elapsed;
+    if (webglMaterial.uniforms.uTime) {
+      webglMaterial.uniforms.uTime.value = elapsed;
+    }
     webglRenderer.render(webglScene, webglCamera);
 
     animationFrameId = requestAnimationFrame(renderLoop);
@@ -96,8 +110,29 @@
     }
   });
 
+  // swap shader live when effect type changes
+  $effect(() => {
+    if (webglActive && uiState.sfxEffect) {
+      if (tl) tl.kill();
+      const prevProgress = webglMaterial?.uniforms.uProgress.value ?? 0;
+      destroyWebGL();
+      initWebGL();
+      if (webglMaterial) {
+        webglMaterial.uniforms.uProgress.value = 0;
+        gsap.to(webglMaterial.uniforms.uProgress, {
+          value: prevProgress,
+          duration: 0.4,
+          ease: 'power2.out',
+          onUpdate: renderWebGL,
+        });
+      }
+    }
+  });
+
   function getCSSColor(name: string): string {
-    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return getComputedStyle(document.documentElement)
+      .getPropertyValue(name)
+      .trim();
   }
 
   // push fresh CSS custom property colors into the live shader uniforms
@@ -137,17 +172,31 @@
     webglCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 10);
     webglCamera.position.z = 1;
 
+    const isGrid = uiState.sfxEffect === 'GRID';
+    const [vShader, fShader] = isGrid
+      ? [gridVertex, gridFragment]
+      : [smokeVertex, smokeFragment];
+
+    const uniforms: Record<string, THREE.Uniform> = {
+      uContainerRes: new THREE.Uniform(new THREE.Vector2(w, h)),
+      uProgress: new THREE.Uniform(0),
+      uColor: new THREE.Uniform(gridColor),
+      uBgColor: new THREE.Uniform(bgColor),
+    };
+
+    if (isGrid) {
+      uniforms.uGridSize = new THREE.Uniform(6);
+    } else {
+      uniforms.uTime = new THREE.Uniform(0);
+      uniforms.uSeed = new THREE.Uniform(
+        new THREE.Vector2(Math.random() * 1000, Math.random() * 1000)
+      );
+    }
+
     webglMaterial = new THREE.ShaderMaterial({
-      vertexShader,
-      fragmentShader,
-      uniforms: {
-        uContainerRes: new THREE.Uniform(new THREE.Vector2(w, h)),
-        uProgress: new THREE.Uniform(0),
-        uColor: new THREE.Uniform(gridColor),
-        uBgColor: new THREE.Uniform(bgColor),
-        uTime: new THREE.Uniform(0),
-        uSeed: new THREE.Uniform(new THREE.Vector2(Math.random() * 1000, Math.random() * 1000)),
-      },
+      vertexShader: vShader,
+      fragmentShader: fShader,
+      uniforms,
       transparent: true,
       depthWrite: false,
       depthTest: false,
@@ -190,7 +239,12 @@
   function resetWebGL() {
     if (!webglMaterial) return;
     // new random seed so every reveal looks different
-    webglMaterial.uniforms.uSeed.value.set(Math.random() * 1000, Math.random() * 1000);
+    if (webglMaterial.uniforms.uSeed) {
+      webglMaterial.uniforms.uSeed.value.set(
+        Math.random() * 1000,
+        Math.random() * 1000
+      );
+    }
     // restart progress and clock
     webglMaterial.uniforms.uProgress.value = 0;
     startTime = 0;
@@ -344,7 +398,12 @@
       <div class="content-area">
         <div class="preview-inner">
           <div class="image-box">
-            <img crossorigin="anonymous" src={project.image} alt={project.name} class="project-image" />
+            <img
+              crossorigin="anonymous"
+              src={project.image}
+              alt={project.name}
+              class="project-image"
+            />
             <canvas bind:this={canvas} class="tile-canvas"></canvas>
           </div>
 

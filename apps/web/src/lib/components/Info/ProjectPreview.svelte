@@ -121,7 +121,7 @@
         webglMaterial.uniforms.uProgress.value = 0;
         gsap.to(webglMaterial.uniforms.uProgress, {
           value: prevProgress,
-          duration: 0.4,
+          duration: uiState.sfxEffect === 'GRID' ? 0.15 : 0.4,
           ease: 'power2.out',
           onUpdate: renderWebGL,
         });
@@ -185,7 +185,7 @@
     };
 
     if (isGrid) {
-      uniforms.uGridSize = new THREE.Uniform(6);
+      uniforms.uGridSize = new THREE.Uniform(8);
     } else {
       uniforms.uTime = new THREE.Uniform(0);
       uniforms.uSeed = new THREE.Uniform(
@@ -314,7 +314,7 @@
           webglMaterial.uniforms.uProgress,
           {
             value: 1,
-            duration: 2.4,
+            duration: uiState.sfxEffect === 'GRID' ? 1.2 : 2.4,
             ease: 'cubic-bezier(0.66, 0, 0.34, 1)',
             onUpdate: renderWebGL,
           },

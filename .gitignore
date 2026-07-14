@@ -55,5 +55,6 @@ bun.lock
 bun.lockb
 
 mouse-effects
+gsap-threejs-codrops
 screenshots
 .agents/skills/commit/pr_body.md

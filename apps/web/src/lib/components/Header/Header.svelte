@@ -260,20 +260,17 @@
       >
         LAYOUT <span class="header__theme-value">[{layoutDisplayText}]</span>
       </button>
-      {#if theme === 'light'}
-        <button
-          class="header__layout-name header__sfx-toggle"
-          onclick={() => {
-            uiState.sfxEffect =
-              uiState.sfxEffect === 'SMOKE' ? 'GRID' : 'SMOKE';
-            getOpenPanel()?.track('sfx_effect_toggle', {
-              effect: uiState.sfxEffect,
-            });
-          }}
-        >
-          EFFECT: <span class="header__theme-value">[{sfxDisplayText}]</span>
-        </button>
-      {/if}
+      <button
+        class="header__layout-name header__sfx-toggle"
+        onclick={() => {
+          uiState.sfxEffect = uiState.sfxEffect === 'SMOKE' ? 'GRID' : 'SMOKE';
+          getOpenPanel()?.track('sfx_effect_toggle', {
+            effect: uiState.sfxEffect,
+          });
+        }}
+      >
+        EFFECT: <span class="header__theme-value">[{sfxDisplayText}]</span>
+      </button>
       <button
         class="header__layout-name header__grid-toggle"
         onclick={() => {

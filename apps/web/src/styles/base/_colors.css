@@ -19,6 +19,8 @@
   --color-overlay-60: rgb(0 0 0 / 60%);
   --color-border-solid: #bfbfbf;
   --color-border-corner: #000;
+  --color-smoke: #080807;
+  --color-bg-smoke: #fafafa;
 }
 
 :root[data-theme='dark'] {
@@ -39,4 +41,6 @@
   --color-overlay-60: rgb(255 255 255 / 60%);
   --color-border-solid: #303030;
   --color-border-corner: #4e4e4e;
+  --color-smoke: #fff;
+  --color-bg-smoke: #303030;
 }

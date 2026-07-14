@@ -24,6 +24,7 @@
   let content = $state<HTMLDivElement>();
   let canvas = $state<HTMLCanvasElement>();
   let tl: gsap.core.Timeline | null = null;
+  let shaderTween: gsap.core.Tween | null = null;
   let lastName = '';
   let displaySocial = $state<Social | null>(null);
 
@@ -176,27 +177,6 @@
     webglActive = false;
   }
 
-  function resetWebGL() {
-    if (!webglMaterial || !canvas) return;
-    const parent = canvas.parentElement;
-    if (parent) {
-      const w = parent.offsetWidth || 200;
-      const h = parent.offsetHeight || 150;
-      if (webglRenderer) {
-        webglRenderer.setSize(w, h, false);
-      }
-      webglMaterial.uniforms.uContainerRes.value.set(w, h);
-    }
-    if (webglMaterial.uniforms.uSeed) {
-      webglMaterial.uniforms.uSeed.value.set(
-        Math.random() * 1000,
-        Math.random() * 1000
-      );
-    }
-    webglMaterial.uniforms.uProgress.value = 0;
-    startTime = 0;
-  }
-
   async function show() {
     await tick();
     if (!container) return;
@@ -247,23 +227,17 @@
 
     // webgl shader reveal
     if (canvas && displaySocial?.image) {
-      if (webglActive) {
-        resetWebGL();
-      } else {
-        initWebGL();
-      }
+      if (shaderTween) shaderTween.kill();
+      if (webglActive) destroyWebGL();
+      initWebGL();
 
       if (webglMaterial) {
-        tl.to(
-          webglMaterial.uniforms.uProgress,
-          {
-            value: 1,
-            duration: uiState.sfxEffect === 'GRID' ? 1.4 : 2.2,
-            ease: 'cubic-bezier(0.66, 0, 0.34, 1)',
-            onUpdate: renderWebGL,
-          },
-          '<0.0'
-        );
+        shaderTween = gsap.to(webglMaterial.uniforms.uProgress, {
+          value: 1,
+          duration: uiState.sfxEffect === 'GRID' ? 1.4 : 2.2,
+          ease: 'cubic-bezier(0.66, 0, 0.34, 1)',
+          onUpdate: renderWebGL,
+        });
       }
     }
   }
@@ -281,21 +255,6 @@
         stagger: 0.03,
         ease: 'power2.in',
       });
-    }
-
-    // reverse webgl reveal
-    if (webglMaterial) {
-      tl.to(
-        webglMaterial.uniforms.uProgress,
-        {
-          value: 0,
-          duration: 0.3,
-          ease: 'power2.in',
-          onUpdate: renderWebGL,
-          onComplete: destroyWebGL,
-        },
-        '<'
-      );
     }
 
     // collapse container
@@ -324,7 +283,7 @@
   // swap shader live when effect type changes
   $effect(() => {
     if (webglActive && uiState.sfxEffect) {
-      if (tl) tl.kill();
+      if (shaderTween) shaderTween.kill();
       const prevProgress = webglMaterial?.uniforms.uProgress.value ?? 0;
       destroyWebGL();
       initWebGL();

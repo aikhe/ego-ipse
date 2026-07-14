@@ -21,6 +21,7 @@
   --color-border-corner: #000;
   --color-smoke: #080807;
   --color-bg-smoke: #fafafa;
+  --color-dark-grid: #424242;
 }
 
 :root[data-theme='dark'] {
@@ -43,4 +44,5 @@
   --color-border-corner: #4e4e4e;
   --color-smoke: #fff;
   --color-bg-smoke: #303030;
+  --color-dark-grid: #424242;
 }

@@ -34,7 +34,7 @@ void main()
         floor(uv.y * cellsY) / cellsY
     );
 
-    float height = 0.2;
+    float height = 0.28;
     float progress = (1.0 + height) - (uProgress * (1.0 + height + height));
 
     // Symmetric distance-based grid alpha (same as Codrops)
@@ -48,7 +48,7 @@ void main()
     float isBlock = step(t, rand1 * rand1);
     
     // Force cells very close to the center scanline to be solid/opaque (1.0) to hide the cutoff line
-    float solidBandWidth = 0.25;
+    float solidBandWidth = 0.4;
     float densityFactor = smoothstep(solidBandWidth, 0.0, t);
     float targetOpacity = mix((1.0 - t) * (0.3 + 0.7 * rand2), 1.0, densityFactor);
     

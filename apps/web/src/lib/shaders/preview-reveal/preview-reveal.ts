@@ -26,7 +26,7 @@ varying vec2 vUv;
 #define SMOKE_WIND_SPEED vec2(0.2, -0.3) // Speed and direction of the smoke drifting (X, Y)
 #define SMOKE_JAGGEDNESS 0.6          // How deeply smoke cuts/dissolves into the mask (higher = more irregular)
 #define SMOKE_THICKNESS  0.18          // Width of the black smoke band at the transition edge
-#define SMOKE_OPACITY    0.82          // Maximum opacity of the dark smoke trail overlay (0.0 to 1.0)
+#define SMOKE_OPACITY    0.9          // Maximum opacity of the dark smoke trail overlay (0.0 to 1.0)
 // =========================================================================
 
 // Pseudo-random noise generator

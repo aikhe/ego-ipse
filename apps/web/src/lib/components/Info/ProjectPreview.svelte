@@ -1,7 +1,11 @@
 <script lang="ts">
+  import * as THREE from 'three';
   import { tick } from 'svelte';
   import gsap from 'gsap';
-  import { runTileReveal } from '$lib/utils/tiles';
+  import {
+    vertexShader,
+    fragmentShader,
+  } from '$lib/shaders/preview-reveal/preview-reveal';
 
   interface Props {
     project?: {
@@ -34,8 +38,27 @@
   let tl: gsap.core.Timeline | null = null;
   let lastProjectName = $state('');
 
-  const COLS = 20;
-  const ROWS = 28;
+  // Three.js state
+  let webglRenderer: THREE.WebGLRenderer | null = null;
+  let webglScene: THREE.Scene | null = null;
+  let webglCamera: THREE.OrthographicCamera | null = null;
+  let webglMesh: THREE.Mesh | null = null;
+  let webglMaterial: THREE.ShaderMaterial | null = null;
+  let webglActive = false;
+  let animationFrameId = 0;
+  let startTime = 0;
+
+  function renderLoop(timestamp: number) {
+    if (!webglActive || !webglRenderer || !webglScene || !webglCamera || !webglMaterial) return;
+
+    if (!startTime) startTime = timestamp;
+    const elapsed = (timestamp - startTime) / 1000;
+
+    webglMaterial.uniforms.uTime.value = elapsed;
+    webglRenderer.render(webglScene, webglCamera);
+
+    animationFrameId = requestAnimationFrame(renderLoop);
+  }
 
   $effect(() => {
     if (container) {
@@ -62,6 +85,89 @@
       });
     }
   });
+
+  function getCSSColor(name: string): string {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  function renderWebGL() {
+    if (webglRenderer && webglScene && webglCamera) {
+      webglRenderer.render(webglScene, webglCamera);
+    }
+  }
+
+  function initWebGL() {
+    if (!canvas || webglActive) return;
+
+    const parent = canvas.parentElement;
+    if (!parent) return;
+    const w = parent.offsetWidth || 200;
+    const h = parent.offsetHeight || 150;
+    const gridColor = new THREE.Color(getCSSColor('--color-smoke'));
+    const bgColor = new THREE.Color(getCSSColor('--color-bg-smoke'));
+
+    // alpha: true — canvas is a transparent overlay on top of the native <img>
+    webglRenderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      powerPreference: 'high-performance',
+    });
+    webglRenderer.setPixelRatio(window.devicePixelRatio);
+    // false = don't set inline canvas CSS styles; let inset:0/width:100% handle layout
+    webglRenderer.setSize(w, h, false);
+
+    webglScene = new THREE.Scene();
+    webglCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 10);
+    webglCamera.position.z = 1;
+
+    webglMaterial = new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader,
+      uniforms: {
+        uContainerRes: new THREE.Uniform(new THREE.Vector2(w, h)),
+        uProgress: new THREE.Uniform(0),
+        uColor: new THREE.Uniform(gridColor),
+        uBgColor: new THREE.Uniform(bgColor),
+        uTime: new THREE.Uniform(0),
+        uSeed: new THREE.Uniform(new THREE.Vector2(Math.random() * 1000, Math.random() * 1000)),
+      },
+      transparent: true,
+      depthWrite: false,
+      depthTest: false,
+    });
+
+    const geometry = new THREE.PlaneGeometry(2, 2);
+    webglMesh = new THREE.Mesh(geometry, webglMaterial);
+    webglScene.add(webglMesh);
+
+    webglActive = true;
+    startTime = performance.now();
+    renderLoop(startTime);
+  }
+
+  function destroyWebGL() {
+    if (webglMesh) {
+      webglMesh.geometry.dispose();
+      webglScene?.remove(webglMesh);
+      webglMesh = null;
+    }
+    if (webglMaterial) {
+      webglMaterial.dispose();
+      webglMaterial = null;
+    }
+    if (webglRenderer) {
+      webglRenderer.dispose();
+      webglRenderer = null;
+    }
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = 0;
+    }
+    startTime = 0;
+    webglScene = null;
+    webglCamera = null;
+    webglActive = false;
+  }
 
   async function show() {
     await tick();
@@ -113,8 +219,22 @@
       );
     }
 
-    if (canvas) {
-      runTileReveal(canvas, tl, COLS, ROWS, true, 0.7, '<0.15');
+    // webgl shader reveal — canvas is an alpha mask over the native img
+    if (project?.image) {
+      initWebGL();
+
+      if (webglMaterial) {
+        tl.to(
+          webglMaterial.uniforms.uProgress,
+          {
+            value: 1,
+            duration: 3,
+            ease: 'cubic-bezier(0.66, 0, 0.34, 1)',
+            onUpdate: renderWebGL,
+          },
+          '<0.0'
+        );
+      }
     }
   }
 
@@ -133,8 +253,19 @@
       });
     }
 
-    if (canvas && tl) {
-      runTileReveal(canvas, tl, COLS, ROWS, false, 0.25, '<');
+    // reverse webgl reveal
+    if (webglMaterial) {
+      tl.to(
+        webglMaterial.uniforms.uProgress,
+        {
+          value: 0,
+          duration: 0.3,
+          ease: 'power2.in',
+          onUpdate: renderWebGL,
+          onComplete: destroyWebGL,
+        },
+        '<'
+      );
     }
 
     // collapse container
@@ -150,6 +281,13 @@
       '-=0.1'
     );
   }
+
+  // cleanup webgl on component destroy
+  $effect(() => {
+    return () => {
+      destroyWebGL();
+    };
+  });
 </script>
 
 <div
@@ -174,7 +312,7 @@
       <div class="content-area">
         <div class="preview-inner">
           <div class="image-box">
-            <img src={project.image} alt={project.name} class="project-image" />
+            <img crossorigin="anonymous" src={project.image} alt={project.name} class="project-image" />
             <canvas bind:this={canvas} class="tile-canvas"></canvas>
           </div>
 

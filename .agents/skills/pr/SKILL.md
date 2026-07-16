@@ -18,7 +18,7 @@ description: Pull request creation with structured descriptions and verification
 5. **PR Description** MUST NOT use hyphens anywhere in the body. Use asterisks for bullet lists instead. MUST include:
    - `### Summary`: High-level overview.
    - `### Features`: Bulleted list of new functionality.
-    - `### Changes`: Table format (`| File | Change |`) with technical breakdown.
+   - `### Changes`: Table format (`| File | Change |`) with technical breakdown.
    - `### Verification`: Validation steps and results (e.g. lint, typecheck, build, review comments addressed).
    - `### Configuration`: (If applicable) code snippets for setup.
 

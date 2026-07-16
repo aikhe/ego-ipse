@@ -106,6 +106,19 @@
     return () => clearInterval(interval);
   });
 
+  const padArray = (str: string, len: number) => {
+    const arr = str.split('');
+    while (arr.length < len) arr.push('');
+    return arr;
+  };
+
+  let cursorCoordsText = $derived(
+    `X:${cursorX} Y:${cursorY} Z:000 ${cursorSpeed}px/s`
+  );
+
+  let cursorCoordsChars = $derived(padArray(cursorCoordsText, 35));
+  let uptimeChars = $derived(padArray(uptime, 20));
+
   $effect(() => {
     let lastX = 0;
     let lastY = 0;
@@ -229,11 +242,17 @@
   </div>
 
   <div class="header__cursor-group">
-    <p class="header__cursor-coords">
-      X:{cursorX} Y:{cursorY} Z:000 {cursorSpeed}px/s
+    <p class="header__cursor-coords header-anim">
+      {#each cursorCoordsChars as char, i (i)}
+        <span class="char-mask"><span class="char">{char}</span></span>
+      {/each}
     </p>
     <div class="header__cursor-group-extra">
-      <p class="header__cursor-timer">{uptime}</p>
+      <p class="header__cursor-timer header-anim">
+        {#each uptimeChars as char, i (i)}
+          <span class="char-mask"><span class="char">{char}</span></span>
+        {/each}
+      </p>
     </div>
   </div>
 
@@ -442,7 +461,9 @@
   .header__time,
   .header__timezone,
   .header__location,
-  .header__coordinates {
+  .header__coordinates,
+  .header__cursor-coords,
+  .header__cursor-timer {
     display: flex;
     white-space: pre;
   }

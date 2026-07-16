@@ -241,15 +241,17 @@
 
   <div class="info pointer-events-auto">
     <p class="info__title font--mono-label">PROJECTS I'VE WORKED ON</p>
-    <Projects
-      {projects}
-      activeProject={selectedProject || nextProject}
-      isReady={uiState.isProjectView}
-      onselect={(p: Project) => {
-        triggerHeroOut(p);
-      }}
-    />
-    <Socials {socials} {github} />
+    <div class="info__group">
+      <Projects
+        {projects}
+        activeProject={selectedProject || nextProject}
+        isReady={uiState.isProjectView}
+        onselect={(p: Project) => {
+          triggerHeroOut(p);
+        }}
+      />
+      <Socials {socials} {github} />
+    </div>
   </div>
 </div>
 
@@ -292,10 +294,16 @@
   .info {
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 0.6rem;
     grid-column: 7 / span 6;
     grid-row: 1;
     position: relative;
+  }
+
+  .info__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
   }
 
   .info__title {

@@ -904,7 +904,7 @@
 
   .project--more {
     font-weight: 400;
-    height: 48px;
+    height: 44px;
     margin-top: -1px;
   }
 

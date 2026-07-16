@@ -21,7 +21,7 @@
   let themeDisplayText = $state('LIGHT');
   let gridDisplayText = $state('HIDDEN');
   let layoutDisplayText = $state('LAYERED');
-  let sfxDisplayText = $state('SMOKE');
+  let sfxDisplayText = $state('NONE');
   let headerEl = $state<HTMLElement>();
   let glitchInterval: ReturnType<typeof setInterval> | null = null;
   let gridGlitchInterval: ReturnType<typeof setInterval> | null = null;
@@ -97,8 +97,7 @@
       const totalSec = Math.floor(elapsed / 1000);
       const m = Math.floor(totalSec / 60);
       const s = totalSec % 60;
-      const ms = elapsed % 1000;
-      uptime = `${m}m ${String(s).padStart(2, '0')}s ${String(ms).padStart(3, '0')}`;
+      uptime = `${m}m ${String(s).padStart(2, '0')}s`;
     };
 
     updateUptime();
@@ -113,7 +112,7 @@
   };
 
   let cursorCoordsText = $derived(
-    `X:${cursorX} Y:${cursorY} Z:000 ${cursorSpeed}px/s`
+    `X:${cursorX} Y:${cursorY} Z:null ${cursorSpeed}px/s`
   );
 
   let cursorCoordsChars = $derived(padArray(cursorCoordsText, 35));
@@ -282,7 +281,12 @@
       <button
         class="header__layout-name header__sfx-toggle"
         onclick={() => {
-          uiState.sfxEffect = uiState.sfxEffect === 'SMOKE' ? 'GRID' : 'SMOKE';
+          uiState.sfxEffect =
+            uiState.sfxEffect === 'SMOKE'
+              ? 'GRID'
+              : uiState.sfxEffect === 'GRID'
+                ? 'NONE'
+                : 'SMOKE';
           getOpenPanel()?.track('sfx_effect_toggle', {
             effect: uiState.sfxEffect,
           });
@@ -364,7 +368,7 @@
   .header__cursor-group-extra {
     left: 0;
     position: absolute;
-    top: calc(100% + 0.3rem);
+    top: calc(100% + 0.14rem);
     white-space: nowrap;
   }
 
@@ -375,17 +379,17 @@
   .header__time-group-extra {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: 0.26rem;
     left: 0;
     position: absolute;
-    top: calc(100% + 0.3rem);
+    top: calc(100% + 0.14rem);
     white-space: nowrap;
   }
 
   .header__meta-group {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: 0.26rem;
     margin-top: 1.2rem;
   }
 
@@ -410,10 +414,10 @@
   .header__theme-group-extra {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: 0.26rem;
     left: 0;
     position: absolute;
-    top: calc(100% + 0.3rem);
+    top: calc(100% + 0.14rem);
     white-space: nowrap;
   }
 

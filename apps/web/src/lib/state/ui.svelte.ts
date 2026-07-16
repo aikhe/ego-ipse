@@ -1,6 +1,6 @@
 export type LayoutMode = 'layered' | 'shader';
 export type Theme = 'light' | 'dark';
-export type SfxEffect = 'SMOKE' | 'GRID';
+export type SfxEffect = 'NONE' | 'SMOKE' | 'GRID';
 
 export const uiState = $state({
   isProjectView: false,
@@ -8,7 +8,7 @@ export const uiState = $state({
   layoutMode: 'shader' as LayoutMode,
   theme: 'light' as Theme,
   isShaderShifted: false,
-  sfxEffect: 'SMOKE' as SfxEffect,
+  sfxEffect: 'NONE' as SfxEffect,
 });
 
 export function toggleTheme() {

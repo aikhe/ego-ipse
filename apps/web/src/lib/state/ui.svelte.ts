@@ -8,7 +8,7 @@ export const uiState = $state({
   layoutMode: 'shader' as LayoutMode,
   theme: 'light' as Theme,
   isShaderShifted: false,
-  sfxEffect: 'NONE' as SfxEffect,
+  sfxEffect: 'SMOKE' as SfxEffect,
 });
 
 export function toggleTheme() {

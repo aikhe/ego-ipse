@@ -113,6 +113,10 @@
 
   // swap shader live when effect type changes
   $effect(() => {
+    if (uiState.sfxEffect === 'NONE') {
+      if (webglActive) destroyWebGL();
+      return;
+    }
     if (webglActive && uiState.sfxEffect) {
       if (shaderTween) shaderTween.kill();
       const prevProgress = webglMaterial?.uniforms.uProgress.value ?? 0;
@@ -186,7 +190,7 @@
     };
 
     if (isGrid) {
-      uniforms.uGridSize = new THREE.Uniform(12);
+      uniforms.uGridSize = new THREE.Uniform(3);
     } else {
       uniforms.uTime = new THREE.Uniform(0);
       uniforms.uSeed = new THREE.Uniform(
@@ -275,7 +279,7 @@
     if (content) {
       tl.fromTo(
         content.children,
-        { opacity: 0, y: 10 },
+        { opacity: 0, y: 4 },
         {
           opacity: 1,
           y: 0,
@@ -288,7 +292,7 @@
     }
 
     // webgl shader reveal — canvas is an alpha mask over the native img
-    if (project?.image) {
+    if (project?.image && uiState.sfxEffect !== 'NONE') {
       if (shaderTween) shaderTween.kill();
       if (webglActive) destroyWebGL();
       initWebGL();

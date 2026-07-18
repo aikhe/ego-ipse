@@ -119,13 +119,13 @@
 
     <GridBackground />
 
+    <GridOverlay />
+
     <div class="stripe-gutter-inner stripe-gutter-inner--left"></div>
     <div class="stripe-gutter-inner stripe-gutter-inner--right"></div>
   </div>
 
   <StripeGutter />
-
-  <GridOverlay />
 </div>
 
 <style>

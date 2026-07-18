@@ -54,7 +54,7 @@
   >
     <RenderPauser active={uiState.layoutMode === 'shader'} />
     <GemSmokeBg
-      scale={0.14}
+      scale={0.12}
       speed={0.8}
       colors={colors.shaderColors}
       colorBack={[1, 1, 1, 0]}

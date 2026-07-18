@@ -15,10 +15,10 @@
     display: grid;
     gap: 1.2rem;
     grid-template-columns: repeat(12, 1fr);
-    inset: 0;
-    margin-inline: auto;
+    height: 100vh;
     pointer-events: none;
     position: fixed;
+    top: 0;
     z-index: 2147483647;
   }
 

@@ -257,7 +257,7 @@
   .hero {
     display: flex;
     flex-direction: column;
-    gap: 1.6rem;
+    gap: 1rem;
     grid-column: 1 / span 10;
     grid-row: 1;
     opacity: 0;
@@ -292,7 +292,7 @@
   .info {
     display: flex;
     flex-direction: column;
-    gap: 0.88rem;
+    gap: 0.8rem;
     grid-column: 7 / span 6;
     grid-row: 1;
     position: relative;
@@ -301,7 +301,5 @@
   .info__title {
     align-items: center;
     color: var(--color-text-muted);
-    display: flex;
-    gap: 0.5rem;
   }
 </style>

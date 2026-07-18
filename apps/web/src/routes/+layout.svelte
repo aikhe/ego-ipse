@@ -20,6 +20,7 @@
   let stageScale = $state(1);
   let stageHeight = $state<number | null>(null);
   let stageOffsetX = $state(0);
+  let isMobile = $state(false);
 
   $effect(() => {
     document.documentElement.setAttribute('data-theme', uiState.theme);
@@ -82,9 +83,17 @@
     window.addEventListener('resize', updateStageScale);
     viewport?.addEventListener('resize', updateStageScale);
 
+    const mql = window.matchMedia('(max-width: 1024px)');
+    isMobile = mql.matches;
+    const onMobileChange = (e: MediaQueryListEvent) => {
+      isMobile = e.matches;
+    };
+    mql.addEventListener('change', onMobileChange);
+
     return () => {
       window.removeEventListener('resize', updateStageScale);
       viewport?.removeEventListener('resize', updateStageScale);
+      mql.removeEventListener('change', onMobileChange);
       document.documentElement.style.setProperty('--page-stage-scale', '1');
       document.documentElement.style.setProperty(
         '--page-stage-width',
@@ -126,6 +135,12 @@
   </div>
 
   <StripeGutter />
+
+  {#if isMobile}
+    <div class="mobile-blocker">
+      <span class="font--mono-label">@aikheandrei</span>
+    </div>
+  {/if}
 </div>
 
 <style>
@@ -166,5 +181,18 @@
 
   .stripe-gutter-inner--right {
     right: 0;
+  }
+
+  .mobile-blocker {
+    align-items: center;
+    background: var(--color-bg);
+    color: var(--color-text);
+    display: flex;
+    height: 100dvh;
+    inset: 0;
+    justify-content: center;
+    position: fixed;
+    width: 100%;
+    z-index: 9999;
   }
 </style>

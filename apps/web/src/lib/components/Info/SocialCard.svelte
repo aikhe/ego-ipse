@@ -400,7 +400,7 @@
     backdrop-filter: blur(4px);
     background: var(--color-bg);
     border: 1px solid var(--color-border-solid);
-    bottom: calc(100% - 1rem);
+    bottom: calc(100% - 0.6rem);
     height: 14.5rem;
     opacity: 0;
     pointer-events: none;
@@ -454,10 +454,10 @@
   .social-card__inner {
     box-sizing: border-box;
     display: grid;
-    gap: 1rem;
+    gap: 0.6rem;
     grid-template-columns: 1fr 1fr;
     height: 100%;
-    padding: 0.8rem;
+    padding: 0.6rem;
   }
 
   .social-card__side--left {
@@ -488,7 +488,7 @@
     font-size: 0.8rem;
     font-weight: 400;
     letter-spacing: 0.034em;
-    margin: 0.1rem 0 0;
+    margin: 0rem 0 0;
     text-wrap: nowrap;
   }
 
@@ -501,7 +501,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.1rem;
-    margin: 0.4rem 0;
+    margin: 0.2rem 0;
   }
 
   .social-card__stat {
@@ -545,7 +545,7 @@
 
   .social-card__status {
     background: var(--color-overlay-02);
-    border: 1px solid var(--color-border-solid);
+    border: 1px solid var(--color-overlay-15);
     color: var(--color-overlay-60);
     cursor: default;
     font-family: 'Geist Mono', monospace;
@@ -569,17 +569,17 @@
     background: var(--color-bg);
     border: 1px dashed var(--color-overlay-60);
     display: flex;
-    height: 12.5rem;
+    height: 13rem;
     justify-content: center;
     overflow: visible;
     position: relative;
-    width: 12.5rem;
+    width: 13rem;
   }
 
   .social-card__img {
     display: block;
-    max-height: 100%;
-    max-width: 100%;
+    height: 102%;
+    width: 102%;
     object-fit: contain;
   }
 

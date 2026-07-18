@@ -791,7 +791,7 @@
     color: var(--color-text);
     cursor: pointer;
     display: flex;
-    height: 46px;
+    height: 44px;
     justify-content: space-between;
     padding: 0;
     position: relative;

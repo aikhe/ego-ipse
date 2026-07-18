@@ -107,7 +107,7 @@ export function useShaderAnimations() {
     const ease = config.glowEasing;
     const outerEase = config.outerDistEaseOut;
     const shouldShow = uiState.isProjectView === uiState.isShaderShifted;
-    const target = shouldShow ? 1 : 0;
+    const target = shouldShow ? 0.9 : 0;
     const duration = shouldShow ? 1.8 : 1.4;
 
     gsap.killTweensOf(outerDistortionTarget);

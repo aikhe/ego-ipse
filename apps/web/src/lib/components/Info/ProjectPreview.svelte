@@ -457,8 +457,8 @@
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    gap: 0.44rem;
-    padding: 0.8rem;
+    gap: 0.24rem;
+    padding: 0.5rem 0.7rem;
     position: relative;
   }
 
@@ -523,7 +523,7 @@
     flex-direction: column;
     flex-grow: 1;
     min-height: 0;
-    padding: 0.8rem 0.8rem 0.96rem;
+    padding: 0.6rem 0.6rem 0.72rem;
   }
 
   .preview-inner {
@@ -547,8 +547,8 @@
 
   .project-image {
     display: block;
-    max-height: 100%;
-    max-width: 100%;
+    height: 100%;
+    width: 100%;
     object-fit: contain;
   }
 
@@ -568,7 +568,7 @@
     display: flex;
     flex-shrink: 0;
     justify-content: space-between;
-    padding: 0.6rem 0.8rem;
+    padding: 0.4rem 0.6rem;
   }
 
   .tags {

@@ -15,7 +15,9 @@
     display: grid;
     gap: 1.2rem;
     grid-template-columns: repeat(12, 1fr);
+    inset-inline: 0;
     height: 100vh;
+    margin-inline: auto;
     pointer-events: none;
     position: fixed;
     top: 0;

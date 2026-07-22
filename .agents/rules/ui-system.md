@@ -27,6 +27,7 @@ Maintain a high-fidelity, premium, and performant user interface that feels orga
   - Surface: `var(--color-bg)`, `var(--color-primary)`
   - Content: `var(--color-text)`, `var(--color-text-muted)`, `var(--color-text-inv)`
   - Overlays: `var(--color-overlay-xx)` (from 02 to 60) for depth and glassmorphism.
+- **Styling approach**: Tailwind v4 is configured as a CSS foundation (`@import 'tailwindcss'` in `main.css`) but the project does not rely on Tailwind utility classes for styling. All UI is styled with hand-written BEM CSS using design tokens from `_colors.css`, `_typography.css`, and `_containers.css`. Only 3 Tailwind utility usages exist project-wide (`z-99`, `pointer-events-none`, `relative`).
 - **Layout**:
   - Max Width: `1920px` (`--container-max-width`)
   - Standard Width: `96.4%` (`--container-width`)

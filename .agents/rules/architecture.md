@@ -16,7 +16,7 @@ Maintain a scalable and predictable monorepo structure using Turborepo and featu
 - **3D Engine**: Threlte / Three.js
 - **CMS**: Sanity (apps/studio)
 - **Animations**: GSAP (GreenSock)
-- **Styling**: Tailwind CSS v4 + Vanilla CSS (BEM)
+- **Styling**: Custom BEM CSS (Tailwind v4 as foundation layer, rarely used directly)
 - **WebGL Shaders**: @paper-design/shaders + custom GLSL
 - **Analytics**: OpenPanel (@openpanel/web)
 - **Deploy**: Cloudflare Pages (adapter-cloudflare + wrangler)

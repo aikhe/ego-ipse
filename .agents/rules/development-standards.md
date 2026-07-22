@@ -31,7 +31,7 @@ Maintain a high-fidelity, premium, and performant coding standard that prioritiz
 ## Rules
 
 - MUST use Svelte v5 (Runes) and Threlte/Three.js for 3D interactions.
-- MUST use BEM naming convention for all CSS (alongside Tailwind utility classes where appropriate).
+- MUST use BEM naming convention for all CSS; Tailwind utilities are configured but the project styles with hand-written BEM classes.
 - MUST remove unnecessary code on sight.
 - MUST ensure all `each` blocks have a unique key.
 - MUST resolve all LSP diagnostics.
@@ -57,7 +57,7 @@ Maintain a high-fidelity, premium, and performant coding standard that prioritiz
 - Font: Geist (Thin weights, tight letter-spacing), Geist Mono, Geist Pixel (Google Fonts).
 - Animation: GSAP for all state transitions (no instant snaps).
 - Colors: Use variables from `_colors.css` only.
-- Styling: Tailwind CSS v4 via `@import 'tailwindcss'` in `main.css` + BEM classes.
+- Styling: Custom BEM classes in `<style>` blocks; Tailwind v4 is imported as a CSS foundation layer (normalize/reset) but utility classes are rarely used.
 - Analytics: OpenPanel via `$lib/analytics/`.
 - Shaders: `@paper-design/shaders` package + custom GLSL under `$lib/shaders/`.
 - Stage scaling: Use `stageScale.ts` utilities for responsive stage sizing.
@@ -69,3 +69,4 @@ Maintain a high-fidelity, premium, and performant coding standard that prioritiz
 - Shared global state without clear boundaries.
 - Hardcoding hex colors or pixel values that should be variables.
 - Using Svelte stores (`writable`, etc.) when `$state` runes should be used.
+- Relying on Tailwind utility classes instead of BEM + design token CSS variables.

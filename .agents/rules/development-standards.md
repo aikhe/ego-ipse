@@ -23,18 +23,19 @@ Maintain a high-fidelity, premium, and performant coding standard that prioritiz
 
 ## Architecture Standards
 
-- MUST follow the feature-based isolation principle.
+- MUST follow the feature-based isolation principle (feature subdirectories under `lib/components/`).
 - MUST isolate business logic/state from UI components.
 - MUST use shared configurations from `packages/` for consistency.
+- MUST use Svelte 5 `$state` runes for reactive state (not stores).
 
 ## Rules
 
 - MUST use Svelte v5 (Runes) and Threlte/Three.js for 3D interactions.
-- MUST use BEM naming convention for all CSS.
+- MUST use BEM naming convention for all CSS (alongside Tailwind utility classes where appropriate).
 - MUST remove unnecessary code on sight.
 - MUST ensure all `each` blocks have a unique key.
 - MUST resolve all LSP diagnostics.
-- MUST use lowercase for comments
+- MUST use lowercase for comments.
 
 ## Linting & Formatting
 
@@ -53,12 +54,18 @@ Maintain a high-fidelity, premium, and performant coding standard that prioritiz
 
 ## Guidelines
 
-- Font: Geist (Thin weights, tight letter-spacing).
+- Font: Geist (Thin weights, tight letter-spacing), Geist Mono, Geist Pixel (Google Fonts).
 - Animation: GSAP for all state transitions (no instant snaps).
 - Colors: Use variables from `_colors.css` only.
+- Styling: Tailwind CSS v4 via `@import 'tailwindcss'` in `main.css` + BEM classes.
+- Analytics: OpenPanel via `$lib/analytics/`.
+- Shaders: `@paper-design/shaders` package + custom GLSL under `$lib/shaders/`.
+- Stage scaling: Use `stageScale.ts` utilities for responsive stage sizing.
+- Deploy: Cloudflare Pages via wrangler (`adapter-cloudflare`).
 
 ## Anti-patterns
 
 - Bloated logic or repetitive code blocks.
 - Shared global state without clear boundaries.
 - Hardcoding hex colors or pixel values that should be variables.
+- Using Svelte stores (`writable`, etc.) when `$state` runes should be used.

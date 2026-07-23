@@ -21,7 +21,8 @@ Maintain a high-fidelity, premium, and performant user interface that feels orga
 
 - **Typography**:
   - Main: `Geist` and `Geist Mono` at thin weights (e.g., 200) with tight letter spacing (0.34%).
-  - Custom: `Geist Pixel` (from Google Fonts) and `Advine-Pixel` for specific creative elements.
+  - Custom: `Geist Pixel` (from Google Fonts) for specific creative elements.
+  - Use `font--mono-label` class for monospace labels.
 - **Colors**: Use the curated palette in `_colors.css`.
   - Surface: `var(--color-bg)`, `var(--color-primary)`
   - Content: `var(--color-text)`, `var(--color-text-muted)`, `var(--color-text-inv)`
@@ -30,7 +31,18 @@ Maintain a high-fidelity, premium, and performant user interface that feels orga
   - Max Width: `1920px` (`--container-max-width`)
   - Standard Width: `96.4%` (`--container-width`)
   - Main container class: `.section-container`
+  - Stage scaling: responsive via `--page-stage-scale`, `--page-stage-width`, `--page-stage-height`, `--page-stage-offset-x` CSS custom properties set by `stageScale.ts`.
 - **Transitions**: State changes (theme toggles, overlays) MUST use fluid GSAP motion.
+- **Grid**: 12-column grid layout using `grid-template-columns: repeat(12, 1fr)`.
+- **Shader layouts**: Two layout modes — `layered` (3D Threlte scene) and `shader` (WebGL background via gem-smoke shader), controlled by `uiState.layoutMode`.
+
+## Stacking Context
+
+- Shader canvas: `z-index: -50`
+- Grid background: `z-index: -1`
+- Page stage: `z-index: 2`
+- Hero section: `z-index: 10000`
+- Mobile blocker: `z-index: 9999`
 
 ## Anti-patterns
 

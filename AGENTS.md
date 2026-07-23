@@ -26,6 +26,7 @@ This repository already has a local agent system under `.agents/`. Use this file
 - `git`: commit and PR formatting.
 - `pr`: pull request creation with structured descriptions and verification.
 - `caveman`: ultra-brief responses when requested.
+- `grill-me`: relentless interview to sharpen a plan or design.
 
 ## Workflow Map
 

@@ -14,9 +14,11 @@ description: Standardizes technical one-line commit messages using project-speci
 2. **Review Logic**: Confirm code follows KISS and DRY. Remove any bloated logic or unnecessary edge cases.
 3. **Construct Message**:
    - Use the technical one-line format.
-   - Start with `feat(scope):` or `fix(scope):` in lowercase.
+   - Start with `feat(scope):`, `fix(scope):`, `refactor(scope):`, `chore(scope):`, or other conventional commit types in lowercase.
    - Use `+` to connect distinct features.
    - Use `&` to connect correlated details.
+   - Max 120 chars (enforced by Commitlint).
+   - No body or footer allowed (Commitlint enforces body/footer length = 0).
 4. **Validation (Automated)**:
    - Attempt to commit with `git commit -m "..."`.
    - **Commitlint** will validate the message in CI.

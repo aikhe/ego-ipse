@@ -8,7 +8,7 @@ description: Structured sequence to prepare and finalize Pull Request documentat
 
 ## Steps
 
-1. **Pre-flight Check**: Run `/format-and-lint` and then `/done-criteria` to ensure the work is ready for production.
+1. **Pre-flight Check**: Run `bun run check` and then review done-criteria to ensure the work is ready for production.
 2. **Draft PR Metadata**:
    - **Title**: Use the technical one-line commit style.
    - **Summary**: Write a high-level overview (1-2 sentences) of the goal.

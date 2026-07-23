@@ -9,17 +9,22 @@ description: Comprehensive quality checklist to verify "Premium" UI standards, B
 ## Steps
 
 1. **Rule Validation**:
-   - Check that all CSS follows the **BEM** convention.
+   - Check that all CSS follows the **BEM** convention (Tailwind utility classes are fine, but custom CSS must be BEM).
    - Verify **Geist** typography (200 weight, 0.34% tracking) has been applied.
    - Ensure all state transitions use **GSAP** for fluid, organic motion.
+   - Verify shader layouts (gem-smoke, preview-reveal) are theme-reactive if they touch visual tokens.
+   - Ensure reactive state uses `$state` runes, not Svelte stores.
 2. **Technical Polish**:
-   - Run `/format-and-lint` to ensure all diagnostics are resolved.
+   - Run `bun run check` to ensure all diagnostics are resolved.
    - Confirm that no hex codes or literal pixels are hardcoded (use design tokens).
    - Ensure `each` blocks have unique keys.
+   - Verify stage scaling (`--page-stage-*` CSS vars) is handled for responsive layouts.
 3. **Data Sync**:
    - If the change involves CMS content, verify the Sanity schema and GROQ queries match.
    - Use the /sync skill if needed to verify data flow.
 4. **Cleanup**:
    - Remove placeholder images or generic "red/blue" colors.
    - Delete any temporary console logs or commented-out code blocks.
-5. **Final Review**: Confirm the solution is KISS and DRY before proceeding to /commit-convention.
+5. **Final Review**:
+   - Confirm the solution is KISS and DRY before proceeding to commit-convention.
+   - Run `bun run build` to verify production build succeeds.

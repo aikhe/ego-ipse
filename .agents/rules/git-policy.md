@@ -1,6 +1,6 @@
 ---
 trigger: model_decision
-description: Established rules for technical one-line commits, PowerShell usage, and structured PR documentation. Apply this rule when staging changes, creating commits, or preparing pull requests.
+description: Established rules for technical one-line commits and structured PR documentation. Apply this rule when staging changes, creating commits, or preparing pull requests.
 ---
 
 # Git Policy
@@ -14,7 +14,7 @@ Maintain a clean, technical, and descriptive commit/PR history following a stric
 ## Rules
 
 - MUST ONLY commit when explicitly instructed by the USER.
-- MUST NOT stage or commit the `.agent` directory.
+- MUST NOT stage or commit the `.agents` directory.
 - MUST use a single-line commit message format (enforced by Commitlint).
 - MUST NOT include "Summary:" or any multi-line descriptions in commits.
 - MUST use `+` to connect distinct features/changes.

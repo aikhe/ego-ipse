@@ -25,7 +25,15 @@ This skill ensures that the data layer (Sanity) and the presentation layer (Svel
 - Ensure that for every new Sanity field, there is a corresponding UI element or state update.
 - Use the `studio` app to verify that sample content matches the frontend requirements.
 
+## Data Flow Pattern
+
+- Sanity schemas in `apps/studio/schemaTypes/` define the content model.
+- SvelteKit fetches data via GROQ queries in `src/routes/` page server files (`+page.server.ts`).
+- TypeScript types for Sanity data live in `$lib/types/sanity.ts` and related type files.
+- The `project`, `social`, and other types in `$lib/types/` mirror the Sanity schema structures.
+
 ## Troubleshooting
 
 - If a query returns `null`, verify the field name in the Sanity schema.
 - Ensure that the Sanity dataset (e.g., `production`) matches the one configured in the SvelteKit environment variables.
+- After schema changes, regenerate TypeScript types if using a codegen setup; otherwise manually sync type definitions in `$lib/types/`.

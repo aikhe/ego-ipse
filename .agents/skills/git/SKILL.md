@@ -11,7 +11,7 @@ This skill ensures that the commit history and PR documentation remain technical
 
 - Use this before committing code to ensure the message follows the one-line format.
 - Use this when generating PR summaries and descriptions.
-- Use this to ensure the `.agent` and `.agents` directories are not accidentally committed.
+- Use this to ensure the `.agents` directory is not accidentally committed.
 
 ## How to use it
 
@@ -44,7 +44,7 @@ This skill ensures that the commit history and PR documentation remain technical
 
 - Committing without explicit "go ahead" from the USER.
 - Using multi-line commit messages with summaries.
-- Staging the `.agent` or `.agents` folder.
+- Staging the `.agents` folder.
 
 ## Samples
 

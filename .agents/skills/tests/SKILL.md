@@ -17,21 +17,23 @@ This skill ensures that the application remains robust through consistent testin
 
 ### 1. Component Testing
 
-- Use Vitest and Svelte Testing Library for unit tests.
+- Use Vitest + `vitest-browser-svelte` with Playwright provider for browser-based component tests.
+- Test files live alongside components: `src/**/*.svelte.{test,spec}.{js,ts}`.
 - Focus on user interactions (clicks, inputs) and state transitions.
 
-### 2. End-to-End Testing
+### 2. Server/Unit Testing
 
-- Use Playwright for critical user flows (e.g., project navigation, theme toggling).
-- Ensure tests run across multiple screen sizes to verify responsiveness.
+- Plain `.{test,spec}.{js,ts}` files run in Node environment.
+- Use for testing utilities, stores (runes), and server logic.
 
 ### 3. Standards
 
 - Follow the project's lowercase comment style within test files.
 - Ensure all tests are kept simple and direct (DRY/KISS).
 
-## Example Command
+## Example Commands
 
 ```sh
-bun run test
+bun run test          # Run all tests (unit + component)
+bun run test:unit     # Unit tests only
 ```

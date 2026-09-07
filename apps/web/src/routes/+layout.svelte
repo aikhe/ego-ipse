@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import '../styles/main.css';
   import favicon from '$lib/assets/favicon.ico';
-  import { getOpenPanel } from '$lib/analytics';
+  import { page } from '$app/state';
   import {
     calculateStageMetrics,
     STAGE_DESIGN_WIDTH,
@@ -21,6 +21,9 @@
   let stageHeight = $state<number | null>(null);
   let stageOffsetX = $state(0);
   let isMobile = $state(false);
+  let isOpus = $derived(
+    page.url.pathname === '/opus' || page.url.pathname.startsWith('/opus/')
+  );
 
   $effect(() => {
     document.documentElement.setAttribute('data-theme', uiState.theme);
@@ -44,8 +47,6 @@
   }
 
   onMount(() => {
-    getOpenPanel();
-
     const viewport = window.visualViewport;
 
     const updateStageScale = () => {
@@ -115,33 +116,37 @@
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
-<div class="app-viewport">
-  <div
-    class="app-stage"
-    style={`--page-stage-scale: ${stageScale}; ${stageHeight === null ? '' : `--page-stage-height: ${stageHeight}px;`} --page-stage-offset-x: ${stageOffsetX}px; transform: translateX(${stageOffsetX}px) scale(${stageScale}); transform-origin: top left;`}
-  >
-    <Header theme={uiState.theme} {toggleTheme} />
+{#if isOpus}
+  {@render children()}
+{:else}
+  <div class="app-viewport">
+    <div
+      class="app-stage"
+      style={`--page-stage-scale: ${stageScale}; ${stageHeight === null ? '' : `--page-stage-height: ${stageHeight}px;`} --page-stage-offset-x: ${stageOffsetX}px; transform: translateX(${stageOffsetX}px) scale(${stageScale}); transform-origin: top left;`}
+    >
+      <Header theme={uiState.theme} {toggleTheme} />
 
-    <main class:main--shader={uiState.layoutMode === 'shader'}>
-      {@render children()}
-    </main>
+      <main class:main--shader={uiState.layoutMode === 'shader'}>
+        {@render children()}
+      </main>
 
-    <GridBackground />
+      <GridBackground />
 
-    <GridOverlay />
+      <GridOverlay />
 
-    <div class="stripe-gutter-inner stripe-gutter-inner--left"></div>
-    <div class="stripe-gutter-inner stripe-gutter-inner--right"></div>
-  </div>
-
-  <StripeGutter />
-
-  {#if isMobile}
-    <div class="mobile-blocker">
-      <span class="font--mono-label">@aikheandrei</span>
+      <div class="stripe-gutter-inner stripe-gutter-inner--left"></div>
+      <div class="stripe-gutter-inner stripe-gutter-inner--right"></div>
     </div>
-  {/if}
-</div>
+
+    <StripeGutter />
+
+    {#if isMobile}
+      <div class="mobile-blocker">
+        <span class="font--mono-label">@aikheandrei</span>
+      </div>
+    {/if}
+  </div>
+{/if}
 
 <style>
   .app-viewport {

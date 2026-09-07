@@ -58,7 +58,7 @@ Maintain a high-fidelity, premium, and performant coding standard that prioritiz
 - Animation: GSAP for all state transitions (no instant snaps).
 - Colors: Use variables from `_colors.css` only.
 - Styling: Custom BEM classes in `<style>` blocks; Tailwind v4 is imported as a CSS foundation layer (normalize/reset) but utility classes are rarely used.
-- Analytics: OpenPanel via `$lib/analytics/`.
+- Analytics: removed (`$lib/analytics/` deleted, `@openpanel/web` removed).
 - Shaders: `@paper-design/shaders` package + custom GLSL under `$lib/shaders/`.
 - Stage scaling: Use `stageScale.ts` utilities for responsive stage sizing.
 - Deploy: Cloudflare Pages via wrangler (`adapter-cloudflare`).

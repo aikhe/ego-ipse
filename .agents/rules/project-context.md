@@ -16,7 +16,7 @@ trigger: always_on
 - **Packages**:
   - Centralized configurations for ESLint, Stylelint, and TypeScript to ensure monorepo consistency.
 - **Infrastructure**: Powered by Turborepo and Bun for fast, efficient build pipelines.
-- **Analytics**: OpenPanel (`@openpanel/web`) for event tracking.
+- **Analytics**: removed (previously OpenPanel).
 - **Testing**: Vitest with Playwright browser provider for unit and component tests.
 
 ## Decision Making Context

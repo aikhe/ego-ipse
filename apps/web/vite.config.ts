@@ -5,11 +5,14 @@ import { sveltekit } from '@sveltejs/kit/vite';
 
 export default defineConfig({
   plugins: [tailwindcss(), sveltekit()],
+  optimizeDeps: {
+    include: ['three', 'gsap', '@threlte/core', '@paper-design/shaders']
+  },
   test: {
     expect: { requireAssertions: true },
     projects: [
       {
-        extends: './vite.config.ts',
+        extends: true,
         test: {
           name: 'client',
           browser: {
@@ -23,7 +26,7 @@ export default defineConfig({
       },
 
       {
-        extends: './vite.config.ts',
+        extends: true,
         test: {
           name: 'server',
           environment: 'node',

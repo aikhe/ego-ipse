@@ -8,9 +8,12 @@
   --color-bg: #f5f5f5;
   --color-text: #080807;
   --color-text-muted: #737373;
+  --color-text-muted-opus: #737373;
+  --color-bg-opus: #f5f5f5;
   --color-text-inv: var(--color-white);
   --logo-invert: 0;
   --color-overlay-02: #f0f0f0;
+  --color-overlay-03: rgb(0 0 0 / 3%);
   --color-overlay-05: rgb(0 0 0 / 5%);
   --color-overlay-10: rgb(0 0 0 / 10%);
   --color-overlay-15: rgb(0 0 0 / 15%);
@@ -31,9 +34,12 @@
   --color-bg: var(--color-primary);
   --color-text: var(--color-white);
   --color-text-muted: #707070;
+  --color-text-muted-opus: #a3a39e;
+  --color-bg-opus: #0e0e0d;
   --color-text-inv: var(--color-black);
   --logo-invert: 1;
   --color-overlay-02: #111;
+  --color-overlay-03: rgb(255 255 255 / 3%);
   --color-overlay-05: rgb(255 255 255 / 5%);
   --color-overlay-10: rgb(255 255 255 / 10%);
   --color-overlay-15: rgb(255 255 255 / 12%);

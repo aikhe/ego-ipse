@@ -1,1 +1,0 @@
-export { getOpenPanel } from './op';

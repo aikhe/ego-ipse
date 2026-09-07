@@ -2,7 +2,6 @@
   import gsap from 'gsap';
 
   import { startGlitch as runGlitch } from '$lib/utils/glitch';
-  import { getOpenPanel } from '$lib/analytics';
   import { getStageScale } from '$lib/utils/stageScale';
 
   import SocialCard from './SocialCard.svelte';
@@ -82,10 +81,6 @@
         isSocialRevealed = true;
         summonBox(index);
         summonLines(index);
-        getOpenPanel()?.track('social_dwell', {
-          name: socials[index].name,
-          handle: socials[index].handle,
-        });
       },
     });
   }

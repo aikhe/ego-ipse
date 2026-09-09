@@ -42,6 +42,21 @@ export interface SanityOpusWork {
   quote?: SanityOpusWorkQuote;
   meta?: SanityOpusWorkMeta | SanityOpusWorkMetaLegacyItem[];
 }
+export interface SanityOpusValuesColumn {
+  title?: string;
+  items?: string[];
+}
+
+export interface SanityOpusValuesQuote {
+  text?: string;
+  by?: string;
+}
+
+export interface SanityOpusValues {
+  description?: string;
+  columns?: SanityOpusValuesColumn[];
+  quote?: SanityOpusValuesQuote;
+}
 export interface SanityProject {
   title?: string;
   duration?: {

@@ -350,7 +350,7 @@
     flex-direction: column;
     gap: 1rem;
     justify-content: flex-start;
-    margin-top: 5rem;
+    margin-top: 4rem;
     padding-bottom: 2rem;
   }
 

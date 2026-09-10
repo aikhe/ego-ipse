@@ -2,7 +2,6 @@
   import { uiState } from '$lib/state/ui.svelte';
   import OpusNav from '$lib/components/Opus/OpusNav.svelte';
   import OpusFooter from '$lib/components/Opus/OpusFooter.svelte';
-  import OpusValues from '$lib/components/Opus/OpusValues.svelte';
   import {
     renderRichInline,
     splitDescriptionParagraphs,
@@ -19,27 +18,19 @@
   );
 
   let aboutEl = $state<HTMLDivElement | null>(null);
-  let valuesTitleEl = $state<HTMLParagraphElement | null>(null);
 
   // same measured-index trick as the home page: 01 takes the about
-  // section's height and 02 takes the values title's height (+ the same
-  // 5rem top margin as the values section) so each index sits level
-  // with its section instead of piling at the top.
+  // section's height so the index sits level with its section
+  // instead of piling at the top.
   $effect(() => {
-    if (!aboutEl || !valuesTitleEl) return;
+    if (!aboutEl) return;
     const sync = () => {
       const h = aboutEl!.getBoundingClientRect().height;
-      const th = valuesTitleEl!.getBoundingClientRect().height;
       document.documentElement.style.setProperty('--about-intro-h', `${h}px`);
-      document.documentElement.style.setProperty(
-        '--about-values-title-h',
-        `${th}px`
-      );
     };
     sync();
     const ro = new ResizeObserver(sync);
     ro.observe(aboutEl);
-    ro.observe(valuesTitleEl);
     window.addEventListener('resize', sync);
     return () => {
       ro.disconnect();
@@ -57,9 +48,6 @@
       <div class="opus-col__section opus-col__section--01">
         <span class="opus-col__index">01</span>
       </div>
-      <div class="opus-col__section opus-col__section--02">
-        <span class="opus-col__index">02</span>
-      </div>
     </div>
     <div class="opus-col opus-col--3">
       <div
@@ -74,10 +62,6 @@
           </p>
         {/each}
       </div>
-      <OpusValues
-        sanityValues={data.sanityValues}
-        bind:titleRef={valuesTitleEl}
-      />
       <OpusFooter />
     </div>
     <div class="opus-col opus-col--4" aria-hidden="true"></div>
@@ -350,11 +334,6 @@
     height: var(--about-intro-h);
   }
 
-  .opus-col__section--02 {
-    height: var(--about-values-title-h);
-    margin-top: 5rem;
-  }
-
   .opus-col__index {
     color: var(--color-text-faint-opus);
     font-family: 'Geist Mono', monospace;
@@ -389,12 +368,6 @@
     line-height: 1.48;
     margin: -0.2rem 0 0;
     max-width: 92%;
-  }
-
-  /* :global — <strong> arrives via {@html}, so it never carries the
-    scoped hash class; without this the UA default (700) wins. */
-  .opus-about__desc :global(strong) {
-    font-weight: 500;
   }
 
   /* debug grid — Shift+G — background only */

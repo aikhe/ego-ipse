@@ -966,13 +966,13 @@
     align-items: flex-start;
     display: flex;
     height: var(--opus-values-title-h, 1.46rem);
-    margin-top: 5rem;
+    margin-top: 4rem;
   }
 
   .opus-col__section--06 {
     height: var(--opus-github-title-h, 1.46rem);
     margin-top: calc(
-      var(--opus-values-h, 7.5rem) - var(--opus-values-title-h, 1.46rem) + 5rem
+      var(--opus-values-h, 7.5rem) - var(--opus-values-title-h, 1.46rem) + 4rem
     );
   }
 

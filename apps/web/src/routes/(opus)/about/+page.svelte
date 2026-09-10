@@ -2,6 +2,39 @@
   import { uiState } from '$lib/state/ui.svelte';
   import OpusNav from '$lib/components/Opus/OpusNav.svelte';
   import OpusFooter from '$lib/components/Opus/OpusFooter.svelte';
+  import OpusValues from '$lib/components/Opus/OpusValues.svelte';
+  import type { PageProps } from './$types';
+
+  let { data }: PageProps = $props();
+
+  let aboutEl = $state<HTMLDivElement | null>(null);
+  let valuesTitleEl = $state<HTMLParagraphElement | null>(null);
+
+  // same measured-index trick as the home page: 01 takes the about
+  // section's height and 02 takes the values title's height (+ the same
+  // 5rem top margin as the values section) so each index sits level
+  // with its section instead of piling at the top.
+  $effect(() => {
+    if (!aboutEl || !valuesTitleEl) return;
+    const sync = () => {
+      const h = aboutEl!.getBoundingClientRect().height;
+      const th = valuesTitleEl!.getBoundingClientRect().height;
+      document.documentElement.style.setProperty('--about-intro-h', `${h}px`);
+      document.documentElement.style.setProperty(
+        '--about-values-title-h',
+        `${th}px`
+      );
+    };
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(aboutEl);
+    ro.observe(valuesTitleEl);
+    window.addEventListener('resize', sync);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', sync);
+    };
+  });
 </script>
 
 <div class="opus-canvas">
@@ -10,17 +43,29 @@
       <OpusNav active="about" />
     </div>
     <div class="opus-col opus-col--2" aria-hidden="true">
-      <div class="opus-col__section opus-col__section--01"><span class="opus-col__index">01</span></div>
+      <div class="opus-col__section opus-col__section--01">
+        <span class="opus-col__index">01</span>
+      </div>
+      <div class="opus-col__section opus-col__section--02">
+        <span class="opus-col__index">02</span>
+      </div>
     </div>
     <div class="opus-col opus-col--3">
-      <div class="opus-col__border opus-col__border--right" aria-hidden="true"></div>
-      <div class="opus-section opus-section--about">
+      <div
+        class="opus-col__border opus-col__border--right"
+        aria-hidden="true"
+      ></div>
+      <div class="opus-section opus-section--about" bind:this={aboutEl}>
         <h2 class="opus-about">About</h2>
         <p class="opus-about__desc">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </p>
       </div>
+      <OpusValues
+        sanityValues={data.sanityValues}
+        bind:titleRef={valuesTitleEl}
+      />
       <OpusFooter />
     </div>
     <div class="opus-col opus-col--4" aria-hidden="true"></div>
@@ -198,14 +243,14 @@
 
   .opus-col__border--right {
     background: linear-gradient(
-        to bottom,
-        var(--color-overlay-02) 0%,
-        var(--color-overlay-02) 20%,
-        transparent 30%,
-        transparent 60%,
-        var(--color-overlay-02) 80%,
-        var(--color-overlay-02) 100%
-      );
+      to bottom,
+      var(--color-overlay-02) 0%,
+      var(--color-overlay-02) 20%,
+      transparent 30%,
+      transparent 60%,
+      var(--color-overlay-02) 80%,
+      var(--color-overlay-02) 100%
+    );
     bottom: 0;
     pointer-events: none;
     position: absolute;
@@ -289,6 +334,15 @@
     display: flex;
   }
 
+  .opus-col__section--01 {
+    height: var(--about-intro-h);
+  }
+
+  .opus-col__section--02 {
+    height: var(--about-values-title-h);
+    margin-top: 5rem;
+  }
+
   .opus-col__index {
     color: var(--color-text-faint-opus);
     font-family: 'Geist Mono', monospace;
@@ -321,7 +375,7 @@
     font-weight: 400;
     letter-spacing: 0.18%;
     line-height: 1.48;
-    margin: 0;
+    margin: -0.2rem 0 0;
     max-width: 92%;
   }
 

@@ -70,7 +70,7 @@
     flex-direction: column;
     gap: 1rem;
     justify-content: flex-start;
-    margin-top: 5rem;
+    margin-top: 4rem;
   }
 
   .opus-name {
@@ -94,17 +94,11 @@
     max-width: 92%;
   }
 
-  /* :global — <strong> arrives via {@html}, so it never carries the
-    scoped hash class; without this the UA default (700) wins. */
-  .opus-desc :global(strong) {
-    font-weight: 500;
-  }
-
   .opus-values__cols {
     display: grid;
     gap: 1rem;
     grid-template-columns: 1.4fr 1fr;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     width: 100%;
   }
 
@@ -147,7 +141,7 @@
     align-items: stretch;
     display: flex;
     gap: 0.5rem;
-    margin-top: 2rem;
+    margin-top: 1.25rem;
   }
 
   .opus-values__quote-line {

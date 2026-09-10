@@ -209,7 +209,7 @@
 
   div.opus-canvas div.opus-values__cols {
     grid-template-columns: minmax(0, 1fr);
-    margin-top: 0.75rem;
+    margin-top: 0.5rem;
   }
 
   div.opus-canvas div.opus-section--posters {

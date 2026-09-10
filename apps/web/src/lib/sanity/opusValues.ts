@@ -20,10 +20,11 @@ export function splitDescriptionParagraphs(description: string): string[] {
     .filter(para => para.length > 0);
 }
 
-// Minimal `**bold**` inline markup for the values description — keeps the
-// Sanity field a plain `text` (no Portable Text dependency) while allowing
-// highlighted phrases. HTML is escaped first so only our own `<strong>`
-// survives; unmatched markers render literally.
+// Minimal `**bold**` + `*italic*` inline markup for the values/about
+// descriptions — keeps the Sanity field a plain `text` (no Portable Text
+// dependency) while allowing highlighted phrases. HTML is escaped first so
+// only our own `<strong>` / `<em>` survive; unmatched markers render
+// literally. Bold runs first so its asterisks are consumed before italic.
 export function renderRichInline(text: string): string {
   return text
     .replace(/&/g, '&amp;')
@@ -31,7 +32,8 @@ export function renderRichInline(text: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, '<em>$1</em>');
 }
 
 export function normalizeOpusValues(

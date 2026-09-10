@@ -321,7 +321,7 @@
     font-weight: 400;
     letter-spacing: 0.18%;
     line-height: 1.48;
-    margin: 0;
+    margin: -0.2rem 0 0;
     max-width: 92%;
   }
 

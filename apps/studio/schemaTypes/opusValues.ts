@@ -13,7 +13,7 @@ export default defineType({
       name: 'description',
       type: 'text',
       description:
-        'Intro paragraph(s) above the lists. Leave a blank line to start a new paragraph. Wrap words in **double asterisks** to bold them.',
+        'Intro paragraph(s) above the lists. Leave a blank line to start a new paragraph. Wrap words in **double asterisks** to bold them and *single asterisks* to italicize them.',
       validation: (Rule) => [
         Rule.required().error('Description is required'),
         Rule.min(10).error('Too short'),

@@ -10,6 +10,7 @@
   import PosterOverlay from '$lib/components/Poster/PosterOverlay.svelte';
   import OpusFooter from '$lib/components/Opus/OpusFooter.svelte';
   import OpusGithub from '$lib/components/Opus/OpusGithub.svelte';
+  import OpusValues from '$lib/components/Opus/OpusValues.svelte';
   import poster1 from '$lib/assets/posters/1.webp';
   import poster2 from '$lib/assets/posters/2.webp';
   import poster3 from '$lib/assets/posters/3.webp';
@@ -661,46 +662,11 @@
           </a>
         </div>
       </div>
-      <div class="opus-section opus-section--values" bind:this={valuesEl}>
-        <p class="opus-name" bind:this={valuesTitleEl}>Values</p>
-        <p class="opus-desc">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat.
-        </p>
-        <div class="opus-values__cols">
-          <div class="opus-values__col opus-values__col--wide">
-            <p class="opus-values__label">Capabilities</p>
-            <ul class="opus-values__list">
-              <li class="opus-values__item">Lorem ipsum dolor sit amet</li>
-              <li class="opus-values__item">Consectetur adipiscing elit</li>
-              <li class="opus-values__item">
-                Sed do eiusmod tempor incididunt
-              </li>
-              <li class="opus-values__item">Ut labore et dolore magna</li>
-            </ul>
-          </div>
-          <div class="opus-values__col">
-            <p class="opus-values__label">Elsewhere</p>
-            <ul class="opus-values__list">
-              <li class="opus-values__item">Ut enim ad minim veniam</li>
-              <li class="opus-values__item">Quis nostrud exercitation</li>
-              <li class="opus-values__item">Ullamco laboris nisi aliquip</li>
-            </ul>
-          </div>
-        </div>
-        <div class="opus-values__quote">
-          <span class="opus-values__quote-line" aria-hidden="true"></span>
-          <div class="opus-values__quote-body">
-            <p class="opus-values__quote-text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-            <span class="opus-values__quote-by">Lorem ipsum dolor</span>
-          </div>
-        </div>
-      </div>
+      <OpusValues
+        sanityValues={data.sanityValues}
+        bind:ref={valuesEl}
+        bind:titleRef={valuesTitleEl}
+      />
       <OpusGithub bind:ref={githubEl} bind:titleRef={githubTitleEl} />
       <OpusFooter bind:ref={footerEl} />
     </div>
@@ -1045,97 +1011,6 @@
     flex-direction: column;
     margin-top: 4rem;
     width: calc(100% + 20rem + 4px);
-  }
-
-  .opus-section--values {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    justify-content: flex-start;
-    margin-top: 5rem;
-  }
-
-  .opus-values__cols {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: 1.4fr 1fr;
-    margin-top: 1.5rem;
-    width: 100%;
-  }
-
-  .opus-values__col {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .opus-values__label {
-    color: var(--color-text-faint-opus);
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.8rem;
-    font-weight: 400;
-    letter-spacing: 0.04em;
-    line-height: 1;
-    margin: 0;
-  }
-
-  .opus-values__list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.05rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .opus-values__item {
-    color: var(--color-text-muted-opus);
-    font-family: Geist, sans-serif;
-    font-size: 1.08rem;
-    font-weight: 400;
-    letter-spacing: 0.18%;
-    line-height: 1.48;
-    margin: 0;
-  }
-
-  .opus-values__quote {
-    align-items: stretch;
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 2rem;
-  }
-
-  .opus-values__quote-line {
-    background: var(--color-text);
-    display: block;
-    flex-shrink: 0;
-    margin-right: 0.25rem;
-    width: 2px;
-  }
-
-  .opus-values__quote-body {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .opus-values__quote-text {
-    color: var(--color-text);
-    font-family: Geist, sans-serif;
-    font-size: 1.08rem;
-    font-weight: 500;
-    letter-spacing: 0.18%;
-    line-height: 1.48;
-    margin: 0;
-  }
-
-  .opus-values__quote-by {
-    color: var(--color-text-muted-opus);
-    font-family: Geist, sans-serif;
-    font-size: 0.92rem;
-    font-weight: 500;
-    letter-spacing: 0.18%;
-    line-height: 1.5;
   }
 
   .opus-works {

@@ -71,3 +71,16 @@
   font-weight: 300;
   letter-spacing: 0.34%;
 }
+
+/* rich inline markup (`renderRichInline` in $lib/sanity/opusValues.ts):
+  <strong>/<em> arrive via {@html}, so scoped component styles cannot
+  target them — they live here instead. */
+.opus-about__desc strong,
+.opus-desc strong {
+  font-weight: 500;
+}
+
+.opus-about__desc em,
+.opus-desc em {
+  font-style: italic;
+}

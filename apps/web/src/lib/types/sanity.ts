@@ -1,3 +1,47 @@
+export interface SanityOpusWorkCell {
+  src?: string;
+  alt?: string;
+  wide?: boolean;
+  ratio?: string;
+  width?: number;
+  height?: number;
+  assetWidth?: number;
+  assetHeight?: number;
+}
+
+export interface SanityOpusWorkQuote {
+  text?: string;
+  by?: string;
+  href?: string;
+  avatar?: string;
+}
+
+export interface SanityOpusWorkMeta {
+  role?: string;
+  platform?: string;
+  year?: string;
+  stack?: string;
+  status?: string;
+}
+
+export interface SanityOpusWorkMetaLegacyItem {
+  k?: string;
+  v?: string;
+}
+
+export interface SanityOpusWork {
+  _id?: string;
+  title?: string;
+  slug?: string;
+  description?: string;
+  selected?: boolean;
+  order?: number;
+  preview?: number;
+  cells?: SanityOpusWorkCell[];
+  gallery?: SanityOpusWorkCell[];
+  quote?: SanityOpusWorkQuote;
+  meta?: SanityOpusWorkMeta | SanityOpusWorkMetaLegacyItem[];
+}
 export interface SanityProject {
   title?: string;
   duration?: {

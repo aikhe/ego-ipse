@@ -57,15 +57,15 @@ function cell(image, alt) {
 }
 
 const tarsi1 = await uploadImage(
-  path.join(webAssets, 'works', 'tarsi-1.webp'),
+  path.join(webAssets, 'works', 'tarsi', 'tarsi-1.webp'),
   'aurora-tarsi-1.webp',
 )
 const tarsi2 = await uploadImage(
-  path.join(webAssets, 'works', 'tarsi-2.webp'),
+  path.join(webAssets, 'works', 'tarsi', 'tarsi-2.webp'),
   'aurora-tarsi-2.webp',
 )
 const tarsi3 = await uploadImage(
-  path.join(webAssets, 'works', 'tarsi-3.webp'),
+  path.join(webAssets, 'works', 'tarsi', 'tarsi-3.webp'),
   'aurora-tarsi-3.webp',
 )
 const avatar = await uploadImage(path.join(webAssets, 'ike.webp'), 'aurora-quote-avatar.webp')

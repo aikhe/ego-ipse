@@ -8,10 +8,13 @@ export const prerender = false;
 export const load: PageServerLoad = async ({ fetch }) => {
   try {
     const res = await fetch('/api/opus-works');
-    if (!res.ok) return { sanitySelected: [] as Work[] };
+    if (!res.ok) return { sanitySelected: [] as Work[], sanityError: true };
     const data = (await res.json()) as { sanitySelected?: Work[] };
-    return { sanitySelected: data.sanitySelected ?? [] };
+    return {
+      sanitySelected: data.sanitySelected ?? [],
+      sanityError: false,
+    };
   } catch {
-    return { sanitySelected: [] as Work[] };
+    return { sanitySelected: [] as Work[], sanityError: true };
   }
 };

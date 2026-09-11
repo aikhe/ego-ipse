@@ -650,6 +650,11 @@
             <WorkCard {work} from={resolve('/')} />
           {/each}
         </div>
+        {#if displayWorks.length === 0 && (data.sanityError ?? false)}
+          <p class="opus-desc">
+            Works are unavailable right now — check back soon.
+          </p>
+        {/if}
         <div class="opus-more">
           <a class="opus-more__btn" href={resolve('/works')}>
             <span>See more</span>

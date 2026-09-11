@@ -43,6 +43,7 @@
   const allWorks = $derived([...mergedSelected, ...mergedWorks]);
 
   let selectedId = $state('all');
+  let query = $state('');
   let open = $state(false);
   let filterEl = $state<HTMLDivElement | null>(null);
   let closeTimer: ReturnType<typeof setTimeout> | undefined = $state(undefined);
@@ -57,15 +58,28 @@
     categories.find(cat => cat.id === selectedId) ?? fallbackCategory
   );
 
+  // sanity fetch failed: list is empty for lack of data, not lack of works.
+  const loadError = $derived(data.sanityError ?? false);
+
+  const queryText = $derived(query.trim().toLowerCase());
+
   const filtered = $derived(
-    selectedCategory.match === null
-      ? allWorks
-      : allWorks.filter(work =>
-          work.meta
-            .find(row => row.k === 'Platform')
-            ?.v.toLowerCase()
-            .includes(selectedCategory.match as string)
-        )
+    allWorks
+      .filter(work =>
+        selectedCategory.match === null
+          ? true
+          : (work.meta
+              .find(row => row.k === 'Platform')
+              ?.v.toLowerCase()
+              .includes(selectedCategory.match as string) ?? false)
+      )
+      .filter(work =>
+        queryText === ''
+          ? true
+          : `${work.title} ${work.description} ${work.tags.join(' ')}`
+              .toLowerCase()
+              .includes(queryText)
+      )
   );
 
   function cancelScheduledClose() {
@@ -141,6 +155,18 @@
     }
   }
 
+  function toggleStickyFilter() {
+    // touch-driven toggle; hover-capable devices stay hover-driven.
+    if (hasHover()) return;
+    if (stickyOpen) {
+      cancelScheduledStickyClose();
+      stickyOpen = false;
+    } else {
+      cancelScheduledStickyClose();
+      stickyOpen = true;
+    }
+  }
+
   function closeOnOutsideClick(event: MouseEvent) {
     const target = event.target as Node;
     const inMain = filterEl?.contains(target) ?? false;
@@ -194,6 +220,7 @@
               placeholder="Filter works..."
               aria-label="Filter works"
               autocomplete="off"
+              bind:value={query}
             />
           </div>
           <div
@@ -201,6 +228,7 @@
             bind:this={filterEl}
             onmouseenter={openFilter}
             onmouseleave={scheduleClose}
+            onfocusin={openFilter}
           >
             <button
               class="opus-filter__btn"
@@ -259,7 +287,13 @@
         </div>
         {#if filtered.length === 0}
           <p class="opus-works__empty">
-            No works filed under {selectedCategory.label} yet.
+            {#if loadError}
+              Works are unavailable right now — check back soon.
+            {:else if queryText !== ''}
+              No works match "{query.trim()}" yet.
+            {:else}
+              No works filed under {selectedCategory.label} yet.
+            {/if}
           </p>
         {/if}
       </div>
@@ -277,6 +311,7 @@
           placeholder="Filter works..."
           aria-label="Filter works"
           autocomplete="off"
+          bind:value={query}
         />
       </div>
       <div
@@ -284,11 +319,13 @@
         bind:this={stickyFilterEl}
         onmouseenter={openStickyFilter}
         onmouseleave={scheduleStickyClose}
+        onfocusin={openStickyFilter}
       >
         <button
           class="opus-filter__btn"
           aria-haspopup="listbox"
           aria-expanded={stickyOpen}
+          onclick={toggleStickyFilter}
         >
           <span class="opus-filter__label">{selectedCategory.label}</span>
           <svg

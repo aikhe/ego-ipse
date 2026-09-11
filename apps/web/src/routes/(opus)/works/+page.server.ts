@@ -6,10 +6,14 @@ export const prerender = false;
 // Same-origin API (see src/routes/api/opus-works): Sanity is fetched
 // server-side so phones never need to reach api.sanity.io directly.
 export const load: PageServerLoad = async ({ fetch }) => {
-  const empty = { sanitySelected: [] as Work[], sanityWorks: [] as Work[] };
   try {
     const res = await fetch('/api/opus-works');
-    if (!res.ok) return empty;
+    if (!res.ok)
+      return {
+        sanitySelected: [] as Work[],
+        sanityWorks: [] as Work[],
+        sanityError: true,
+      };
     const data = (await res.json()) as {
       sanitySelected?: Work[];
       sanityWorks?: Work[];
@@ -17,8 +21,13 @@ export const load: PageServerLoad = async ({ fetch }) => {
     return {
       sanitySelected: data.sanitySelected ?? [],
       sanityWorks: data.sanityWorks ?? [],
+      sanityError: false,
     };
   } catch {
-    return empty;
+    return {
+      sanitySelected: [] as Work[],
+      sanityWorks: [] as Work[],
+      sanityError: true,
+    };
   }
 };

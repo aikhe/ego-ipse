@@ -24,7 +24,8 @@ const FIELDS = ['role', 'platform', 'year', 'stack', 'status']
 function fromLegacyArray(meta) {
   const byKey = new Map()
   for (const row of meta ?? []) {
-    const key = (row?._key ?? row?.k ?? '').trim().toLowerCase()
+    // legacy field name lives in `k`; `_key` is sanity's array item id.
+    const key = (row?.k ?? row?._key ?? '').trim().toLowerCase()
     const value = (row?.v ?? '').trim()
     if (FIELDS.includes(key) && value && !byKey.has(key)) byKey.set(key, value)
   }

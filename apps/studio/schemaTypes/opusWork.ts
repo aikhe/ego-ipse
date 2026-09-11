@@ -29,7 +29,21 @@ export default defineType({
       name: 'slug',
       type: 'slug',
       options: {source: 'title', maxLength: 96},
-      validation: (Rule) => Rule.required().error('Slug is required'),
+      validation: (Rule) => [
+        Rule.required().error('Slug is required'),
+        // slugs back dynamic routes: duplicates make detail queries racy.
+        Rule.custom(async (slug, context) => {
+          if (!slug?.current) return true
+          const {document, getClient} = context
+          const client = getClient({apiVersion: '2022-03-07'})
+          const id = document?._id?.replace(/^drafts\./, '')
+          const isUnique = await client.fetch(
+            `!defined(*[_type == "opusWork" && slug.current == $slug && !(_id in [$draft, $published])][0]._id)`,
+            {draft: `drafts.${id}`, published: id, slug: slug.current},
+          )
+          return isUnique ? true : 'Slug must be unique'
+        }),
+      ],
     }),
     defineField({
       title: 'Description',

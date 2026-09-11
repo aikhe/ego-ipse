@@ -60,6 +60,9 @@ export interface SanityOpusValues {
 export interface SanityOpusAbout {
   description?: string;
 }
+export interface SanityOpusStack {
+  description?: string;
+}
 export interface SanityProject {
   title?: string;
   duration?: {

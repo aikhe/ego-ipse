@@ -304,7 +304,9 @@
     </div>
   </div>
 
-  <button class="header__contact ui-button ui-button--corners z-99">CONTACT</button
+  <a
+    class="header__contact ui-button ui-button--corners z-99"
+    href="mailto:ikeandrie.ro@gmail.com">CONTACT</a
   >
 </header>
 
@@ -434,8 +436,10 @@
   }
 
   .header__contact {
+    color: inherit;
     grid-column: 12 / span 1;
     justify-self: flex-end;
+    text-decoration: none;
   }
 
   .char-mask {

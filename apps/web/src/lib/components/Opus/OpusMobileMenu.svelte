@@ -8,6 +8,9 @@
   let { active }: { active: OpusSection } = $props();
 
   let open = $state(false);
+  let triggerEl = $state<HTMLButtonElement | null>(null);
+  let overlayEl = $state<HTMLDivElement | null>(null);
+  let panelEl = $state<HTMLDivElement | null>(null);
 
   function close() {
     open = false;
@@ -21,6 +24,33 @@
   function closeOnEscape(event: KeyboardEvent) {
     if (open && event.key === 'Escape') close();
   }
+
+  // modal semantics need entry, trap and restore around the trigger.
+  function trapTab(event: KeyboardEvent) {
+    if (event.key !== 'Tab' || !overlayEl) return;
+    const items = overlayEl.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])'
+    );
+    const first = items.item(0);
+    const last = items.item(items.length - 1);
+    if (!first || !last) return;
+    const active = document.activeElement;
+    if (event.shiftKey && active === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && active === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
+  $effect(() => {
+    if (!open) return;
+    panelEl?.focus();
+    return () => {
+      if (triggerEl && document.contains(triggerEl)) triggerEl.focus();
+    };
+  });
 
   $effect(() => {
     if (!open) return;
@@ -41,6 +71,7 @@
   class="opus-menu__btn"
   class:opus-menu__btn--open={open}
   type="button"
+  bind:this={triggerEl}
   onclick={() => (open = !open)}
   aria-expanded={open}
   aria-controls="opus-menu-overlay"
@@ -53,19 +84,25 @@
   <div
     id="opus-menu-overlay"
     class="opus-menu__overlay"
+    bind:this={overlayEl}
     role="dialog"
     aria-modal="true"
     aria-label="Site menu"
+    onkeydown={trapTab}
     transition:fade={{ duration: 180 }}
   >
     <button
       class="opus-menu__backdrop"
       type="button"
-      tabindex="-1"
-      aria-hidden="true"
+      aria-label="Close menu"
       onclick={close}
     ></button>
-    <div class="opus-menu__panel" transition:fly={{ x: 48, duration: 220 }}>
+    <div
+      class="opus-menu__panel"
+      bind:this={panelEl}
+      tabindex="-1"
+      transition:fly={{ x: 48, duration: 220 }}
+    >
       <OpusNav {active} overlay={true} />
       <span class="opus-menu__note">[Temporary portfolio]</span>
     </div>

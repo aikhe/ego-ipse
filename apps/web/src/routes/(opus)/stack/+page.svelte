@@ -2,6 +2,20 @@
   import { uiState } from '$lib/state/ui.svelte';
   import OpusNav from '$lib/components/Opus/OpusNav.svelte';
   import OpusFooter from '$lib/components/Opus/OpusFooter.svelte';
+  import {
+    renderRichInline,
+    splitDescriptionParagraphs,
+  } from '$lib/sanity/opusValues';
+  import type { PageProps } from './$types';
+
+  let { data }: PageProps = $props();
+
+  // Sanity-only: no fallback copy. Missing description renders nothing.
+  const stackParagraphs = $derived(
+    data.sanityStack?.description
+      ? splitDescriptionParagraphs(data.sanityStack.description)
+      : []
+  );
 </script>
 
 <div class="opus-canvas">
@@ -16,10 +30,11 @@
       <div class="opus-col__border opus-col__border--right" aria-hidden="true"></div>
       <div class="opus-section opus-section--stack">
         <h2 class="opus-stack">Stack</h2>
-        <p class="opus-stack__desc">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua.
-        </p>
+        {#each stackParagraphs as para, k (k)}
+          <p class="opus-stack__desc">
+            {@html renderRichInline(para)}
+          </p>
+        {/each}
       </div>
       <OpusFooter />
     </div>

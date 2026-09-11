@@ -76,11 +76,13 @@
   <strong>/<em> arrive via {@html}, so scoped component styles cannot
   target them — they live here instead. */
 .opus-about__desc strong,
-.opus-desc strong {
+.opus-desc strong,
+.opus-stack__desc strong {
   font-weight: 500;
 }
 
 .opus-about__desc em,
-.opus-desc em {
+.opus-desc em,
+.opus-stack__desc em {
   font-style: italic;
 }

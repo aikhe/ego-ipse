@@ -358,4 +358,15 @@
       top: 1.5rem;
     }
   }
+
+  /* touch: press states replace hover states */
+  @media (hover: none) {
+    .poster-overlay__close:hover {
+      background: rgb(238 238 238 / 72%);
+    }
+
+    .poster-overlay__close:active {
+      background: rgb(244 244 244 / 84%);
+    }
+  }
 </style>

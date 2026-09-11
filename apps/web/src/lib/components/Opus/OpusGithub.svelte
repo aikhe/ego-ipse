@@ -22,6 +22,7 @@
   } = $props();
 
   let rawDays = $state<ContributionDay[]>([]);
+  let loaded = $state(false);
   let failed = $state(false);
   let scrollEl = $state<HTMLDivElement | null>(null);
   let cellPx = $state(8);
@@ -30,8 +31,8 @@
   // mobile shows a trailing 6 months, desktop the full year
   const windowDays = $derived(isMobile ? WINDOW_DAYS_MOBILE : WINDOW_DAYS);
   const built = $derived(buildYearWindow(rawDays, windowDays));
-  const days = $derived(built.days);
-  const total = $derived(built.total);
+  const days = $derived(loaded ? built.days : []);
+  const total = $derived(loaded ? built.total : null);
   let tip = $state<{
     x: number;
     y: number;
@@ -202,6 +203,7 @@
         };
         if (cancelled) return;
         rawDays = Array.isArray(data.contributions) ? data.contributions : [];
+        loaded = true;
       } catch {
         if (!cancelled) failed = true;
       }
@@ -249,7 +251,7 @@
     class="opus-github__scroll"
     bind:this={scrollEl}
     onscroll={hideTip}
-    role="img"
+    role="group"
     aria-label={total === null
       ? 'GitHub contribution heatmap'
       : `${formattedTotal} GitHub contributions in the last ${isMobile ? '6 months' : 'year'}`}

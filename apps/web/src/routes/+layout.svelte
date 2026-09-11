@@ -119,6 +119,7 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <svelte:head>
+  <title>Ike Rosacay</title>
   <link rel="icon" type="image/png" href={favicon} />
   <link rel="apple-touch-icon" href={favicon} />
 </svelte:head>

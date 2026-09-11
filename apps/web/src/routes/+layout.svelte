@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import '../styles/main.css';
-  import favicon from '$lib/assets/favicon.ico';
+  import favicon from '$lib/assets/ike-favicon.png';
   import { page } from '$app/state';
   import {
     calculateStageMetrics,
@@ -118,7 +118,10 @@
 
 <svelte:window onkeydown={handleKeydown} />
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head>
+  <link rel="icon" type="image/png" href={favicon} />
+  <link rel="apple-touch-icon" href={favicon} />
+</svelte:head>
 
 {#if isOpus}
   {@render children()}

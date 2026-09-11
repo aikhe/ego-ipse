@@ -357,8 +357,8 @@
     }
 
     .opus-work__title-link:active {
-      text-decoration: underline;
-      text-underline-offset: 0.15em;
+      color: var(--color-text-muted-opus);
+      text-decoration: none;
     }
 
     .opus-work__preview-cell:hover::after {

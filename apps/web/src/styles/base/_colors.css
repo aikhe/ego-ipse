@@ -9,6 +9,7 @@
   --color-text: #080807;
   --color-text-muted: #737373;
   --color-text-muted-opus: #737373;
+  --color-text-faint-opus: #bdbdbd;
   --color-bg-opus: #f5f5f5;
   --color-text-inv: var(--color-white);
   --logo-invert: 0;
@@ -35,6 +36,7 @@
   --color-text: var(--color-white);
   --color-text-muted: #707070;
   --color-text-muted-opus: #a3a39e;
+  --color-text-faint-opus: #63635f;
   --color-bg-opus: #0e0e0d;
   --color-text-inv: var(--color-black);
   --logo-invert: 1;

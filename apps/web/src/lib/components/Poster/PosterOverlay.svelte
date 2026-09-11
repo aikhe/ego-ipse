@@ -1,7 +1,14 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
-  import gsap from 'gsap';
   import { getStageScale } from '$lib/utils/stageScale';
+
+  // gsap stays out of the initial bundle: loaded on first interaction only.
+  type Gsap = typeof import('gsap');
+  let gsapMod: Gsap['default'] | null = null;
+  async function gsapLib(): Promise<Gsap['default']> {
+    if (!gsapMod) gsapMod = (await import('gsap')).default;
+    return gsapMod;
+  }
 
   let { selected = $bindable(), images } = $props<{
     selected: number | null;
@@ -65,7 +72,7 @@
   $effect(() => {
     if (selected !== null && container) {
       hasInteracted = false;
-      gsap.killTweensOf(proxy);
+      if (gsapMod) gsapMod.killTweensOf(proxy);
       setTimeout(centerGallery, 10);
     }
   });
@@ -103,7 +110,8 @@
     lastX = e.clientX / getStageScale();
     lastTime = Date.now();
     velocity = 0;
-    gsap.killTweensOf(proxy);
+    if (gsapMod) gsapMod.killTweensOf(proxy);
+    else void gsapLib().then(g => g.killTweensOf(proxy));
     proxy.x = container.scrollLeft;
   }
 
@@ -137,16 +145,18 @@
       const momentum = velocity * -280; // Dampened momentum
       const targetX = container.scrollLeft + momentum;
 
-      gsap.to(proxy, {
-        x: targetX,
-        duration: 1,
-        ease: 'power3.out',
-        overwrite: 'auto',
-        onUpdate: () => {
-          if (!container) return;
-          container.scrollLeft = proxy.x;
-          applyWrap();
-        },
+      void gsapLib().then(g => {
+        g.to(proxy, {
+          x: targetX,
+          duration: 1,
+          ease: 'power3.out',
+          overwrite: 'auto',
+          onUpdate: () => {
+            if (!container) return;
+            container.scrollLeft = proxy.x;
+            applyWrap();
+          },
+        });
       });
     } else {
       applyWrap();
@@ -162,20 +172,22 @@
       ((Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY) * 3.5) /
       getStageScale();
 
-    if (!gsap.isTweening(proxy)) {
+    if (gsapMod && !gsapMod.isTweening(proxy)) {
       proxy.x = container.scrollLeft;
     }
 
-    gsap.to(proxy, {
-      x: proxy.x + delta,
-      duration: 1,
-      ease: 'power3.out',
-      overwrite: 'auto',
-      onUpdate: () => {
-        if (!container) return;
-        container.scrollLeft = proxy.x;
-        applyWrap();
-      },
+    void gsapLib().then(g => {
+      g.to(proxy, {
+        x: proxy.x + delta,
+        duration: 1,
+        ease: 'power3.out',
+        overwrite: 'auto',
+        onUpdate: () => {
+          if (!container) return;
+          container.scrollLeft = proxy.x;
+          applyWrap();
+        },
+      });
     });
   }
 </script>
@@ -212,6 +224,8 @@
           class="poster-overlay__image"
           class:loaded={loadedStates[i]}
           draggable="false"
+          loading="lazy"
+          decoding="async"
           onload={() => {
             loadedStates[i] = true;
           }}
@@ -288,7 +302,7 @@
 
   .poster-overlay__skeleton {
     animation: skeleton-pulse 1.8s ease-in-out infinite;
-    aspect-ratio: 2848 / 3690;
+    aspect-ratio: 800 / 1037;
     background: #fff;
     height: 100%;
     position: absolute;
@@ -296,7 +310,7 @@
   }
 
   .poster-overlay__image {
-    aspect-ratio: 2848 / 3690;
+    aspect-ratio: 800 / 1037;
     height: 100%;
     object-fit: contain;
     opacity: 0;

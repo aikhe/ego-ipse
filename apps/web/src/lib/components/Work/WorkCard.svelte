@@ -213,7 +213,8 @@
     letter-spacing: 0.18%;
     line-height: 1.5;
     margin: 0;
-    overflow-wrap: break-word;
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 
   .opus-work__quote {

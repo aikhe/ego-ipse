@@ -185,7 +185,7 @@
     flex-direction: column;
     gap: 0.15rem;
     margin: 0;
-    min-width: max-content;
+    min-width: 0;
   }
 
   .opus-work__row {
@@ -213,7 +213,7 @@
     letter-spacing: 0.18%;
     line-height: 1.5;
     margin: 0;
-    white-space: nowrap;
+    overflow-wrap: break-word;
   }
 
   .opus-work__quote {

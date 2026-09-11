@@ -7,7 +7,6 @@
   import type { PageProps } from './$types';
   import WorkCard from '$lib/components/Work/WorkCard.svelte';
   import ike from '$lib/assets/ike.webp';
-  import PosterOverlay from '$lib/components/Poster/PosterOverlay.svelte';
   import OpusFooter from '$lib/components/Opus/OpusFooter.svelte';
   import OpusGithub from '$lib/components/Opus/OpusGithub.svelte';
   import OpusValues from '$lib/components/Opus/OpusValues.svelte';
@@ -27,6 +26,20 @@
 
   let selectedPoster = $state<number | null>(null);
 
+  // poster overlay pulls gsap: lazy-load it so the animation runtime stays
+  // out of the initial bundle and off the lighthouse main thread.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let PosterOverlayCmp = $state<any>(null);
+  $effect(() => {
+    if (selectedPoster !== null && !PosterOverlayCmp) {
+      void import('$lib/components/Poster/PosterOverlay.svelte').then(
+        mod => {
+          PosterOverlayCmp = mod.default;
+        }
+      );
+    }
+  });
+
   let viewportEl = $state<HTMLDivElement | null>(null);
   let trackEl = $state<HTMLDivElement | null>(null);
   let introEl = $state<HTMLDivElement | null>(null);
@@ -41,19 +54,6 @@
   // true native scroll limit (can differ from maxPos on mid widths where the
   // viewport overflows the column). drives the mobile button states.
   let scrollMax = $state(0);
-
-  function updateBounds() {
-    if (!viewportEl || !trackEl) return;
-    // measured, not hardcoded: col3 shrinks on mid screens and goes
-    // full-width on mobile. the last poster settles at the col3 right
-    // edge, never past the viewport edge.
-    const parentW = viewportEl.parentElement?.clientWidth;
-    const colW = parentW ?? viewportEl.clientWidth;
-    const edge = Math.min(colW, viewportEl.clientWidth);
-    maxPos = Math.max(0, trackEl.scrollWidth - edge);
-    scrollMax = Math.max(0, trackEl.scrollWidth - viewportEl.clientWidth);
-    pos = Math.min(pos, maxPos);
-  }
 
   function clamp(v: number) {
     return Math.max(0, Math.min(v, maxPos));
@@ -337,112 +337,103 @@
 
   $effect(() => {
     if (!viewportEl || !trackEl) return;
-    updateBounds();
-    const ro = new ResizeObserver(() => updateBounds());
+    // single rAF-throttled pass: containers use aspect-ratio so image loads
+    // never change layout — no per-img load listeners, no settle timeouts.
+    let raf = 0;
+    const measure = () => {
+      if (!viewportEl || !trackEl) return;
+      const parentW = viewportEl.parentElement?.clientWidth;
+      const colW = parentW ?? viewportEl.clientWidth;
+      const edge = Math.min(colW, viewportEl.clientWidth);
+      maxPos = Math.max(0, trackEl.scrollWidth - edge);
+      scrollMax = Math.max(0, trackEl.scrollWidth - viewportEl.clientWidth);
+      pos = Math.min(pos, maxPos);
+    };
+    const schedule = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        measure();
+      });
+    };
+    schedule();
+    const ro = new ResizeObserver(schedule);
     ro.observe(viewportEl);
-    ro.observe(trackEl);
-    const onResize = () => updateBounds();
-    window.addEventListener('resize', onResize);
-    const imgs = trackEl.querySelectorAll('img');
-    const onLoad = () => updateBounds();
-    imgs.forEach(im => im.addEventListener('load', onLoad));
-    const t1 = setTimeout(updateBounds, 100);
-    const t2 = setTimeout(updateBounds, 600);
+    window.addEventListener('resize', schedule);
     return () => {
-      window.removeEventListener('resize', onResize);
-      clearTimeout(t1);
-      clearTimeout(t2);
-      imgs.forEach(im => im.removeEventListener('load', onLoad));
+      if (raf) cancelAnimationFrame(raf);
+      window.removeEventListener('resize', schedule);
       ro.disconnect();
     };
   });
 
+  // one batched read pass per frame for all column-height css vars.
+  // five separate resizeobservers + resize listeners doing
+  // getboundingclientrect back-to-back is what lighthouse flags as forced
+  // reflow — a single rAF-throttled sync keeps one layout per resize.
   $effect(() => {
-    if (!introEl) return;
+    let raf = 0;
     const sync = () => {
-      const h = introEl!.getBoundingClientRect().height;
-      document.documentElement.style.setProperty('--opus-intro-h', `${h}px`);
+      if (introEl)
+        document.documentElement.style.setProperty(
+          '--opus-intro-h',
+          `${introEl.getBoundingClientRect().height}px`
+        );
+      if (postersSectionEl)
+        document.documentElement.style.setProperty(
+          '--opus-posters-h',
+          `${postersSectionEl.getBoundingClientRect().height}px`
+        );
+      if (valuesEl)
+        document.documentElement.style.setProperty(
+          '--opus-values-h',
+          `${valuesEl.getBoundingClientRect().height}px`
+        );
+      if (valuesTitleEl)
+        document.documentElement.style.setProperty(
+          '--opus-values-title-h',
+          `${valuesTitleEl.getBoundingClientRect().height}px`
+        );
+      if (githubEl)
+        document.documentElement.style.setProperty(
+          '--opus-github-h',
+          `${githubEl.getBoundingClientRect().height}px`
+        );
+      if (githubTitleEl)
+        document.documentElement.style.setProperty(
+          '--opus-github-title-h',
+          `${githubTitleEl.getBoundingClientRect().height}px`
+        );
+      if (footerEl)
+        document.documentElement.style.setProperty(
+          '--opus-footer-h',
+          `${footerEl.getBoundingClientRect().height}px`
+        );
     };
-    sync();
-    const ro = new ResizeObserver(sync);
-    ro.observe(introEl);
-    window.addEventListener('resize', sync);
+    const schedule = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        sync();
+      });
+    };
+    schedule();
+    const ro = new ResizeObserver(schedule);
+    for (const el of [
+      introEl,
+      postersSectionEl,
+      valuesEl,
+      valuesTitleEl,
+      githubEl,
+      githubTitleEl,
+      footerEl,
+    ])
+      if (el) ro.observe(el);
+    window.addEventListener('resize', schedule);
     return () => {
+      if (raf) cancelAnimationFrame(raf);
       ro.disconnect();
-      window.removeEventListener('resize', sync);
-    };
-  });
-
-  $effect(() => {
-    if (!valuesEl || !valuesTitleEl) return;
-    const sync = () => {
-      const h = valuesEl!.getBoundingClientRect().height;
-      const th = valuesTitleEl!.getBoundingClientRect().height;
-      document.documentElement.style.setProperty('--opus-values-h', `${h}px`);
-      document.documentElement.style.setProperty(
-        '--opus-values-title-h',
-        `${th}px`
-      );
-    };
-    sync();
-    const ro = new ResizeObserver(sync);
-    ro.observe(valuesEl);
-    ro.observe(valuesTitleEl);
-    window.addEventListener('resize', sync);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener('resize', sync);
-    };
-  });
-  $effect(() => {
-    if (!githubEl || !githubTitleEl) return;
-    const sync = () => {
-      const h = githubEl!.getBoundingClientRect().height;
-      const th = githubTitleEl!.getBoundingClientRect().height;
-      document.documentElement.style.setProperty('--opus-github-h', `${h}px`);
-      document.documentElement.style.setProperty(
-        '--opus-github-title-h',
-        `${th}px`
-      );
-    };
-    sync();
-    const ro = new ResizeObserver(sync);
-    ro.observe(githubEl);
-    ro.observe(githubTitleEl);
-    window.addEventListener('resize', sync);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener('resize', sync);
-    };
-  });
-  $effect(() => {
-    if (!footerEl) return;
-    const sync = () => {
-      const h = footerEl!.getBoundingClientRect().height;
-      document.documentElement.style.setProperty('--opus-footer-h', `${h}px`);
-    };
-    sync();
-    const ro = new ResizeObserver(sync);
-    ro.observe(footerEl);
-    window.addEventListener('resize', sync);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener('resize', sync);
-    };
-  });
-  $effect(() => {
-    if (!postersSectionEl) return;
-    const sync = () => {
-      const h = postersSectionEl!.getBoundingClientRect().height;
-      document.documentElement.style.setProperty('--opus-posters-h', `${h}px`);
-    };
-    sync();
-    const ro = new ResizeObserver(sync);
-    ro.observe(postersSectionEl);
-    window.addEventListener('resize', sync);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener('resize', sync);
+      window.removeEventListener('resize', schedule);
     };
   });
 
@@ -459,6 +450,15 @@
     }
   });
 </script>
+
+<svelte:head>
+  <link
+    rel="preload"
+    as="image"
+    href={poster1}
+    fetchpriority="high"
+  />
+</svelte:head>
 
 <div class="opus-canvas">
   <div class="opus-grid">
@@ -541,14 +541,20 @@
                   role="button"
                   tabindex="0"
                   onclick={() => openPoster(i)}
-                  onkeydown={e => e.key === 'Enter' && (selectedPoster = i)}
+                  onkeydown={e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      selectedPoster = i;
+                    }
+                  }}
                 >
                   <img
                     {src}
                     alt={`Poster ${i + 1}`}
-                    width="2848"
-                    height="3690"
-                    loading="eager"
+                    width="800"
+                    height="1037"
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    fetchpriority={i === 0 ? 'high' : 'low'}
                     decoding="async"
                     draggable="false"
                   />
@@ -686,8 +692,8 @@
   <div class="opus-stripe opus-stripe--bottom" aria-hidden="true"></div>
 </div>
 
-{#if selectedPoster !== null}
-  <PosterOverlay bind:selected={selectedPoster} images={posters} />
+{#if selectedPoster !== null && PosterOverlayCmp}
+  <PosterOverlayCmp bind:selected={selectedPoster} images={posters} />
 {/if}
 
 <style>
@@ -1131,7 +1137,7 @@
   }
 
   .opus-poster {
-    aspect-ratio: 2848 / 3690;
+    aspect-ratio: 800 / 1037;
     background: var(--color-overlay-03);
     cursor: pointer;
     overflow: hidden;
@@ -1209,6 +1215,7 @@
   .opus-paper-quote-line {
     background: var(--color-text);
     display: block;
+    flex-shrink: 0;
     height: 2rem;
     width: 2px;
   }

@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import '../styles/main.css';
-  import favicon from '$lib/assets/favicon.ico';
-  import { getOpenPanel } from '$lib/analytics';
+  import favicon from '$lib/assets/ike-favicon.png';
+  import { page } from '$app/state';
   import {
     calculateStageMetrics,
     STAGE_DESIGN_WIDTH,
@@ -21,6 +21,13 @@
   let stageHeight = $state<number | null>(null);
   let stageOffsetX = $state(0);
   let isMobile = $state(false);
+  // opus pages live in the (opus) route group; everything else
+  // (/ipse, /shaders) gets the staged landing treatment.
+  let isOpus = $derived(
+    (page.route.id ?? '').startsWith('/(opus)') ||
+      page.url.pathname === '/opus' ||
+      page.url.pathname.startsWith('/opus/')
+  );
 
   $effect(() => {
     document.documentElement.setAttribute('data-theme', uiState.theme);
@@ -44,8 +51,6 @@
   }
 
   onMount(() => {
-    getOpenPanel();
-
     const viewport = window.visualViewport;
 
     const updateStageScale = () => {
@@ -113,35 +118,74 @@
 
 <svelte:window onkeydown={handleKeydown} />
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head>
+  <title>Ike Rosacay</title>
+  <meta
+    name="description"
+    content="Designer & Developer based in Caloocan, Philippines. Freelancing since 2025."
+  />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Ike Rosacay" />
+  <meta property="og:title" content="Ike Rosacay" />
+  <meta
+    property="og:description"
+    content="Designer & Developer based in Caloocan, Philippines. Freelancing since 2025."
+  />
+  <meta
+    property="og:image"
+    content="https://ikerosacay.pages.dev/banner.webp"
+  />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta
+    property="og:image:alt"
+    content="Ike Andrie Rosacay — Designer and Developer"
+  />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Ike Rosacay" />
+  <meta
+    name="twitter:description"
+    content="Designer & Developer based in Caloocan, Philippines. Freelancing since 2025."
+  />
+  <meta
+    name="twitter:image"
+    content="https://ikerosacay.pages.dev/banner.webp"
+  />
+  <link rel="icon" type="image/png" href={favicon} />
+  <link rel="apple-touch-icon" href={favicon} />
+</svelte:head>
 
-<div class="app-viewport">
-  <div
-    class="app-stage"
-    style={`--page-stage-scale: ${stageScale}; ${stageHeight === null ? '' : `--page-stage-height: ${stageHeight}px;`} --page-stage-offset-x: ${stageOffsetX}px; transform: translateX(${stageOffsetX}px) scale(${stageScale}); transform-origin: top left;`}
-  >
-    <Header theme={uiState.theme} {toggleTheme} />
+{#if isOpus}
+  {@render children()}
+{:else}
+  <div class="app-viewport">
+    <div
+      class="app-stage"
+      style={`--page-stage-scale: ${stageScale}; ${stageHeight === null ? '' : `--page-stage-height: ${stageHeight}px;`} --page-stage-offset-x: ${stageOffsetX}px; transform: translateX(${stageOffsetX}px) scale(${stageScale}); transform-origin: top left;`}
+    >
+      <Header theme={uiState.theme} {toggleTheme} />
 
-    <main class:main--shader={uiState.layoutMode === 'shader'}>
-      {@render children()}
-    </main>
+      <main class:main--shader={uiState.layoutMode === 'shader'}>
+        {@render children()}
+      </main>
 
-    <GridBackground />
+      <GridBackground />
 
-    <GridOverlay />
+      <GridOverlay />
 
-    <div class="stripe-gutter-inner stripe-gutter-inner--left"></div>
-    <div class="stripe-gutter-inner stripe-gutter-inner--right"></div>
-  </div>
-
-  <StripeGutter />
-
-  {#if isMobile}
-    <div class="mobile-blocker">
-      <span class="font--mono-label">@aikheandrei</span>
+      <div class="stripe-gutter-inner stripe-gutter-inner--left"></div>
+      <div class="stripe-gutter-inner stripe-gutter-inner--right"></div>
     </div>
-  {/if}
-</div>
+
+    <StripeGutter />
+
+    {#if isMobile}
+      <div class="mobile-blocker">
+        <span class="font--mono-label">@aikheandrei</span>
+      </div>
+    {/if}
+  </div>
+{/if}
 
 <style>
   .app-viewport {

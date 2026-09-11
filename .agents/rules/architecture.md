@@ -18,7 +18,7 @@ Maintain a scalable and predictable monorepo structure using Turborepo and featu
 - **Animations**: GSAP (GreenSock)
 - **Styling**: Custom BEM CSS (Tailwind v4 as foundation layer, rarely used directly)
 - **WebGL Shaders**: @paper-design/shaders + custom GLSL
-- **Analytics**: OpenPanel (@openpanel/web)
+- **Analytics**: removed (previously OpenPanel)
 - **Deploy**: Cloudflare Pages (adapter-cloudflare + wrangler)
 - **Testing**: Vitest + Playwright
 - **Tooling**: ESLint, Stylelint, Prettier, TypeScript
@@ -32,7 +32,6 @@ Maintain a scalable and predictable monorepo structure using Turborepo and featu
 │   └── web/                 # SvelteKit + Threlte frontend
 │       ├── src/
 │       │   ├── lib/
-│       │   │   ├── analytics/   # OpenPanel tracking
 │       │   │   ├── assets/      # Fonts, images, SVGs
 │       │   │   ├── components/  # Feature-based components (Header/, Info/, Poster/, Shaders/)
 │       │   │   ├── layouts/     # Page-level layout components

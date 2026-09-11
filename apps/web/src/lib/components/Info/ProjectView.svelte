@@ -9,11 +9,11 @@
   }
 
   let { project, visible = false }: Props = $props();
-  let viewEl: HTMLDivElement;
-  let innerEl: HTMLDivElement;
-  let content: HTMLDivElement;
+  let viewEl = $state<HTMLDivElement>();
+  let innerEl = $state<HTMLDivElement>();
+  let content = $state<HTMLDivElement>();
   let tl: gsap.core.Timeline | null = null;
-  let showContent = $state(!!project);
+  let showContent = $state(false);
 
   $effect(() => {
     if (visible) {
@@ -90,7 +90,7 @@
 
     tl = gsap.timeline({
       onComplete: () => {
-        viewEl.style.display = 'none';
+        if (viewEl) viewEl.style.display = 'none';
         showContent = false;
       },
     });

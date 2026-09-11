@@ -3,7 +3,6 @@
   import SceneLayout from '$lib/layouts/SceneLayout.svelte';
   import ShaderLayout from '$lib/layouts/ShaderLayout.svelte';
   import PosterOverlay from '$lib/components/Poster/PosterOverlay.svelte';
-  import { getOpenPanel } from '$lib/analytics';
 
   import poster1 from '$lib/assets/posters/1.png';
   import poster2 from '$lib/assets/posters/2.png';
@@ -15,12 +14,6 @@
   let { data } = $props();
 
   let selectedPoster = $state<number | null>(null);
-
-  $effect(() => {
-    if (selectedPoster !== null) {
-      getOpenPanel()?.track('gallery_open', { poster: selectedPoster });
-    }
-  });
 </script>
 
 <div class="page-shell">

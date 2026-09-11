@@ -5,10 +5,10 @@ export type SfxEffect = 'NONE' | 'SMOKE' | 'GRID';
 export const uiState = $state({
   isProjectView: false,
   gridOverlay: false,
-  layoutMode: 'shader' as LayoutMode,
+  layoutMode: 'layered' as LayoutMode,
   theme: 'light' as Theme,
   isShaderShifted: false,
-  sfxEffect: 'SMOKE' as SfxEffect,
+  sfxEffect: 'GRID' as SfxEffect,
 });
 
 export function toggleTheme() {

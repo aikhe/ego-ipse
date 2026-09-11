@@ -3,7 +3,6 @@
   import gsap from 'gsap';
   import { startGlitch } from '$lib/utils/glitch';
   import { uiState } from '$lib/state/ui.svelte';
-  import { getOpenPanel } from '$lib/analytics';
   import logo from '$lib/assets/logo.svg';
 
   interface Props {
@@ -21,7 +20,7 @@
   let themeDisplayText = $state('LIGHT');
   let gridDisplayText = $state('HIDDEN');
   let layoutDisplayText = $state('LAYERED');
-  let sfxDisplayText = $state('NONE');
+  let sfxDisplayText = $state('GRID');
   let headerEl = $state<HTMLElement>();
   let glitchInterval: ReturnType<typeof setInterval> | null = null;
   let gridGlitchInterval: ReturnType<typeof setInterval> | null = null;
@@ -260,7 +259,6 @@
       class="header__theme-toggle ui-button--ghost font--mono-label z-99"
       onclick={() => {
         toggleTheme();
-        getOpenPanel()?.track('theme_toggle', { theme });
       }}
     >
       STATE: <span class="header__theme-value">{themeDisplayText}</span>
@@ -271,9 +269,6 @@
         onclick={() => {
           uiState.layoutMode =
             uiState.layoutMode === 'layered' ? 'shader' : 'layered';
-          getOpenPanel()?.track('layout_toggle', {
-            layout: uiState.layoutMode,
-          });
         }}
       >
         LAYOUT <span class="header__theme-value">[{layoutDisplayText}]</span>
@@ -287,9 +282,6 @@
               : uiState.sfxEffect === 'GRID'
                 ? 'NONE'
                 : 'SMOKE';
-          getOpenPanel()?.track('sfx_effect_toggle', {
-            effect: uiState.sfxEffect,
-          });
         }}
       >
         EFFECT: <span class="header__theme-value">[{sfxDisplayText}]</span>
@@ -298,9 +290,6 @@
         class="header__layout-name header__grid-toggle"
         onclick={() => {
           uiState.gridOverlay = !uiState.gridOverlay;
-          getOpenPanel()?.track('grid_overlay_toggle', {
-            visible: uiState.gridOverlay,
-          });
         }}
       >
         GRID: <span class="header__theme-value">{gridDisplayText}</span>
@@ -315,9 +304,9 @@
     </div>
   </div>
 
-  <button
+  <a
     class="header__contact ui-button ui-button--corners z-99"
-    onclick={() => getOpenPanel()?.track('contact_click')}>CONTACT</button
+    href="mailto:ikeandrie.ro@gmail.com">CONTACT</a
   >
 </header>
 
@@ -447,8 +436,10 @@
   }
 
   .header__contact {
+    color: inherit;
     grid-column: 12 / span 1;
     justify-self: flex-end;
+    text-decoration: none;
   }
 
   .char-mask {

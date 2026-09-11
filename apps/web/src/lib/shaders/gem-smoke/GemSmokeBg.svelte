@@ -79,31 +79,36 @@
   let imageTexture: THREE.Texture | undefined = $state();
   let imageAspectRatio = $state(1);
 
+  // Static defaults — actual prop values are synced via $effect below (Option B: avoids state_referenced_locally)
   const uniforms = {
     u_time: { value: 0 },
     u_resolution: { value: new THREE.Vector2(1280, 720) },
     u_pixelRatio: { value: renderer.getPixelRatio() },
     u_imageAspectRatio: { value: 1 },
     u_image: { value: null as THREE.Texture | null },
-    u_colors: { value: padColorsTo6(colors) },
-    u_colorsCount: { value: colors.length },
-    u_colorBack: { value: colorBack },
-    u_colorInner: { value: colorInner },
-    u_innerDistortion: { value: innerDistortion },
-    u_outerDistortion: { value: outerDistortion },
-    u_outerGlow: { value: outerGlow },
-    u_innerGlow: { value: innerGlow },
-    u_offset: { value: offsetV },
-    u_angle: { value: angle },
-    u_size: { value: size },
-    u_shape: { value: GemSmokeShapes[shape] },
+    u_colors: {
+      value: padColorsTo6(
+        ['#454545', '#141414', '#2e2e2e', '#000000'].map(getShaderColorFromString)
+      )
+    },
+    u_colorsCount: { value: 4 },
+    u_colorBack: { value: getShaderColorFromString('#ffffff') },
+    u_colorInner: { value: getShaderColorFromString('#ffffff') },
+    u_innerDistortion: { value: 1 },
+    u_outerDistortion: { value: 1 },
+    u_outerGlow: { value: 0.26 },
+    u_innerGlow: { value: 1 },
+    u_offset: { value: 0 },
+    u_angle: { value: 0 },
+    u_size: { value: 0.72 },
+    u_shape: { value: GemSmokeShapes['circle'] as number },
     u_isImage: { value: true },
     u_originX: { value: 0.5 },
     u_originY: { value: 0.5 },
     u_worldWidth: { value: 1280 },
     u_worldHeight: { value: 720 },
     u_fit: { value: 2 },
-    u_scale: { value: scale },
+    u_scale: { value: 0.16 },
     u_rotation: { value: 0 },
     u_offsetX: { value: 0 },
     u_offsetY: { value: 0 },

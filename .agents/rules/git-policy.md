@@ -62,7 +62,7 @@ components — cleaning up the root layout significantly.
 
 - **Shader layout mode**: Toggle between `layered` (3D poster scene) and
   `shader` (gem-smoke WebGL background) modes via `Shift+L`, `Shift+F`, or
-  the header button. `shader` is now the default layout.
+  the header button. `layered` is now the default layout.
 - **Theme-reactive shader**: Gem-smoke colors, inner glow, and outer glow
   intensity adapt to light/dark theme automatically.
 - **Instant toggle**: Canvas stays mounted — toggling is a CSS-only
@@ -76,7 +76,7 @@ components — cleaning up the root layout significantly.
   `GridOverlay`, `StripeGutter` components under `src/lib/layouts/`
 - **Root layout**: 295 → 150 lines; inline blocks replaced with components
 - **Homepage**: 92 → 62 lines; inline Canvas/Scene replaced with SceneLayout
-- **State**: LayoutMode default changed to `'shader'`
+- **State**: LayoutMode default changed to `'layered'` & SfxEffect default to `'GRID'`
 - **Stacking**: Shader at z-index -50, hero at z-index 3
 
 ### Configuration
@@ -84,7 +84,8 @@ components — cleaning up the root layout significantly.
 ```ts
 // apps/web/src/lib/state/ui.svelte.ts
 export type LayoutMode = 'layered' | 'shader';
-layoutMode: 'shader' as LayoutMode;
+layoutMode: 'layered' as LayoutMode;
+sfxEffect: 'GRID' as SfxEffect;
 ```
 ````
 

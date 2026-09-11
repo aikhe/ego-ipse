@@ -9,5 +9,10 @@ export const prerender = false;
 // traffic goes through here. Sanity is always fetched server-side.
 export const GET: RequestHandler = async () => {
   const result = await fetchSanityOpusWorks();
-  return json(result, { headers: { 'Cache-Control': 'no-store' } });
+  return json(result, {
+    headers: {
+      'Cache-Control':
+        'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400',
+    },
+  });
 };

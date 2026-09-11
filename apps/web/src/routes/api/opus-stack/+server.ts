@@ -10,6 +10,11 @@ export const GET: RequestHandler = async () => {
   const stack = await fetchSanityOpusStack();
   return json(
     { sanityStack: stack },
-    { headers: { 'Cache-Control': 'no-store' } }
+    {
+      headers: {
+        'Cache-Control':
+          'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400',
+      },
+    }
   );
 };

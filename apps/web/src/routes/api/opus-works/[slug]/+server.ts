@@ -8,5 +8,13 @@ export const prerender = false;
 // doc for the slug so the page can fall back to hardcoded data.
 export const GET: RequestHandler = async ({ params }) => {
   const work = await fetchSanityOpusWorkBySlug(fetch, params.slug);
-  return json({ work }, { headers: { 'Cache-Control': 'no-store' } });
+  return json(
+    { work },
+    {
+      headers: {
+        'Cache-Control':
+          'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400',
+      },
+    }
+  );
 };

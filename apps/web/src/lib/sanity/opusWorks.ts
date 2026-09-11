@@ -47,6 +47,15 @@ function toPreview(value: number | undefined): WorkPreview {
   return 4;
 }
 
+// sanity cdn serves raw full-res files by default: cap width + auto format
+// so cards ship ~100-200kb instead of multi-mb originals. non-sanity
+// urls pass through untouched.
+export function sizedSanityUrl(src: string, width: number): string {
+  if (!src.includes('cdn.sanity.io')) return src;
+  const sep = src.includes('?') ? '&' : '?';
+  return `${src}${sep}auto=format&w=${width}&q=75&fit=max`;
+}
+
 function slugify(title: string): string {
   return title
     .toLowerCase()
@@ -72,8 +81,10 @@ function toWorkCell(
   const alt = raw.alt?.trim()
     ? raw.alt.trim()
     : `${fallbackTitle} preview ${index + 1}`;
+  // cards render at ~300-600px wide: cap sanity cdn output at 900px.
+  // width/height stay intrinsic so aspect-ratio lock + cls are unaffected.
   return {
-    src,
+    src: sizedSanityUrl(src, 900),
     alt,
     span: raw.wide ? 'wide' : undefined,
     ratio,
@@ -148,8 +159,9 @@ export function mapSanityOpusWorkToWork(raw: SanityOpusWork): Work | null {
             text: quoteText,
             by: quoteBy,
             href: raw.quote?.href?.trim() ? raw.quote.href.trim() : undefined,
+            // 64px avatar slot: 96px cdn output is plenty.
             avatar: raw.quote?.avatar?.trim()
-              ? raw.quote.avatar.trim()
+              ? sizedSanityUrl(raw.quote.avatar.trim(), 96)
               : undefined,
           }
         : undefined,

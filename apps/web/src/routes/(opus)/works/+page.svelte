@@ -73,13 +73,12 @@
               ?.v.toLowerCase()
               .includes(selectedCategory.match as string) ?? false)
       )
-      .filter(work =>
-        queryText === ''
-          ? true
-          : `${work.title} ${work.description} ${work.tags.join(' ')}`
-              .toLowerCase()
-              .includes(queryText)
-      )
+      .filter(work => {
+        if (queryText === '') return true;
+        const haystack =
+          `${work.title} ${work.description} ${work.meta.map(row => row.v ?? '').join(' ')}`.toLowerCase();
+        return haystack.includes(queryText);
+      })
   );
 
   function cancelScheduledClose() {

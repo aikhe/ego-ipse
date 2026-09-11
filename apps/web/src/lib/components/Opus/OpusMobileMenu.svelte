@@ -88,6 +88,7 @@
     role="dialog"
     aria-modal="true"
     aria-label="Site menu"
+    tabindex="-1"
     onkeydown={trapTab}
     transition:fade={{ duration: 180 }}
   >

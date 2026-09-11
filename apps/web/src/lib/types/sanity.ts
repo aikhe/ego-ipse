@@ -60,8 +60,21 @@ export interface SanityOpusValues {
 export interface SanityOpusAbout {
   description?: string;
 }
+export interface SanityOpusStackItem {
+  name?: string;
+  href?: string;
+  size?: number;
+  iconLightUrl?: string;
+  iconDarkUrl?: string;
+  previewUrl?: string;
+}
+export interface SanityOpusStackCategory {
+  title?: string;
+  items?: SanityOpusStackItem[];
+}
 export interface SanityOpusStack {
   description?: string;
+  categories?: SanityOpusStackCategory[];
 }
 export interface SanityProject {
   title?: string;

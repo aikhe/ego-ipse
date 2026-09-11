@@ -10,7 +10,6 @@
   import PosterOverlay from '$lib/components/Poster/PosterOverlay.svelte';
   import OpusFooter from '$lib/components/Opus/OpusFooter.svelte';
   import OpusGithub from '$lib/components/Opus/OpusGithub.svelte';
-  import OpusMobileMenu from '$lib/components/Opus/OpusMobileMenu.svelte';
   import poster1 from '$lib/assets/posters/1.webp';
   import poster2 from '$lib/assets/posters/2.webp';
   import poster3 from '$lib/assets/posters/3.webp';
@@ -460,8 +459,6 @@
   });
 </script>
 
-<span class="opus-side__note">[Temporary portfolio]</span>
-<OpusMobileMenu active="opus" />
 <div class="opus-canvas">
   <div class="opus-grid">
     <div class="opus-col opus-col--1">

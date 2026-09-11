@@ -58,7 +58,7 @@
   </nav>
   <!-- future routes — unclickable for now -->
   <nav class="opus-nav opus-nav--soon" aria-label="Upcoming sections">
-    <a class="opus-nav__link" href={resolve('/ipse')}>ipse</a>
+    <span class="opus-nav__link opus-nav__link--soon">ipse</span>
     <span class="opus-nav__link opus-nav__link--soon">acedia</span>
     <span class="opus-nav__link opus-nav__link--soon">fleur</span>
     <span class="opus-nav__link opus-nav__link--soon">nvim</span>

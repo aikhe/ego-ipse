@@ -232,8 +232,20 @@
     font-size: 1rem;
   }
 
+  div.opus-canvas p.opus-about__desc,
+  div.opus-canvas p.opus-services__desc,
+  div.opus-canvas p.opus-stack__desc,
+  div.opus-canvas p.opus-work-detail__desc,
+  div.opus-canvas p.opus-works__empty {
+    font-size: 1rem;
+  }
+
   div.opus-canvas span.opus-paper-label {
     font-size: 1rem;
+  }
+
+  div.opus-canvas svg.opus-paper-design {
+    height: 20px;
   }
 
   div.opus-canvas li.opus-values__item {

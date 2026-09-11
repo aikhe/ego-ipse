@@ -120,6 +120,37 @@
 
 <svelte:head>
   <title>Ike Rosacay</title>
+  <meta
+    name="description"
+    content="Designer & Developer based in Caloocan, Philippines. Freelancing since 2025."
+  />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Ike Rosacay" />
+  <meta property="og:title" content="Ike Rosacay" />
+  <meta
+    property="og:description"
+    content="Designer & Developer based in Caloocan, Philippines. Freelancing since 2025."
+  />
+  <meta
+    property="og:image"
+    content="https://ikerosacay.pages.dev/banner.webp"
+  />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta
+    property="og:image:alt"
+    content="Ike Andrie Rosacay — Designer and Developer"
+  />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Ike Rosacay" />
+  <meta
+    name="twitter:description"
+    content="Designer & Developer based in Caloocan, Philippines. Freelancing since 2025."
+  />
+  <meta
+    name="twitter:image"
+    content="https://ikerosacay.pages.dev/banner.webp"
+  />
   <link rel="icon" type="image/png" href={favicon} />
   <link rel="apple-touch-icon" href={favicon} />
 </svelte:head>

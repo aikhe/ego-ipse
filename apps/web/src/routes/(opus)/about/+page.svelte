@@ -3,9 +3,20 @@
   import OpusNav from '$lib/components/Opus/OpusNav.svelte';
   import OpusFooter from '$lib/components/Opus/OpusFooter.svelte';
   import OpusValues from '$lib/components/Opus/OpusValues.svelte';
+  import {
+    renderRichInline,
+    splitDescriptionParagraphs,
+  } from '$lib/sanity/opusValues';
   import type { PageProps } from './$types';
 
   let { data }: PageProps = $props();
+
+  // Sanity-only: no fallback copy. Missing description renders nothing.
+  const aboutParagraphs = $derived(
+    data.sanityAbout?.description
+      ? splitDescriptionParagraphs(data.sanityAbout.description)
+      : []
+  );
 
   let aboutEl = $state<HTMLDivElement | null>(null);
   let valuesTitleEl = $state<HTMLParagraphElement | null>(null);
@@ -57,10 +68,11 @@
       ></div>
       <div class="opus-section opus-section--about" bind:this={aboutEl}>
         <h2 class="opus-about">About</h2>
-        <p class="opus-about__desc">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </p>
+        {#each aboutParagraphs as para, k (k)}
+          <p class="opus-about__desc">
+            {@html renderRichInline(para)}
+          </p>
+        {/each}
       </div>
       <OpusValues
         sanityValues={data.sanityValues}
@@ -377,6 +389,12 @@
     line-height: 1.48;
     margin: -0.2rem 0 0;
     max-width: 92%;
+  }
+
+  /* :global — <strong> arrives via {@html}, so it never carries the
+    scoped hash class; without this the UA default (700) wins. */
+  .opus-about__desc :global(strong) {
+    font-weight: 500;
   }
 
   /* debug grid — Shift+G — background only */

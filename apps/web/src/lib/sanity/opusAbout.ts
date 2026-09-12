@@ -1,7 +1,8 @@
 import type { SanityOpusAbout } from '$lib/types/sanity';
 import { SANITY_URL } from './opusValues';
 
-export const opusAboutQuery = `*[_type == "opusAbout"][0]{
+// deterministic pick: oldest document wins if duplicates ever exist.
+export const opusAboutQuery = `*[_type == "opusAbout"] | order(_createdAt asc)[0]{
   description
 }`;
 

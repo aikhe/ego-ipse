@@ -163,20 +163,34 @@
     }
   }
 
+  // wheel deltas arriving while gsap still loads accumulate here instead
+  // of each spawning a tween from the same base (overwrite would drop all
+  // but the last burst event).
+  let pendingDelta = 0;
+  let wheelQueued = false;
+
   function onWheel(e: WheelEvent) {
     if (!container || setWidth === 0) return;
     hasInteracted = true;
 
     // Smooth scroll with higher sensitivity
-    const delta =
+    pendingDelta +=
       ((Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY) * 3.5) /
       getStageScale();
-
-    if (gsapMod && !gsapMod.isTweening(proxy)) {
-      proxy.x = container.scrollLeft;
-    }
+    if (wheelQueued) return;
+    wheelQueued = true;
 
     void gsapLib().then(g => {
+      wheelQueued = false;
+      if (!container) {
+        pendingDelta = 0;
+        return;
+      }
+      if (!g.isTweening(proxy)) {
+        proxy.x = container.scrollLeft;
+      }
+      const delta = pendingDelta;
+      pendingDelta = 0;
       g.to(proxy, {
         x: proxy.x + delta,
         duration: 1,

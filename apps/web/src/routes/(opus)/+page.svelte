@@ -1,5 +1,6 @@
 <script lang="ts">
   import { resolve } from '$app/paths';
+  import type { Component } from 'svelte';
   import { uiState } from '$lib/state/ui.svelte';
   import OpusNav from '$lib/components/Opus/OpusNav.svelte';
   import { selectedWorks } from '$lib/data/works';
@@ -28,13 +29,18 @@
 
   // poster overlay pulls gsap: lazy-load it so the animation runtime stays
   // out of the initial bundle and off the lighthouse main thread.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let PosterOverlayCmp = $state<any>(null);
+  // a failed chunk load resets the selection so the body scroll lock in
+  // the effect below always has a close path and never wedges the page.
+  type PosterOverlayProps = { selected: number | null; images: string[] };
+  let PosterOverlayCmp = $state<Component<PosterOverlayProps> | null>(null);
   $effect(() => {
     if (selectedPoster !== null && !PosterOverlayCmp) {
       void import('$lib/components/Poster/PosterOverlay.svelte').then(
         mod => {
           PosterOverlayCmp = mod.default;
+        },
+        () => {
+          selectedPoster = null;
         }
       );
     }
@@ -374,41 +380,32 @@
   $effect(() => {
     let raf = 0;
     const sync = () => {
-      if (introEl)
-        document.documentElement.style.setProperty(
-          '--opus-intro-h',
-          `${introEl.getBoundingClientRect().height}px`
-        );
-      if (postersSectionEl)
-        document.documentElement.style.setProperty(
-          '--opus-posters-h',
-          `${postersSectionEl.getBoundingClientRect().height}px`
-        );
-      if (valuesEl)
-        document.documentElement.style.setProperty(
-          '--opus-values-h',
-          `${valuesEl.getBoundingClientRect().height}px`
-        );
-      if (valuesTitleEl)
-        document.documentElement.style.setProperty(
-          '--opus-values-title-h',
-          `${valuesTitleEl.getBoundingClientRect().height}px`
-        );
-      if (githubEl)
-        document.documentElement.style.setProperty(
-          '--opus-github-h',
-          `${githubEl.getBoundingClientRect().height}px`
-        );
-      if (githubTitleEl)
-        document.documentElement.style.setProperty(
-          '--opus-github-title-h',
-          `${githubTitleEl.getBoundingClientRect().height}px`
-        );
-      if (footerEl)
-        document.documentElement.style.setProperty(
-          '--opus-footer-h',
-          `${footerEl.getBoundingClientRect().height}px`
-        );
+      // read pass first: every getboundingclientrect runs before any
+      // setproperty, so one layout serves all reads and the writes below
+      // cannot force extra reflows between measurements.
+      const introH = introEl?.getBoundingClientRect().height;
+      const postersH = postersSectionEl?.getBoundingClientRect().height;
+      const valuesH = valuesEl?.getBoundingClientRect().height;
+      const valuesTitleH = valuesTitleEl?.getBoundingClientRect().height;
+      const githubH = githubEl?.getBoundingClientRect().height;
+      const githubTitleH = githubTitleEl?.getBoundingClientRect().height;
+      const footerH = footerEl?.getBoundingClientRect().height;
+      // write pass: style writes only, no reads interleaved.
+      const root = document.documentElement.style;
+      if (introH !== undefined)
+        root.setProperty('--opus-intro-h', `${introH}px`);
+      if (postersH !== undefined)
+        root.setProperty('--opus-posters-h', `${postersH}px`);
+      if (valuesH !== undefined)
+        root.setProperty('--opus-values-h', `${valuesH}px`);
+      if (valuesTitleH !== undefined)
+        root.setProperty('--opus-values-title-h', `${valuesTitleH}px`);
+      if (githubH !== undefined)
+        root.setProperty('--opus-github-h', `${githubH}px`);
+      if (githubTitleH !== undefined)
+        root.setProperty('--opus-github-title-h', `${githubTitleH}px`);
+      if (footerH !== undefined)
+        root.setProperty('--opus-footer-h', `${footerH}px`);
     };
     const schedule = () => {
       if (raf) return;

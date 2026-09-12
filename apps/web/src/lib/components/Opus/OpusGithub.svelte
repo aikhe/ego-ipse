@@ -46,6 +46,33 @@
     dy: tip?.dy ?? 1,
   });
   let prevIdx: number | null = null;
+  let tipEl = $state<HTMLDivElement | null>(null);
+  let lastTipW: number | null = null;
+  let widthAnim: Animation | null = null;
+
+  // smooth width: content-driven auto width jumps skip css transitions,
+  // so tween the measured width via waapi whenever the text changes
+  $effect(() => {
+    const text = tip?.text;
+    if (!text) {
+      lastTipW = null;
+      return;
+    }
+    const el = tipEl;
+    if (!el) return;
+    // a previous tween may still hold the width: read the rendered width,
+    // cancel it, then measure the new intrinsic width before tweening
+    const from = el.getBoundingClientRect().width;
+    const fresh = lastTipW === null;
+    widthAnim?.cancel();
+    const to = el.offsetWidth;
+    lastTipW = to;
+    if (fresh || Math.abs(from - to) < 1) return;
+    widthAnim = el.animate([{ width: `${from}px` }, { width: `${to}px` }], {
+      duration: 280,
+      easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+    });
+  });
 
   const formattedTotal = $derived(
     total === null ? '—' : total.toLocaleString('en-US')
@@ -282,6 +309,7 @@
           class:opus-github__tip--below={tip.below}
           style:left={`${tip.x}px`}
           style:top={`${tip.y}px`}
+          bind:this={tipEl}
           in:pop
           out:popOut
           aria-hidden="true"
@@ -429,6 +457,23 @@
   .opus-github__tip--below {
     transform: translate(-50%, 14px);
     transform-origin: top center;
+  }
+
+  /* pointer diamond bridging the gap between the pill and the cursor */
+  .opus-github__tip::after {
+    background: var(--color-text);
+    content: '';
+    height: 8px;
+    left: 50%;
+    position: absolute;
+    top: 100%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 8px;
+  }
+
+  /* sits after the base rule: same specificity, so this wins for below tips */
+  .opus-github__tip--below::after {
+    top: 0;
   }
 
   .opus-github__tip-swap {

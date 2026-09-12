@@ -25,21 +25,22 @@
   // section's height and 02 takes the values title's height (+ the same
   // 4rem top margin as the values section) so each index sits level
   // with its section instead of piling at the top.
+  // the about measure always runs: values may be missing while about
+  // content exists, and 01 must never wait on the optional section.
   $effect(() => {
-    if (!aboutEl || !valuesTitleEl) return;
+    if (!aboutEl) return;
     const sync = () => {
       const h = aboutEl!.getBoundingClientRect().height;
-      const th = valuesTitleEl!.getBoundingClientRect().height;
-      document.documentElement.style.setProperty('--about-intro-h', `${h}px`);
-      document.documentElement.style.setProperty(
-        '--about-values-title-h',
-        `${th}px`
-      );
+      const th = valuesTitleEl?.getBoundingClientRect().height;
+      const root = document.documentElement.style;
+      root.setProperty('--about-intro-h', `${h}px`);
+      if (th !== undefined)
+        root.setProperty('--about-values-title-h', `${th}px`);
     };
     sync();
     const ro = new ResizeObserver(sync);
     ro.observe(aboutEl);
-    ro.observe(valuesTitleEl);
+    if (valuesTitleEl) ro.observe(valuesTitleEl);
     window.addEventListener('resize', sync);
     return () => {
       ro.disconnect();
@@ -57,9 +58,11 @@
       <div class="opus-col__section opus-col__section--01">
         <span class="opus-col__index">01</span>
       </div>
-      <div class="opus-col__section opus-col__section--02">
-        <span class="opus-col__index">02</span>
-      </div>
+      {#if data.sanityValues}
+        <div class="opus-col__section opus-col__section--02">
+          <span class="opus-col__index">02</span>
+        </div>
+      {/if}
     </div>
     <div class="opus-col opus-col--3">
       <div

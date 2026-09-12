@@ -447,6 +447,7 @@
     padding: 0.55rem 0.75rem;
     pointer-events: none;
     position: fixed;
+    text-align: center;
     top: 0;
     transform: translate(-50%, calc(-100% - 10px));
     transform-origin: bottom center;

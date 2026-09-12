@@ -57,6 +57,9 @@ export interface SanityOpusValues {
   columns?: SanityOpusValuesColumn[];
   quote?: SanityOpusValuesQuote;
 }
+export interface SanityOpusAbout {
+  description?: string;
+}
 export interface SanityProject {
   title?: string;
   duration?: {

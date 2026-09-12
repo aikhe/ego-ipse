@@ -1,6 +1,5 @@
 <script lang="ts">
   import {
-    fallbackOpusValues,
     renderRichInline,
     splitDescriptionParagraphs,
   } from '$lib/sanity/opusValues';
@@ -16,47 +15,49 @@
     titleRef?: HTMLParagraphElement | null;
   } = $props();
 
-  // partial sanity docs merge over the lorem fallback field-by-field so an
-  // empty field never blanks the section.
-  const display = $derived({
-    description: sanityValues?.description ?? fallbackOpusValues.description,
-    columns: sanityValues?.columns ?? fallbackOpusValues.columns,
-    quote: sanityValues?.quote ?? fallbackOpusValues.quote,
-  });
-
-  // blank line in Sanity = new paragraph, so "To me…" starts its own line.
-  const paragraphs = $derived(splitDescriptionParagraphs(display.description));
+  // Sanity-only: no fallback copy. Missing fields render nothing.
+  const paragraphs = $derived(
+    sanityValues?.description
+      ? splitDescriptionParagraphs(sanityValues.description)
+      : []
+  );
 </script>
 
-<div class="opus-section opus-section--values" bind:this={ref}>
-  <p class="opus-name" bind:this={titleRef}>Values</p>
-  {#each paragraphs as para, k (k)}
-    <p class="opus-desc">
-      {@html renderRichInline(para)}
-    </p>
-  {/each}
-  <div class="opus-values__cols">
-    {#each display.columns as col, i (col.title)}
-      <div class="opus-values__col" class:opus-values__col--wide={i === 0}>
-        <p class="opus-values__label">{col.title}</p>
-        <ul class="opus-values__list">
-          {#each col.items as item (item)}
-            <li class="opus-values__item">{item}</li>
-          {/each}
-        </ul>
-      </div>
-    {/each}
-  </div>
-  <div class="opus-values__quote">
-    <span class="opus-values__quote-line" aria-hidden="true"></span>
-    <div class="opus-values__quote-body">
-      <p class="opus-values__quote-text">
-        “{display.quote.text}”
+{#if sanityValues}
+  <div class="opus-section opus-section--values" bind:this={ref}>
+    <p class="opus-name" bind:this={titleRef}>Values</p>
+    {#each paragraphs as para, k (k)}
+      <p class="opus-desc">
+        {@html renderRichInline(para)}
       </p>
-      <span class="opus-values__quote-by">{display.quote.by}</span>
-    </div>
+    {/each}
+    {#if sanityValues.columns}
+      <div class="opus-values__cols">
+        {#each sanityValues.columns as col, i (col.title)}
+          <div class="opus-values__col" class:opus-values__col--wide={i === 0}>
+            <p class="opus-values__label">{col.title}</p>
+            <ul class="opus-values__list">
+              {#each col.items ?? [] as item (item)}
+                <li class="opus-values__item">{item}</li>
+              {/each}
+            </ul>
+          </div>
+        {/each}
+      </div>
+    {/if}
+    {#if sanityValues.quote}
+      <div class="opus-values__quote">
+        <span class="opus-values__quote-line" aria-hidden="true"></span>
+        <div class="opus-values__quote-body">
+          <p class="opus-values__quote-text">
+            “{sanityValues.quote.text}”
+          </p>
+          <span class="opus-values__quote-by">{sanityValues.quote.by}</span>
+        </div>
+      </div>
+    {/if}
   </div>
-</div>
+{/if}
 
 <style>
   .opus-section {

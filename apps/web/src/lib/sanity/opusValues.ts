@@ -10,36 +10,6 @@ export const opusValuesQuery = `*[_type == "opusValues"][0]{
   quote{ text, by }
 }`;
 
-// Current hardcoded copy in `(opus)/+page.svelte` — stays as fallback so the
-// section never renders empty when Sanity is unreachable or unpublished.
-export const fallbackOpusValues: Required<SanityOpusValues> = {
-  description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-  columns: [
-    {
-      title: 'Capabilities',
-      items: [
-        'Lorem ipsum dolor sit amet',
-        'Consectetur adipiscing elit',
-        'Sed do eiusmod tempor incididunt',
-        'Ut labore et dolore magna',
-      ],
-    },
-    {
-      title: 'Elsewhere',
-      items: [
-        'Ut enim ad minim veniam',
-        'Quis nostrud exercitation',
-        'Ullamco laboris nisi aliquip',
-      ],
-    },
-  ],
-  quote: {
-    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    by: 'Lorem ipsum dolor',
-  },
-};
-
 // A blank line in the Sanity text field starts a new paragraph —
 // rendered as its own `<p class="opus-desc">` so line breaks survive HTML
 // whitespace collapsing.
@@ -86,7 +56,7 @@ export function normalizeOpusValues(
   };
 }
 
-// never throws, returns null on failure so callers fall back to hardcoded copy.
+// never throws, returns null on failure so callers render nothing.
 export async function fetchSanityOpusValues(
   fetchFn: typeof fetch = fetch
 ): Promise<SanityOpusValues | null> {

@@ -123,7 +123,7 @@
           {#if p.cell.src}
             <img
               src={p.cell.src}
-              alt=""
+              alt={p.cell.alt ?? `${work.title} preview`}
               width={p.cell.width}
               height={p.cell.height}
               loading="lazy"
@@ -227,6 +227,7 @@
   .opus-work__quote-line {
     background: var(--color-text);
     display: block;
+    flex-shrink: 0;
     width: 2px;
   }
 

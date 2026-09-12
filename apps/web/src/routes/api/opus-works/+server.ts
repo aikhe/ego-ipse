@@ -9,5 +9,15 @@ export const prerender = false;
 // traffic goes through here. Sanity is always fetched server-side.
 export const GET: RequestHandler = async () => {
   const result = await fetchSanityOpusWorks();
-  return json(result, { headers: { 'Cache-Control': 'no-store' } });
+  // empty means the sanity fetch failed (or no docs exist): never let the
+  // edge cache an outage and serve blank works after recovery.
+  const ok =
+    result.sanitySelected.length > 0 || result.sanityWorks.length > 0;
+  return json(result, {
+    headers: {
+      'Cache-Control': ok
+        ? 'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400'
+        : 'no-store',
+    },
+  });
 };

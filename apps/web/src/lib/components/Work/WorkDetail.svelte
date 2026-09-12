@@ -187,6 +187,7 @@
   .opus-work-detail__quote-line {
     background: var(--color-text);
     display: block;
+    flex-shrink: 0;
     margin-right: 0.25rem;
     width: 2px;
   }

@@ -1,9 +1,17 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import gsap from 'gsap';
   import { startGlitch } from '$lib/utils/glitch';
   import { uiState } from '$lib/state/ui.svelte';
   import logo from '$lib/assets/logo.svg';
+
+  // header only renders on non-opus routes: gsap loads on first use so the
+  // animation runtime never enters the opus initial bundle via the layout.
+  type Gsap = typeof import('gsap');
+  let gsapMod: Gsap['default'] | null = null;
+  async function gsapLib(): Promise<Gsap['default']> {
+    if (!gsapMod) gsapMod = (await import('gsap')).default;
+    return gsapMod;
+  }
 
   interface Props {
     theme: 'light' | 'dark';
@@ -152,39 +160,44 @@
   onMount(() => {
     if (headerEl) {
       const chars = headerEl.querySelectorAll('.header-anim .char');
-      gsap.set(chars, { xPercent: 0, force3D: false, clearProps: 'transform' });
+      void gsapLib().then(g =>
+        g.set(chars, { xPercent: 0, force3D: false, clearProps: 'transform' })
+      );
     }
   });
 
   $effect(() => {
     if (!headerEl) return;
     const chars = headerEl.querySelectorAll('.header-anim .char');
-    if (uiState.isProjectView) {
-      gsap.fromTo(
-        chars,
-        { xPercent: 0 },
-        {
-          xPercent: -200,
-          duration: 0.6,
-          ease: 'expo.inOut',
-          force3D: false,
-          stagger: { amount: 0.2, from: 'end' },
-        }
-      );
-    } else {
-      gsap.fromTo(
-        chars,
-        { xPercent: -200 },
-        {
-          xPercent: 0,
-          duration: 0.6,
-          ease: 'expo.inOut',
-          force3D: false,
-          clearProps: 'transform',
-          stagger: { amount: 0.2, from: 'start' },
-        }
-      );
-    }
+    const projectView = uiState.isProjectView;
+    void gsapLib().then(g => {
+      if (projectView) {
+        g.fromTo(
+          chars,
+          { xPercent: 0 },
+          {
+            xPercent: -200,
+            duration: 0.6,
+            ease: 'expo.inOut',
+            force3D: false,
+            stagger: { amount: 0.2, from: 'end' },
+          }
+        );
+      } else {
+        g.fromTo(
+          chars,
+          { xPercent: -200 },
+          {
+            xPercent: 0,
+            duration: 0.6,
+            ease: 'expo.inOut',
+            force3D: false,
+            clearProps: 'transform',
+            stagger: { amount: 0.2, from: 'start' },
+          }
+        );
+      }
+    });
   });
 </script>
 

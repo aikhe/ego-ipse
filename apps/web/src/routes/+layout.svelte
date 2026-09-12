@@ -120,8 +120,11 @@
 
 <svelte:head>
   <title>Ike Rosacay</title>
-  <link rel="canonical" href={page.url.href} />
-  <meta name="theme-color" content="#0a0a0a" />
+  <link rel="canonical" href={page.url.origin + page.url.pathname} />
+  <meta
+    name="theme-color"
+    content={uiState.theme === 'dark' ? '#080807' : '#f5f5f5'}
+  />
   <meta
     name="description"
     content="Designer & Developer based in Caloocan, Philippines. Freelancing since 2025."

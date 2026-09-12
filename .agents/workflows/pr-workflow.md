@@ -15,5 +15,6 @@ description: Structured sequence to prepare and finalize Pull Request documentat
    - **Features**: List new capabilities in a bulleted list.
    - **Changes**: Provide a technical breakdown with clickable links to modified files.
 3. **Configuration**: If the change requires new environment variables or Sanity setup, include a `### Configuration` block with the necessary code snippets.
-4. **Final Review**: Ensure the PR markdown is clean, technical, and ready for copy-pasting by the user.
+4. **Environment**: Always append a `### Environment` block with the exact LLM model and version plus the harness (e.g. `Model: Muse Spark 1.3`, `Harness: OpenCode`). Never guess; write `Unknown` and confirm with the user if unsure.
+5. **Final Review**: Ensure the PR markdown is clean, technical, and ready for copy-pasting by the user.
 5. **Finalize**: Prompt the user to run `/commit-convention` to stage and commit the work before closing the PR.

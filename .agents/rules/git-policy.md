@@ -36,6 +36,7 @@ Maintain a clean, technical, and descriptive commit/PR history following a stric
   - `### Changes`: Technical breakdown of changes.
   - `### Verification`: Validation steps and results (lint, typecheck, build, review comments addressed).
   - `### Configuration`: (If applicable) code snippets for setup.
+  - `### Environment`: Agent attribution with exact LLM model and version plus harness (e.g. `Model: Muse Spark 1.3`, `Harness: OpenCode`).
 
 ## Guidelines
 

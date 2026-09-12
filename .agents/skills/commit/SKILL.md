@@ -1,34 +1,42 @@
 ---
 name: commit
-description: 'Commit staged or unstaged changes with a structured, professional format'
-argument-hint: '[arguments]'
-allowed-tools: ['Bash', 'Read', 'Task', 'run_shell_command']
+description: Stage and commit changes with a one-line conventional message. Use when the user asks to commit, stage and commit, or save changes as a commit.
 ---
 
 # Commit Changes
 
 Stage and commit changes using the professional, structured Git commit message format.
 
-## Commit Message Format
+## When to use this skill
 
-Follow the conventional commits standard with specific style guidelines:
+- Use this when the user asks to commit, stage and commit, or save work as a commit.
+- Use this when splitting recent changes into multiple dated or scoped commits.
+- Do not use this for PR bodies or descriptions — use the `pr` skill instead.
 
-- Format: `<type>(<scope>): <description 1> & <description 2> + <description 3>` (or similar compact structure using `&` and `+` to chain related changes)
-- Examples:
-  - `refactor(web): compact typography classes & shared button primitives + migrate shared text styles`
-  - `feat(plugins): integrate wrapped.nvim & update cake/fleur commands + define custom keymaps`
-  - `refactor(config): tidy up theme/cord integration & optimize core plugin settings + enable termguicolors`
+## How to use it
 
-## Workflow:
+Follow `.agents/rules/git-policy.md` and `.agents/workflows/commit-convention.md` as the source of truth; this skill is the execution checklist.
 
-1. **Check Git Status & Diffs**
-   - Identify what changes have been made (staged and unstaged).
-   - If no changes are staged, stage the relevant changes or ask the user.
+### 1. Check Git Status & Diffs
 
-2. **Draft the Commit Message**
-   - Analyze the diffs.
-   - Write a clear, concise commit message following the exact format above.
-   - Use standard conventional commit types (e.g., `feat`, `refactor`, `fix`, `chore`, `docs`, `style`, etc.).
+- Identify staged and unstaged changes (`git status`, `git diff`, `git diff --cached`).
+- If nothing is staged, stage the relevant files or ask the user which to include.
+- Never stage or commit the `.agents` directory.
 
-3. **Execute the Commit**
-   - Run the git commit command to commit the changes.
+### 2. Draft the Commit Message
+
+- Format: `<type>(<scope>): <description 1> & <description 2> + <description 3>`.
+- Use `+` for distinct changes, `&` for correlated details within one change.
+- Single line only, max 120 chars, lowercase descriptions, no body or footer.
+- Types: `feat`, `fix`, `refactor`, `chore`, `docs`, `style`, etc.
+
+### 3. Execute the Commit
+
+- Use PowerShell for all Git operations.
+- Commit only after explicit user confirmation (`git commit -m "..."`).
+- For backdated splits, set `GIT_AUTHOR_DATE` / `GIT_COMMITTER_DATE` plus `--date="YYYY-MM-DDTHH:MM:SS"` so author and committer dates agree.
+
+## Examples
+
+- `refactor(web): compact typography classes & shared button primitives + migrate shared text styles`
+- `feat(studio): add opusValues singleton schema & register type + validate columns & quote`

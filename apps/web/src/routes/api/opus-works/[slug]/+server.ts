@@ -8,12 +8,16 @@ export const prerender = false;
 // doc for the slug so the page can fall back to hardcoded data.
 export const GET: RequestHandler = async ({ params }) => {
   const work = await fetchSanityOpusWorkBySlug(fetch, params.slug);
+  // null covers both missing docs and failed fetches: only cache a hit so
+  // a transient outage cannot pin a real page as missing for hours.
   return json(
     { work },
     {
       headers: {
         'Cache-Control':
-          'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400',
+          work !== null
+            ? 'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400'
+            : 'no-store',
       },
     }
   );

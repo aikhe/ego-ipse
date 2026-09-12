@@ -8,12 +8,15 @@ export const prerender = false;
 // content-blockers never need to reach api.sanity.io directly.
 export const GET: RequestHandler = async () => {
   const about = await fetchSanityOpusAbout();
+  // null means the sanity fetch failed: keep the outage uncacheable.
   return json(
     { sanityAbout: about },
     {
       headers: {
         'Cache-Control':
-          'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400',
+          about !== null
+            ? 'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400'
+            : 'no-store',
       },
     }
   );

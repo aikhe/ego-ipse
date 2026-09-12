@@ -6,30 +6,29 @@ export const prerender = false;
 
 // Same-origin APIs (see src/routes/api/opus-*): Sanity is fetched
 // server-side so phones never need to reach api.sanity.io directly.
-export const load: PageServerLoad = async ({ fetch }) => {
+// each request settles on its own: one failing section never blanks the other.
+async function getJson<T>(fetchFn: typeof fetch, url: string): Promise<T | null> {
   try {
-    const [worksRes, valuesRes] = await Promise.all([
-      fetch('/api/opus-works'),
-      fetch('/api/opus-values'),
-    ]);
-    const sanitySelected = worksRes.ok
-      ? (((await worksRes.json()) as { sanitySelected?: Work[] })
-          .sanitySelected ?? [])
-      : [];
-    const sanityValues = valuesRes.ok
-      ? ((await valuesRes.json()) as { sanityValues?: SanityOpusValues | null })
-          .sanityValues ?? null
-      : null;
-    return {
-      sanitySelected,
-      sanityValues,
-      sanityError: !worksRes.ok,
-    };
+    const res = await fetchFn(url);
+    if (!res.ok) return null;
+    return (await res.json()) as T;
   } catch {
-    return {
-      sanitySelected: [] as Work[],
-      sanityValues: null as SanityOpusValues | null,
-      sanityError: true,
-    };
+    return null;
   }
+}
+
+export const load: PageServerLoad = async ({ fetch }) => {
+  const [worksData, valuesData] = await Promise.all([
+    getJson<{ sanitySelected?: Work[] }>(fetch, '/api/opus-works'),
+    getJson<{ sanityValues?: SanityOpusValues | null }>(
+      fetch,
+      '/api/opus-values'
+    ),
+  ]);
+  const sanitySelected = worksData?.sanitySelected ?? [];
+  return {
+    sanitySelected,
+    sanityValues: valuesData?.sanityValues ?? null,
+    sanityError: worksData === null,
+  };
 };

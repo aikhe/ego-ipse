@@ -5,31 +5,27 @@ export const prerender = false;
 
 // Same-origin APIs (see src/routes/api/opus-*): Sanity is fetched
 // server-side so phones never need to reach api.sanity.io directly.
-export const load: PageServerLoad = async ({ fetch }) => {
+// each request settles on its own: one failing section never blanks the other.
+async function getJson<T>(fetchFn: typeof fetch, url: string): Promise<T | null> {
   try {
-    const [valuesRes, aboutRes] = await Promise.all([
-      fetch('/api/opus-values'),
-      fetch('/api/opus-about'),
-    ]);
-    const sanityValues = valuesRes.ok
-      ? (
-          (await valuesRes.json()) as {
-            sanityValues?: SanityOpusValues | null;
-          }
-        ).sanityValues ?? null
-      : null;
-    const sanityAbout = aboutRes.ok
-      ? (
-          (await aboutRes.json()) as {
-            sanityAbout?: SanityOpusAbout | null;
-          }
-        ).sanityAbout ?? null
-      : null;
-    return { sanityValues, sanityAbout };
+    const res = await fetchFn(url);
+    if (!res.ok) return null;
+    return (await res.json()) as T;
   } catch {
-    return {
-      sanityValues: null as SanityOpusValues | null,
-      sanityAbout: null as SanityOpusAbout | null,
-    };
+    return null;
   }
+}
+
+export const load: PageServerLoad = async ({ fetch }) => {
+  const [valuesData, aboutData] = await Promise.all([
+    getJson<{ sanityValues?: SanityOpusValues | null }>(
+      fetch,
+      '/api/opus-values'
+    ),
+    getJson<{ sanityAbout?: SanityOpusAbout | null }>(fetch, '/api/opus-about'),
+  ]);
+  return {
+    sanityValues: valuesData?.sanityValues ?? null,
+    sanityAbout: aboutData?.sanityAbout ?? null,
+  };
 };

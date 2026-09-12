@@ -67,7 +67,8 @@ function slugify(title: string): string {
 function toWorkCell(
   raw: SanityOpusWorkCell,
   fallbackTitle: string,
-  index: number
+  index: number,
+  cdnWidth = 900
 ): WorkCell | null {
   const src = raw.src?.trim();
   if (!src) return null;
@@ -81,10 +82,9 @@ function toWorkCell(
   const alt = raw.alt?.trim()
     ? raw.alt.trim()
     : `${fallbackTitle} preview ${index + 1}`;
-  // cards render at ~300-600px wide: cap sanity cdn output at 900px.
   // width/height stay intrinsic so aspect-ratio lock + cls are unaffected.
   return {
-    src: sizedSanityUrl(src, 900),
+    src: sizedSanityUrl(src, cdnWidth),
     alt,
     span: raw.wide ? 'wide' : undefined,
     ratio,
@@ -101,8 +101,10 @@ export function mapSanityOpusWorkToWork(raw: SanityOpusWork): Work | null {
   const cells = (raw.cells ?? [])
     .map((cell, i) => toWorkCell(cell, title, i))
     .filter((cell): cell is WorkCell => cell !== null);
+  // detail gallery spans past the column (100% + 20rem): 1600px so wide
+  // desktop cells stay sharp while cards stay capped at 900px.
   const gallery = (raw.gallery ?? [])
-    .map((cell, i) => toWorkCell(cell, title, i))
+    .map((cell, i) => toWorkCell(cell, title, i, 1600))
     .filter((cell): cell is WorkCell => cell !== null);
   const previewCells = cells.length > 0 ? cells : gallery;
   const detailImages = gallery.length > 0 ? gallery : cells;

@@ -28,20 +28,6 @@
 
   const padIndex = (n: number) => String(n).padStart(2, '0');
 
-  // idle logos render as a mask silhouette so every brand shares one
-  // uniform muted tone (grayscale alone keeps dark/white wordmarks
-  // uneven). vendor prefixes stay inline to keep stylelint quiet.
-  // accepts undefined (preview urls are optional): renders no mask.
-  const maskInline = (url: string | undefined) => {
-    if (!url) return '';
-    return (
-      `-webkit-mask-image: url('${url}'); mask-image: url('${url}'); ` +
-      '-webkit-mask-position: center; mask-position: center; ' +
-      '-webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; ' +
-      '-webkit-mask-size: contain; mask-size: contain;'
-    );
-  };
-
   // per-logo tweak from Sanity (1 = default): clamped so a typo can't
   // blow up the grid. uses the independent `scale` property to avoid
   // interfering with transforms.
@@ -284,12 +270,14 @@
             onmouseleave={hideTip}
           >
             {#each cat.items ?? [] as item, k (k)}
-              {@const hasPreview = Boolean(item.previewUrl)}
               {#if item.iconLightUrl && item.iconDarkUrl && item.name}
                 {@const logoUrl = isDark ? item.iconDarkUrl : item.iconLightUrl}
                 {#if item.href}
                   <a
                     class="opus-stack-cat__item"
+                    class:opus-stack-cat__item--preview={Boolean(
+                      item.previewUrl
+                    )}
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -297,24 +285,24 @@
                     aria-label={item.name}
                     style={`--stack-scale: ${scaleOf(item.size)}`}
                   >
-                    {#if hasPreview}
-                      <span
-                        class="opus-stack-cat__preview"
+                    {#if item.previewUrl}
+                      <img
+                        class="opus-stack-cat__logo opus-stack-cat__logo--idle"
+                        src={item.previewUrl}
+                        alt=""
                         aria-hidden="true"
-                        style={maskInline(item.previewUrl)}
-                      ></span>
-                    {:else}
-                      <span
-                        class="opus-stack-cat__mask"
-                        aria-hidden="true"
-                        style={maskInline(logoUrl)}
-                      ></span>
+                        width="96"
+                        height="36"
+                        loading={i === 0 ? 'eager' : 'lazy'}
+                        fetchpriority={i === 0 ? 'high' : 'low'}
+                        decoding="async"
+                      />
                     {/if}
                     <!-- single-theme logo: the hidden light/dark pair both
                       downloaded (display:none still fetches <img>), doubling
                       every request. first category is above the fold. -->
                     <img
-                      class="opus-stack-cat__logo"
+                      class="opus-stack-cat__logo opus-stack-cat__logo--main"
                       src={logoUrl}
                       alt={item.name}
                       width="96"
@@ -327,28 +315,31 @@
                 {:else}
                   <span
                     class="opus-stack-cat__item"
+                    class:opus-stack-cat__item--preview={Boolean(
+                      item.previewUrl
+                    )}
                     data-tip={item.name}
                     aria-label={item.name}
                     style={`--stack-scale: ${scaleOf(item.size)}`}
                   >
-                    {#if hasPreview}
-                      <span
-                        class="opus-stack-cat__preview"
+                    {#if item.previewUrl}
+                      <img
+                        class="opus-stack-cat__logo opus-stack-cat__logo--idle"
+                        src={item.previewUrl}
+                        alt=""
                         aria-hidden="true"
-                        style={maskInline(item.previewUrl)}
-                      ></span>
-                    {:else}
-                      <span
-                        class="opus-stack-cat__mask"
-                        aria-hidden="true"
-                        style={maskInline(logoUrl)}
-                      ></span>
+                        width="96"
+                        height="36"
+                        loading={i === 0 ? 'eager' : 'lazy'}
+                        fetchpriority={i === 0 ? 'high' : 'low'}
+                        decoding="async"
+                      />
                     {/if}
                     <!-- single-theme logo: the hidden light/dark pair both
                       downloaded (display:none still fetches <img>), doubling
                       every request. first category is above the fold. -->
                     <img
-                      class="opus-stack-cat__logo"
+                      class="opus-stack-cat__logo opus-stack-cat__logo--main"
                       src={logoUrl}
                       alt={item.name}
                       width="96"
@@ -743,8 +734,14 @@
     cursor: pointer;
   }
 
+  /* idle state renders the real <img> dimmed via grayscale so every
+    brand shares one muted tone on all devices. a previous mask-image
+    silhouette rendered nothing on desktop for svg icons without
+    intrinsic dimensions, while touch devices (which showed the <img>)
+    looked fine. */
   .opus-stack-cat__logo {
     display: block;
+    filter: grayscale(1);
     grid-area: 1 / 1;
     height: clamp(1.4rem, 1rem + 2.5vw, 2.25rem);
     margin: 0;
@@ -752,60 +749,32 @@
     max-width: 5.8rem;
     object-fit: contain;
     object-position: center;
+    opacity: 0.55;
+    transform: none;
+    transition:
+      filter 0.35s ease,
+      opacity 0.35s ease;
+    width: 100%;
+  }
+
+  /* preview items stack the preview idle under the full logo:
+    idle shows the preview, hover cross-fades to the logo. */
+  .opus-stack-cat__item--preview .opus-stack-cat__logo--main {
+    filter: none;
     opacity: 0;
-    transform: none;
-    transition: opacity 0.35s ease;
-    width: 100%;
   }
 
-  .opus-stack-cat__preview {
-    background: var(--color-text-muted-opus);
-    display: block;
-    grid-area: 1 / 1;
-    height: clamp(1.4rem, 1rem + 2.5vw, 2.25rem);
-    margin: 0;
-    max-width: 5.8rem;
-    opacity: 0.6;
-    transform: none;
-    transition: opacity 0.35s ease;
-    width: 100%;
-  }
-
-  .opus-stack-cat__mask {
-    background: var(--color-text-muted-opus);
-    display: block;
-    grid-area: 1 / 1;
-    height: clamp(1.4rem, 1rem + 2.5vw, 2.25rem);
-    margin: 0;
-    max-width: 5.8rem;
-    opacity: 0.6;
-    transform: none;
-    transition: opacity 0.35s ease;
-    width: 100%;
-  }
-
-  .opus-stack-cat__item:hover .opus-stack-cat__mask,
-  .opus-stack-cat__item:hover .opus-stack-cat__preview {
-    opacity: 0;
-    transform: none;
-  }
-
-  .opus-stack-cat__item:hover .opus-stack-cat__logo {
+  .opus-stack-cat__item:hover .opus-stack-cat__logo--main,
+  .opus-stack-cat__item:active .opus-stack-cat__logo--main,
+  .opus-stack-cat__item:focus-visible .opus-stack-cat__logo--main {
+    filter: none;
     opacity: 1;
-    transform: none;
   }
 
-  /* keyboard mirrors hover so the dim-to-color reveal works without
-    a pointer, at every width. */
-  .opus-stack-cat__item:focus-visible .opus-stack-cat__mask,
-  .opus-stack-cat__item:focus-visible .opus-stack-cat__preview {
+  .opus-stack-cat__item:hover .opus-stack-cat__logo--idle,
+  .opus-stack-cat__item:active .opus-stack-cat__logo--idle,
+  .opus-stack-cat__item:focus-visible .opus-stack-cat__logo--idle {
     opacity: 0;
-    transform: none;
-  }
-
-  .opus-stack-cat__item:focus-visible .opus-stack-cat__logo {
-    opacity: 1;
-    transform: none;
   }
 
   .opus-stack__tip {
@@ -854,14 +823,7 @@
     display: inline-block;
   }
 
-  /* same silhouette treatment as desktop, just stronger: at 0.6 the
-    small mid/mobile shapes wash out against the grid background. */
   @media (max-width: 63rem) {
-    .opus-stack-cat__mask,
-    .opus-stack-cat__preview {
-      opacity: 0.9;
-    }
-
     .opus-stack-cat__grid {
       padding-block: 1.75rem;
     }
@@ -882,38 +844,10 @@
       min-height: clamp(1.25rem, 1rem + 2vw, 1.6rem);
     }
 
-    .opus-stack-cat__logo,
-    .opus-stack-cat__mask,
-    .opus-stack-cat__preview {
+    .opus-stack-cat__logo {
       height: clamp(1.1rem, 0.85rem + 2vw, 1.5rem);
       max-height: clamp(1.1rem, 0.85rem + 2vw, 1.5rem);
       max-width: 4.5rem;
-    }
-  }
-
-  /* touch has no persistent hover: keep a dim idle (muted logos)
-    and reveal full color on tap/keys, mirroring the desktop hover
-    reveal. grayscale sits on the logo itself so the idle stays
-    visible (same resource as hover, no mask dependency). */
-  @media (hover: none) {
-    .opus-stack-cat__mask,
-    .opus-stack-cat__preview {
-      opacity: 0;
-    }
-
-    .opus-stack-cat__logo {
-      filter: grayscale(1);
-      opacity: 0.55;
-      transition:
-        filter 0.35s ease,
-        opacity 0.35s ease;
-    }
-
-    .opus-stack-cat__item:active .opus-stack-cat__logo,
-    .opus-stack-cat__item:focus-visible .opus-stack-cat__logo,
-    .opus-stack-cat__item:hover .opus-stack-cat__logo {
-      filter: none;
-      opacity: 1;
     }
   }
 

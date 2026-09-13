@@ -21,16 +21,26 @@
   const categories = $derived(data.sanityStack?.categories ?? []);
   const catCount = $derived(categories.length);
 
+  // single-theme render: a display:none <img> still downloads, so mounting
+  // both light+dark pairs doubles every logo request. theme switches are
+  // rare and re-fetch into the http cache; initial load always pays 2x.
+  const isDark = $derived(uiState.theme === 'dark');
+
   const padIndex = (n: number) => String(n).padStart(2, '0');
 
   // idle logos render as a mask silhouette so every brand shares one
   // uniform muted tone (grayscale alone keeps dark/white wordmarks
   // uneven). vendor prefixes stay inline to keep stylelint quiet.
-  const maskInline = (url: string) =>
-    `-webkit-mask-image: url('${url}'); mask-image: url('${url}'); ` +
-    '-webkit-mask-position: center; mask-position: center; ' +
-    '-webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; ' +
-    '-webkit-mask-size: contain; mask-size: contain;';
+  // accepts undefined (preview urls are optional): renders no mask.
+  const maskInline = (url: string | undefined) => {
+    if (!url) return '';
+    return (
+      `-webkit-mask-image: url('${url}'); mask-image: url('${url}'); ` +
+      '-webkit-mask-position: center; mask-position: center; ' +
+      '-webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; ' +
+      '-webkit-mask-size: contain; mask-size: contain;'
+    );
+  };
 
   // per-logo tweak from Sanity (1 = default): clamped so a typo can't
   // blow up the grid. uses the independent `scale` property to avoid
@@ -48,7 +58,11 @@
   $effect(() => {
     // track category count so observers re-sync when sanity data arrives.
     void catCount;
-    const sync = () => {
+    // one rAF-throttled pass: read every part height before the single
+    // reactive write so one layout serves all reads (unthrottled
+    // observers + resize/load listeners force a reflow per section).
+    let raf = 0;
+    const measure = () => {
       if (!rightColEl) return;
       const parts = rightColEl.querySelectorAll(
         ':scope > .opus-section--stack-part'
@@ -57,16 +71,24 @@
         el => (el as HTMLElement).getBoundingClientRect().height
       );
     };
-    sync();
-    const ro = new ResizeObserver(sync);
+    const schedule = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        measure();
+      });
+    };
+    schedule();
+    const ro = new ResizeObserver(schedule);
     if (rightColEl) ro.observe(rightColEl);
-    window.addEventListener('resize', sync);
+    window.addEventListener('resize', schedule);
     // fonts/images shift heights after first paint: re-sync on load.
-    window.addEventListener('load', sync);
+    window.addEventListener('load', schedule);
     return () => {
+      if (raf) cancelAnimationFrame(raf);
       ro.disconnect();
-      window.removeEventListener('resize', sync);
-      window.removeEventListener('load', sync);
+      window.removeEventListener('resize', schedule);
+      window.removeEventListener('load', schedule);
     };
   });
 
@@ -122,7 +144,7 @@
 
   function showTip(e: MouseEvent) {
     const cell = (e.target as HTMLElement).closest('[data-tip]');
-    // crossing the gaps between items keeps the pill open
+    // crossing the gaps between cells keeps the pill open (mirrors heatmap)
     if (!(cell instanceof HTMLElement)) return;
     const text = cell.dataset.tip ?? '';
     if (!text) return;
@@ -264,6 +286,7 @@
             {#each cat.items ?? [] as item, k (k)}
               {@const hasPreview = Boolean(item.previewUrl)}
               {#if item.iconLightUrl && item.iconDarkUrl && item.name}
+                {@const logoUrl = isDark ? item.iconDarkUrl : item.iconLightUrl}
                 {#if item.href}
                   <a
                     class="opus-stack-cat__item"
@@ -282,29 +305,22 @@
                       ></span>
                     {:else}
                       <span
-                        class="opus-stack-cat__mask opus-stack-cat__mask--light"
+                        class="opus-stack-cat__mask"
                         aria-hidden="true"
-                        style={maskInline(item.iconLightUrl)}
-                      ></span>
-                      <span
-                        class="opus-stack-cat__mask opus-stack-cat__mask--dark"
-                        aria-hidden="true"
-                        style={maskInline(item.iconDarkUrl)}
+                        style={maskInline(logoUrl)}
                       ></span>
                     {/if}
+                    <!-- single-theme logo: the hidden light/dark pair both
+                      downloaded (display:none still fetches <img>), doubling
+                      every request. first category is above the fold. -->
                     <img
-                      class="opus-stack-cat__logo opus-stack-cat__logo--light"
-                      src={item.iconLightUrl}
+                      class="opus-stack-cat__logo"
+                      src={logoUrl}
                       alt={item.name}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    <img
-                      class="opus-stack-cat__logo opus-stack-cat__logo--dark"
-                      src={item.iconDarkUrl}
-                      alt=""
-                      aria-hidden="true"
-                      loading="lazy"
+                      width="96"
+                      height="36"
+                      loading={i === 0 ? 'eager' : 'lazy'}
+                      fetchpriority={i === 0 ? 'high' : 'low'}
                       decoding="async"
                     />
                   </a>
@@ -323,29 +339,22 @@
                       ></span>
                     {:else}
                       <span
-                        class="opus-stack-cat__mask opus-stack-cat__mask--light"
+                        class="opus-stack-cat__mask"
                         aria-hidden="true"
-                        style={maskInline(item.iconLightUrl)}
-                      ></span>
-                      <span
-                        class="opus-stack-cat__mask opus-stack-cat__mask--dark"
-                        aria-hidden="true"
-                        style={maskInline(item.iconDarkUrl)}
+                        style={maskInline(logoUrl)}
                       ></span>
                     {/if}
+                    <!-- single-theme logo: the hidden light/dark pair both
+                      downloaded (display:none still fetches <img>), doubling
+                      every request. first category is above the fold. -->
                     <img
-                      class="opus-stack-cat__logo opus-stack-cat__logo--light"
-                      src={item.iconLightUrl}
+                      class="opus-stack-cat__logo"
+                      src={logoUrl}
                       alt={item.name}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    <img
-                      class="opus-stack-cat__logo opus-stack-cat__logo--dark"
-                      src={item.iconDarkUrl}
-                      alt=""
-                      aria-hidden="true"
-                      loading="lazy"
+                      width="96"
+                      height="36"
+                      loading={i === 0 ? 'eager' : 'lazy'}
+                      fetchpriority={i === 0 ? 'high' : 'low'}
                       decoding="async"
                     />
                   </span>
@@ -775,21 +784,6 @@
     width: 100%;
   }
 
-  .opus-stack-cat__logo--dark,
-  .opus-stack-cat__mask--dark {
-    display: none;
-  }
-
-  :global([data-theme='dark']) .opus-stack-cat__logo--light,
-  :global([data-theme='dark']) .opus-stack-cat__mask--light {
-    display: none;
-  }
-
-  :global([data-theme='dark']) .opus-stack-cat__logo--dark,
-  :global([data-theme='dark']) .opus-stack-cat__mask--dark {
-    display: block;
-  }
-
   .opus-stack-cat__item:hover .opus-stack-cat__mask,
   .opus-stack-cat__item:hover .opus-stack-cat__preview {
     opacity: 0;
@@ -867,6 +861,10 @@
     .opus-stack-cat__preview {
       opacity: 0.9;
     }
+
+    .opus-stack-cat__grid {
+      padding-block: 1.75rem;
+    }
   }
 
   @media (max-width: 48rem) {
@@ -877,7 +875,7 @@
     .opus-stack-cat__grid {
       gap: 0.75rem 0.5rem;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      padding: 0.875rem 0.625rem;
+      padding: 1.125rem 0.625rem;
     }
 
     .opus-stack-cat__item {

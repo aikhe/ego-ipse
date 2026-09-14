@@ -24,7 +24,7 @@
     if (!introEl) return;
     const sync = () => {
       const h = introEl!.getBoundingClientRect().height;
-      document.documentElement.style.setProperty('--opus-intro-h', `${h}px`);
+      document.documentElement.style.setProperty('--kaia-intro-h', `${h}px`);
     };
     sync();
     const ro = new ResizeObserver(sync);
@@ -339,7 +339,7 @@
   }
 
   .opus-col__section--01 {
-    height: var(--opus-intro-h, 13.2rem);
+    height: var(--kaia-intro-h, 13.2rem);
   }
 
   .opus-col__index {

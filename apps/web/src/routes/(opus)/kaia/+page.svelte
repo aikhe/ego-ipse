@@ -3,6 +3,20 @@
   import OpusNav from '$lib/components/Opus/OpusNav.svelte';
   import OpusFooter from '$lib/components/Opus/OpusFooter.svelte';
   import kaia from '$lib/assets/kaia.webp';
+  import {
+    renderRichInline,
+    splitDescriptionParagraphs,
+  } from '$lib/sanity/opusValues';
+  import type { PageProps } from './$types';
+
+  let { data }: PageProps = $props();
+
+  // Sanity-only: no fallback copy. Missing description renders nothing.
+  const kaiaParagraphs = $derived(
+    data.sanityKaia?.description
+      ? splitDescriptionParagraphs(data.sanityKaia.description)
+      : []
+  );
 
   let introEl = $state<HTMLDivElement | null>(null);
 
@@ -29,10 +43,15 @@
       <OpusNav active="kaia" />
     </div>
     <div class="opus-col opus-col--2" aria-hidden="true">
-      <div class="opus-col__section opus-col__section--01"><span class="opus-col__index">01</span></div>
+      <div class="opus-col__section opus-col__section--01">
+        <span class="opus-col__index">01</span>
+      </div>
     </div>
     <div class="opus-col opus-col--3">
-      <div class="opus-col__border opus-col__border--right" aria-hidden="true"></div>
+      <div
+        class="opus-col__border opus-col__border--right"
+        aria-hidden="true"
+      ></div>
       <div class="opus-section opus-section--intro" bind:this={introEl}>
         <div class="opus-profile">
           <img
@@ -45,13 +64,11 @@
           />
         </div>
         <p class="opus-name">Kaia</p>
-        <p class="opus-desc">
-          My personal agent for <span class="opus-desc__hl">design,</span>
-          <span class="opus-desc__hl">development,</span>
-          <span class="opus-desc__hl">planning,</span> and
-          <span class="opus-desc__hl">everyday</span> tasks. Powered by
-          <span class="opus-desc__hl">Hermes agent.</span>
-        </p>
+        {#each kaiaParagraphs as para, k (k)}
+          <p class="opus-desc">
+            {@html renderRichInline(para)}
+          </p>
+        {/each}
       </div>
       <OpusFooter showCard={false} />
     </div>
@@ -230,14 +247,14 @@
 
   .opus-col__border--right {
     background: linear-gradient(
-        to bottom,
-        var(--color-overlay-02) 0%,
-        var(--color-overlay-02) 20%,
-        transparent 30%,
-        transparent 60%,
-        var(--color-overlay-02) 80%,
-        var(--color-overlay-02) 100%
-      );
+      to bottom,
+      var(--color-overlay-02) 0%,
+      var(--color-overlay-02) 20%,
+      transparent 30%,
+      transparent 60%,
+      var(--color-overlay-02) 80%,
+      var(--color-overlay-02) 100%
+    );
     bottom: 0;
     pointer-events: none;
     position: absolute;
@@ -376,11 +393,6 @@
     line-height: 1.48;
     margin: -0.2rem 0 0;
     max-width: 92%;
-  }
-
-  .opus-desc__hl {
-    color: var(--color-text);
-    font-weight: 500;
   }
 
   /* debug grid — Shift+G — background only */

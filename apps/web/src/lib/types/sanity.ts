@@ -60,6 +60,9 @@ export interface SanityOpusValues {
 export interface SanityOpusAbout {
   description?: string;
 }
+export interface SanityOpusKaia {
+  description?: string;
+}
 export interface SanityOpusStackItem {
   name?: string;
   href?: string;

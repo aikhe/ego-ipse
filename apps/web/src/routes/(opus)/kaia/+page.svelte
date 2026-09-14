@@ -355,13 +355,13 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    height: var(--opus-intro-h, 13.2rem);
     justify-content: flex-start;
   }
 
   .opus-profile {
     aspect-ratio: 1 / 1;
     border-radius: 0.7rem;
+    flex-shrink: 0;
     max-width: 3.4rem;
     overflow: hidden;
     width: 28%;

@@ -999,7 +999,6 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    height: var(--opus-intro-h, 13.2rem);
     justify-content: flex-start;
   }
 

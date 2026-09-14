@@ -230,6 +230,7 @@
     style="touch-action: pan-y;"
   >
     {#each duplicatedImages as image, i (i)}
+      {@const isSelected = i % images.length === (selected ?? -1)}
       <div class="poster-overlay__item">
         <div class="poster-overlay__skeleton"></div>
         <img
@@ -238,7 +239,8 @@
           class="poster-overlay__image"
           class:loaded={loadedStates[i]}
           draggable="false"
-          loading="lazy"
+          loading={isSelected ? 'eager' : 'lazy'}
+          fetchpriority={isSelected ? 'high' : 'low'}
           decoding="async"
           onload={() => {
             loadedStates[i] = true;
@@ -250,7 +252,7 @@
 
   <!-- fallback resize calculation image load -->
   <img
-    src={images[0]}
+    src={images[selected ?? 0]}
     style="display:none;"
     onload={calculateSetWidth}
     alt=""

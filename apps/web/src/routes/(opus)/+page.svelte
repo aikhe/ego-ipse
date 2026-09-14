@@ -11,12 +11,20 @@
   import OpusFooter from '$lib/components/Opus/OpusFooter.svelte';
   import OpusGithub from '$lib/components/Opus/OpusGithub.svelte';
   import OpusValues from '$lib/components/Opus/OpusValues.svelte';
-  import poster1 from '$lib/assets/posters/1.webp';
-  import poster2 from '$lib/assets/posters/2.webp';
-  import poster3 from '$lib/assets/posters/3.webp';
-  import poster4 from '$lib/assets/posters/4.webp';
+  import poster1Thumb from '$lib/assets/posters/1.webp';
+  import poster2Thumb from '$lib/assets/posters/2.webp';
+  import poster3Thumb from '$lib/assets/posters/3.webp';
+  import poster4Thumb from '$lib/assets/posters/4.webp';
+  // full-res originals: fullscreen overlay only. the grid keeps the small
+  // webp thumbs so the initial page stays light; the overlay lazy-loads
+  // these on demand (same urls as /ipse, so the cache is shared).
+  import poster1Full from '$lib/assets/posters/1.png';
+  import poster2Full from '$lib/assets/posters/2.png';
+  import poster3Full from '$lib/assets/posters/3.png';
+  import poster4Full from '$lib/assets/posters/4.png';
 
-  const posters = [poster1, poster4, poster3, poster2];
+  const posters = [poster1Thumb, poster4Thumb, poster3Thumb, poster2Thumb];
+  const posterFulls = [poster1Full, poster4Full, poster3Full, poster2Full];
 
   let { data }: PageProps = $props();
 
@@ -341,6 +349,14 @@
     selectedPoster = i;
   }
 
+  // warm the fullscreen asset on hover/focus so the overlay opens sharp
+  // with no visible swap: the grid itself never uses the full file.
+  function preloadFull(i: number) {
+    const img = new Image();
+    img.src = posterFulls[i];
+    img.decoding = 'async';
+  }
+
   $effect(() => {
     if (!viewportEl || !trackEl) return;
     // single rAF-throttled pass: containers use aspect-ratio so image loads
@@ -452,7 +468,7 @@
   <link
     rel="preload"
     as="image"
-    href={poster1}
+    href={poster1Thumb}
     fetchpriority="high"
   />
 </svelte:head>
@@ -538,6 +554,8 @@
                   role="button"
                   tabindex="0"
                   onclick={() => openPoster(i)}
+                  onmouseenter={() => preloadFull(i)}
+                  onfocus={() => preloadFull(i)}
                   onkeydown={e => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
@@ -690,7 +708,7 @@
 </div>
 
 {#if selectedPoster !== null && PosterOverlayCmp}
-  <PosterOverlayCmp bind:selected={selectedPoster} images={posters} />
+  <PosterOverlayCmp bind:selected={selectedPoster} images={posterFulls} />
 {/if}
 
 <style>

@@ -1000,6 +1000,7 @@
     flex-direction: column;
     gap: 1rem;
     justify-content: flex-start;
+    min-height: 13.2rem;
   }
 
   .opus-section--posters {

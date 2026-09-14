@@ -15,13 +15,14 @@
   import poster2Thumb from '$lib/assets/posters/2.webp';
   import poster3Thumb from '$lib/assets/posters/3.webp';
   import poster4Thumb from '$lib/assets/posters/4.webp';
-  // full-res originals: fullscreen overlay only. the grid keeps the small
-  // webp thumbs so the initial page stays light; the overlay lazy-loads
-  // these on demand (same urls as /ipse, so the cache is shared).
-  import poster1Full from '$lib/assets/posters/1.png';
-  import poster2Full from '$lib/assets/posters/2.png';
-  import poster3Full from '$lib/assets/posters/3.png';
-  import poster4Full from '$lib/assets/posters/4.png';
+  // full-res webp: fullscreen overlay only. the grid keeps the small
+  // thumbs so the initial page stays light; the overlay lazy-loads
+  // these on demand. (1-full is resized to 1600w: covers 2x dpr at
+  // overlay display size, the rest are native 1424w.)
+  import poster1Full from '$lib/assets/posters/1-full.webp';
+  import poster2Full from '$lib/assets/posters/2-full.webp';
+  import poster3Full from '$lib/assets/posters/3-full.webp';
+  import poster4Full from '$lib/assets/posters/4-full.webp';
 
   const posters = [poster1Thumb, poster4Thumb, poster3Thumb, poster2Thumb];
   const posterFulls = [poster1Full, poster4Full, poster3Full, poster2Full];

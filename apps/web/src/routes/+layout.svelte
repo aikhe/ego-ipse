@@ -8,7 +8,7 @@
     STAGE_DESIGN_WIDTH,
     STAGE_MIN_SCALE,
   } from '$lib/utils/stageScale';
-  import { uiState, toggleTheme } from '$lib/state/ui.svelte';
+  import { uiState, toggleTheme, initTheme } from '$lib/state/ui.svelte';
   import Header from '$lib/components/Header/Header.svelte';
   import GridBackground from '$lib/layouts/GridBackground.svelte';
   import GridOverlay from '$lib/layouts/GridOverlay.svelte';
@@ -51,6 +51,7 @@
   }
 
   onMount(() => {
+    initTheme();
     const viewport = window.visualViewport;
 
     const updateStageScale = () => {

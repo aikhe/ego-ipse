@@ -60,6 +60,35 @@ export interface SanityOpusValues {
 export interface SanityOpusAbout {
   description?: string;
 }
+export interface SanityOpusFleurImage {
+  src?: string;
+  alt?: string;
+  assetWidth?: number;
+  assetHeight?: number;
+  width?: number;
+  height?: number;
+}
+export interface SanityOpusFleur {
+  description?: string;
+  images?: SanityOpusFleurImage[];
+}
+export interface SanityOpusNvimPlugin {
+  title?: string;
+  description?: string;
+  repo?: string;
+}
+export interface SanityOpusNvimConfigCard {
+  title?: string;
+  description?: string;
+}
+export interface SanityOpusNvim {
+  description?: string;
+  configCard?: SanityOpusNvimConfigCard;
+  plugins?: SanityOpusNvimPlugin[];
+}
+export interface SanityOpusServices {
+  description?: string;
+}
 export interface SanityOpusKaia {
   description?: string;
 }
@@ -69,7 +98,6 @@ export interface SanityOpusStackItem {
   size?: number;
   iconLightUrl?: string;
   iconDarkUrl?: string;
-  previewUrl?: string;
 }
 export interface SanityOpusStackCategory {
   title?: string;

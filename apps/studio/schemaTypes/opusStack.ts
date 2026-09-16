@@ -26,7 +26,7 @@ export default defineType({
       name: 'categories',
       type: 'array',
       description:
-        'Each category adds a new numbered section (e.g. Design). Add items with a name, optional link, light/dark brand icons, and an optional single preview.',
+        'Each category adds a new numbered section (e.g. Design). Add items with a name, optional link, and light/dark brand icons.',
       of: [
         {
           type: 'object',
@@ -101,14 +101,6 @@ export default defineType({
                       description: 'SVG shown in dark theme.',
                       options: {accept: 'image/svg+xml'},
                       validation: (Rule) => Rule.required().error('Dark mode icon is required'),
-                    }),
-                    defineField({
-                      title: 'Preview',
-                      name: 'preview',
-                      type: 'image',
-                      description:
-                        'Optional SVG shown by default in both themes. When set, it replaces the muted silhouette until hover, when the Icon above is revealed. Must be fully opaque and share the exact footprint of the icons, or the mark will visibly shift on hover.',
-                      options: {accept: 'image/svg+xml'},
                     }),
                   ],
                   preview: {

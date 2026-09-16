@@ -14,8 +14,7 @@ export const opusStackQuery = `*[_type == "opusStack"] | order(_createdAt asc)[0
       href,
       size,
       "iconLightUrl": iconLight.asset->url,
-      "iconDarkUrl": iconDark.asset->url,
-      "previewUrl": preview.asset->url
+      "iconDarkUrl": iconDark.asset->url
     }
   }
 }`;
@@ -40,22 +39,19 @@ function normalizeCategories(
 ): SanityOpusStackCategory[] | undefined {
   if (!raw) return undefined;
   const out = raw
-    .map((cat) => ({
+    .map(cat => ({
       title: cat.title?.trim() || undefined,
       items: (cat.items ?? [])
-        .map((item) => ({
+        .map(item => ({
           name: item.name?.trim() || undefined,
           href: item.href?.trim() || undefined,
           size: normalizeSize(item.size),
           iconLightUrl: normalizeIconUrl(item.iconLightUrl),
           iconDarkUrl: normalizeIconUrl(item.iconDarkUrl),
-          previewUrl: normalizeIconUrl(item.previewUrl),
         }))
-        .filter(
-          (item) => item.name && item.iconLightUrl && item.iconDarkUrl
-        ),
+        .filter(item => item.name && item.iconLightUrl && item.iconDarkUrl),
     }))
-    .filter((cat) => cat.title && cat.items && cat.items.length > 0);
+    .filter(cat => cat.title && cat.items && cat.items.length > 0);
   return out.length > 0 ? out : undefined;
 }
 

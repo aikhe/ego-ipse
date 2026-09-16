@@ -3,6 +3,9 @@ import workRoot from './workRoot'
 import opusWork from './opusWork'
 import opusValues from './opusValues'
 import opusAbout from './opusAbout'
+import opusFleur from './opusFleur'
+import opusNvim from './opusNvim'
+import opusServices from './opusServices'
 import opusKaia from './opusKaia'
 import opusStack from './opusStack'
 import social from './social'
@@ -14,6 +17,9 @@ export const schemaTypes = [
   opusWork,
   opusValues,
   opusAbout,
+  opusFleur,
+  opusNvim,
+  opusServices,
   opusKaia,
   opusStack,
   social,

@@ -42,6 +42,54 @@ export default defineType({
       ],
       validation: (Rule) => Rule.max(12).error('Maximum 12 figures allowed'),
     }),
+    defineField({
+      title: 'Extras',
+      name: 'extras',
+      type: 'array',
+      description: 'Supported apps and projects under the Extras heading. Each item links out to its repo.',
+      of: [
+        {
+          type: 'object',
+          name: 'fleurExtra',
+          title: 'Extra',
+          fields: [
+            defineField({
+              title: 'Title',
+              name: 'title',
+              type: 'string',
+              validation: (Rule) => [
+                Rule.required().error('Title is required'),
+                Rule.max(80).error('Title cannot exceed 80 characters'),
+              ],
+            }),
+            defineField({
+              title: 'Description',
+              name: 'description',
+              type: 'text',
+              rows: 2,
+              validation: (Rule) => [
+                Rule.required().error('Description is required'),
+                Rule.max(300).error('Description cannot exceed 300 characters'),
+              ],
+            }),
+            defineField({
+              title: 'Repo',
+              name: 'repo',
+              type: 'url',
+              description: 'Link to the extra repo.',
+              validation: (Rule) => [
+                Rule.required().error('Repo link is required'),
+                Rule.uri({scheme: ['http', 'https']}).error('Must be a valid URL (http/https)'),
+              ],
+            }),
+          ],
+          preview: {
+            select: {title: 'title', subtitle: 'repo'},
+          },
+        },
+      ],
+      validation: (Rule) => Rule.max(20).error('Maximum 20 extras allowed'),
+    }),
   ],
   preview: {
     select: {title: 'description'},

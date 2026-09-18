@@ -3,7 +3,15 @@
   import { page } from '$app/state';
   import OpusNav from '$lib/components/Opus/OpusNav.svelte';
 
-  type OpusSection = 'opus' | 'about' | 'works' | 'services' | 'stack' | 'kaia';
+  type OpusSection =
+    | 'opus'
+    | 'about'
+    | 'works'
+    | 'services'
+    | 'stack'
+    | 'fleur'
+    | 'nvim'
+    | 'kaia';
 
   let { active }: { active: OpusSection } = $props();
 

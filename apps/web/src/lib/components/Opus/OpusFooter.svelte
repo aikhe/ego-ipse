@@ -36,19 +36,17 @@
         <span class="opus-footer__title">Services</span>
         <svg
           class="opus-footer__arrow"
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
           fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
           aria-hidden="true"
         >
-          <path
-            d="M3 10H17M13 6L17 10L13 14"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
+          <path d="m6.5 17.5 11-11m0 9v-9h-9" />
         </svg>
       </span>
       <p class="opus-footer__desc">
@@ -81,12 +79,13 @@
   /* 90% of col-3 (36rem) */
   .opus-footer__card {
     background: var(--color-overlay-03);
+    box-sizing: border-box;
     color: inherit;
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    padding: 1rem;
+    gap: 0.25rem;
+    padding: 0.75rem 1rem;
     position: relative;
     text-decoration: none;
     transition: background-color 0.15s ease;
@@ -125,24 +124,24 @@
   .opus-footer__top {
     align-items: center;
     display: flex;
-    gap: 0.5rem;
+    gap: 0.25rem;
   }
 
   .opus-footer__arrow {
     color: var(--color-text);
     display: block;
     flex-shrink: 0;
-    height: 1.25rem;
-    width: 1.25rem;
+    height: 1.125rem;
+    width: 1.125rem;
   }
 
   .opus-footer__title {
     color: var(--color-text);
     font-family: Geist, sans-serif;
-    font-size: 1.46rem;
+    font-size: 1.08rem;
     font-weight: 500;
-    letter-spacing: 0.1%;
-    line-height: 1;
+    letter-spacing: 0.18%;
+    line-height: 1.48;
     margin: 0;
   }
 
@@ -154,6 +153,7 @@
     letter-spacing: 0.18%;
     line-height: 1.48;
     margin: 0;
+    max-width: 92%;
   }
 
   .opus-footer__bar {
@@ -184,6 +184,14 @@
 
     .opus-footer__card:active::after {
       opacity: 1;
+    }
+  }
+
+  /* mobile: match the nvim card type step-down */
+  @media (max-width: 48rem) {
+    .opus-footer__title,
+    .opus-footer__desc {
+      font-size: 1rem;
     }
   }
 </style>

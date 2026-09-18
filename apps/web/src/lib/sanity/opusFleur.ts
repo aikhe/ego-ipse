@@ -11,7 +11,8 @@ export const opusFleurQuery = `*[_type == "opusFleur"] | order(_createdAt asc)[0
     "assetHeight": image.asset->metadata.dimensions.height,
     width,
     height
-  }
+  },
+  "extras": extras[]{ title, description, repo }
 }`;
 
 function normalizeFleurImages(
@@ -46,10 +47,18 @@ export function normalizeOpusFleur(
   if (!raw) return null;
   const description = raw.description?.trim();
   const images = normalizeFleurImages(raw.images);
-  if (!description && !images) return null;
+  const extras = (raw.extras ?? [])
+    .map((extra) => ({
+      title: extra.title?.trim() ?? '',
+      description: extra.description?.trim() ?? '',
+      repo: extra.repo?.trim() ?? '',
+    }))
+    .filter((extra) => extra.title.length > 0 && extra.repo.length > 0);
+  if (!description && !images && extras.length === 0) return null;
   return {
     ...(description ? { description } : {}),
     ...(images ? { images } : {}),
+    ...(extras.length > 0 ? { extras } : {}),
   };
 }
 

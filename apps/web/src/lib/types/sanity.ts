@@ -68,9 +68,15 @@ export interface SanityOpusFleurImage {
   width?: number;
   height?: number;
 }
+export interface SanityOpusFleurExtra {
+  title?: string;
+  description?: string;
+  repo?: string;
+}
 export interface SanityOpusFleur {
   description?: string;
   images?: SanityOpusFleurImage[];
+  extras?: SanityOpusFleurExtra[];
 }
 export interface SanityOpusNvimPlugin {
   title?: string;

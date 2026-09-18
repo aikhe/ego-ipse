@@ -275,9 +275,6 @@
                 {#if item.href}
                   <a
                     class="opus-stack-cat__item"
-                    class:opus-stack-cat__item--preview={Boolean(
-                      item.previewUrl
-                    )}
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -285,24 +282,11 @@
                     aria-label={item.name}
                     style={`--stack-scale: ${scaleOf(item.size)}`}
                   >
-                    {#if item.previewUrl}
-                      <img
-                        class="opus-stack-cat__logo opus-stack-cat__logo--idle"
-                        src={item.previewUrl}
-                        alt=""
-                        aria-hidden="true"
-                        width="96"
-                        height="36"
-                        loading={i === 0 ? 'eager' : 'lazy'}
-                        fetchpriority={i === 0 ? 'high' : 'low'}
-                        decoding="async"
-                      />
-                    {/if}
                     <!-- single-theme logo: the hidden light/dark pair both
                       downloaded (display:none still fetches <img>), doubling
                       every request. first category is above the fold. -->
                     <img
-                      class="opus-stack-cat__logo opus-stack-cat__logo--main"
+                      class="opus-stack-cat__logo"
                       src={logoUrl}
                       alt={item.name}
                       width="96"
@@ -315,31 +299,15 @@
                 {:else}
                   <span
                     class="opus-stack-cat__item"
-                    class:opus-stack-cat__item--preview={Boolean(
-                      item.previewUrl
-                    )}
                     data-tip={item.name}
                     aria-label={item.name}
                     style={`--stack-scale: ${scaleOf(item.size)}`}
                   >
-                    {#if item.previewUrl}
-                      <img
-                        class="opus-stack-cat__logo opus-stack-cat__logo--idle"
-                        src={item.previewUrl}
-                        alt=""
-                        aria-hidden="true"
-                        width="96"
-                        height="36"
-                        loading={i === 0 ? 'eager' : 'lazy'}
-                        fetchpriority={i === 0 ? 'high' : 'low'}
-                        decoding="async"
-                      />
-                    {/if}
                     <!-- single-theme logo: the hidden light/dark pair both
                       downloaded (display:none still fetches <img>), doubling
                       every request. first category is above the fold. -->
                     <img
-                      class="opus-stack-cat__logo opus-stack-cat__logo--main"
+                      class="opus-stack-cat__logo"
                       src={logoUrl}
                       alt={item.name}
                       width="96"
@@ -734,15 +702,11 @@
     cursor: pointer;
   }
 
-  /* idle state renders the real <img> dimmed via grayscale so every
-    brand shares one muted tone on all devices. a previous mask-image
-    silhouette rendered nothing on desktop for svg icons without
-    intrinsic dimensions, while touch devices (which showed the <img>)
-    looked fine. */
+  /* theme logo renders dimmed via grayscale, hover reveals the full
+    light/dark brand color. */
   .opus-stack-cat__logo {
     display: block;
     filter: grayscale(1);
-    grid-area: 1 / 1;
     height: clamp(1.4rem, 1rem + 2.5vw, 2.25rem);
     margin: 0;
     max-height: clamp(1.4rem, 1rem + 2.5vw, 2.25rem);
@@ -757,24 +721,11 @@
     width: 100%;
   }
 
-  /* preview items stack the preview idle under the full logo:
-    idle shows the preview, hover cross-fades to the logo. */
-  .opus-stack-cat__item--preview .opus-stack-cat__logo--main {
-    filter: none;
-    opacity: 0;
-  }
-
-  .opus-stack-cat__item:hover .opus-stack-cat__logo--main,
-  .opus-stack-cat__item:active .opus-stack-cat__logo--main,
-  .opus-stack-cat__item:focus-visible .opus-stack-cat__logo--main {
+  .opus-stack-cat__item:hover .opus-stack-cat__logo,
+  .opus-stack-cat__item:active .opus-stack-cat__logo,
+  .opus-stack-cat__item:focus-visible .opus-stack-cat__logo {
     filter: none;
     opacity: 1;
-  }
-
-  .opus-stack-cat__item:hover .opus-stack-cat__logo--idle,
-  .opus-stack-cat__item:active .opus-stack-cat__logo--idle,
-  .opus-stack-cat__item:focus-visible .opus-stack-cat__logo--idle {
-    opacity: 0;
   }
 
   .opus-stack__tip {

@@ -19,17 +19,22 @@
   );
   const fleurImages = $derived(data.sanityFleur?.images ?? []);
   const figCount = $derived(fleurImages.length);
+  const fleurExtras = $derived(data.sanityFleur?.extras ?? []);
+  const extraCount = $derived(fleurExtras.length);
 
   const figLabel = (i: number) => `Fig ${String(i + 1).padStart(2, '0')}`;
 
   // left index column mirrors the right content heights so 01 sits level
-  // with the intro and each Fig 01 sits level with its figure instead of
-  // piling at the top (same pattern as the stack page).
+  // with the intro, each Fig 01 sits level with its figure, and 02 sits
+  // level with the extras title instead of piling at the top
+  // (same pattern as the stack page).
   let rightColEl = $state<HTMLElement | null>(null);
+  let extrasTitleEl = $state<HTMLElement | null>(null);
   let partHeights = $state<number[]>([]);
 
   $effect(() => {
     void figCount;
+    void extraCount;
     let raf = 0;
     const measure = () => {
       if (!rightColEl) return;
@@ -83,6 +88,16 @@
           <span class="opus-col__index">{figLabel(i)}</span>
         </div>
       {/each}
+      {#if extraCount > 0}
+        <div
+          class="opus-col__section opus-col__section--fleur-extras"
+          style={partHeights[figCount + 1]
+            ? `height: ${partHeights[figCount + 1]}px`
+            : undefined}
+        >
+          <span class="opus-col__index">02</span>
+        </div>
+      {/if}
     </div>
     <div class="opus-col opus-col--3" bind:this={rightColEl}>
       <div class="opus-col__border opus-col__border--right" aria-hidden="true"></div>
@@ -117,6 +132,32 @@
           {/if}
         </figure>
       {/each}
+      {#if fleurExtras.length > 0}
+        <div
+          class="opus-section opus-section--fleur-extras opus-section--fleur-part"
+        >
+          <h2 class="opus-fleur" bind:this={extrasTitleEl}>Extras</h2>
+          <div class="opus-fleur__rule" aria-hidden="true"></div>
+          <div class="opus-fleur__extras">
+            {#each fleurExtras as extra (extra.repo)}
+              <a
+                class="opus-fleur__extra"
+                href={extra.repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`View ${extra.title} repo on GitHub`}
+              >
+                <span class="opus-fleur__card-title">
+                  {extra.title}
+                </span>
+                <p class="opus-fleur__card-desc">
+                  {extra.description}
+                </p>
+              </a>
+            {/each}
+          </div>
+        </div>
+      {/if}
       <OpusFooter showCard={false} />
     </div>
     <div class="opus-col opus-col--4" aria-hidden="true"></div>
@@ -402,6 +443,10 @@
     margin-top: 2rem;
   }
 
+  .opus-col__section--fleur-extras {
+    margin-top: 3rem;
+  }
+
   .opus-section--fleur {
     display: flex;
     flex-direction: column;
@@ -442,6 +487,109 @@
     line-height: 1.48;
     margin: -0.2rem 0 0;
     max-width: 92%;
+  }
+
+  .opus-section--fleur-extras {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    justify-content: flex-start;
+    margin-top: 3rem;
+  }
+
+  .opus-fleur__rule {
+    background-color: var(--color-overlay-03);
+    height: 2px;
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  .opus-fleur__extras {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    justify-content: flex-start;
+  }
+
+  .opus-fleur__extra {
+    border-bottom: 2px solid var(--color-overlay-03);
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1.25rem 0;
+    position: relative;
+    text-decoration: none;
+    width: 100%;
+  }
+
+  .opus-fleur__extra .opus-fleur__card-title {
+    transition: color 0.15s ease;
+  }
+
+  .opus-fleur__extra .opus-fleur__card-desc {
+    font-size: 1.08rem;
+    line-height: 1.48;
+    max-width: 100%;
+    transition: color 0.15s ease;
+  }
+
+  .opus-fleur__extra:hover .opus-fleur__card-title {
+    color: color-mix(in srgb, var(--color-text) 60%, white);
+  }
+
+  .opus-fleur__extra:hover .opus-fleur__card-desc {
+    color: color-mix(in srgb, var(--color-text-muted-opus) 60%, white);
+  }
+
+  .opus-fleur__card-title {
+    color: var(--color-text);
+    font-family: Geist, sans-serif;
+    font-size: 1.08rem;
+    font-weight: 500;
+    letter-spacing: 0.18%;
+    line-height: 1.48;
+    margin: 0;
+  }
+
+  .opus-fleur__card-desc {
+    color: var(--color-text-muted-opus);
+    font-family: Geist, sans-serif;
+    font-size: 1.08rem;
+    font-weight: 400;
+    letter-spacing: 0.18%;
+    line-height: 1.48;
+    margin: 0;
+    max-width: 92%;
+  }
+
+  /* touch: press states replace hover states */
+  @media (hover: none) {
+    .opus-fleur__extra:hover .opus-fleur__card-title {
+      color: var(--color-text);
+    }
+
+    .opus-fleur__extra:hover .opus-fleur__card-desc {
+      color: var(--color-text-muted-opus);
+    }
+
+    .opus-fleur__extra:active .opus-fleur__card-title {
+      color: color-mix(in srgb, var(--color-text) 60%, white);
+    }
+
+    .opus-fleur__extra:active .opus-fleur__card-desc {
+      color: color-mix(in srgb, var(--color-text-muted-opus) 60%, white);
+    }
+  }
+
+  /* mobile: type steps down with the other opus descriptions. */
+  @media (max-width: 48rem) {
+    .opus-fleur__desc,
+    .opus-fleur__card-title,
+    .opus-fleur__card-desc {
+      font-size: 1rem;
+    }
   }
 
   /* debug grid — Shift+G — background only */

@@ -2,6 +2,20 @@
   import { uiState } from '$lib/state/ui.svelte';
   import OpusNav from '$lib/components/Opus/OpusNav.svelte';
   import OpusFooter from '$lib/components/Opus/OpusFooter.svelte';
+  import {
+    renderRichInline,
+    splitDescriptionParagraphs,
+  } from '$lib/sanity/opusValues';
+  import type { PageProps } from './$types';
+
+  let { data }: PageProps = $props();
+
+  // Sanity-only: no fallback copy. Missing description renders nothing.
+  const servicesParagraphs = $derived(
+    data.sanityServices?.description
+      ? splitDescriptionParagraphs(data.sanityServices.description)
+      : []
+  );
 </script>
 
 <div class="opus-canvas">
@@ -10,17 +24,22 @@
       <OpusNav active="services" />
     </div>
     <div class="opus-col opus-col--2" aria-hidden="true">
-      <div class="opus-col__section opus-col__section--01"><span class="opus-col__index">01</span></div>
+      <div class="opus-col__section opus-col__section--01">
+        <span class="opus-col__index">01</span>
+      </div>
     </div>
     <div class="opus-col opus-col--3">
-      <div class="opus-col__border opus-col__border--right" aria-hidden="true"></div>
+      <div
+        class="opus-col__border opus-col__border--right"
+        aria-hidden="true"
+      ></div>
       <div class="opus-section opus-section--services">
         <h2 class="opus-services">Services</h2>
-        <p class="opus-services__desc">
-          Freelancing since 2025, I help startups and small teams with design,
-          web development, and creative work, from brand and product design to
-          building and shipping sites.
-        </p>
+        {#each servicesParagraphs as para, k (k)}
+          <p class="opus-services__desc">
+            {@html renderRichInline(para)}
+          </p>
+        {/each}
       </div>
       <OpusFooter showCard={false} />
     </div>
@@ -199,14 +218,14 @@
 
   .opus-col__border--right {
     background: linear-gradient(
-        to bottom,
-        var(--color-overlay-02) 0%,
-        var(--color-overlay-02) 20%,
-        transparent 30%,
-        transparent 60%,
-        var(--color-overlay-02) 80%,
-        var(--color-overlay-02) 100%
-      );
+      to bottom,
+      var(--color-overlay-02) 0%,
+      var(--color-overlay-02) 20%,
+      transparent 30%,
+      transparent 60%,
+      var(--color-overlay-02) 80%,
+      var(--color-overlay-02) 100%
+    );
     bottom: 0;
     pointer-events: none;
     position: absolute;

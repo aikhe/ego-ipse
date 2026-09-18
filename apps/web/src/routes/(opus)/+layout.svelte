@@ -5,7 +5,15 @@
 
   let { children }: LayoutProps = $props();
 
-  type OpusSection = 'opus' | 'about' | 'works' | 'services' | 'stack' | 'kaia';
+  type OpusSection =
+    | 'opus'
+    | 'about'
+    | 'works'
+    | 'services'
+    | 'stack'
+    | 'fleur'
+    | 'nvim'
+    | 'kaia';
 
   const active = $derived.by((): OpusSection => {
     // group prefix is not part of the url: /(opus)/about -> /about
@@ -14,6 +22,8 @@
     if (id === '/about') return 'about';
     if (id === '/services') return 'services';
     if (id === '/stack') return 'stack';
+    if (id === '/fleur') return 'fleur';
+    if (id === '/nvim') return 'nvim';
     if (id === '/kaia') return 'kaia';
     return 'opus';
   });

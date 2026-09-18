@@ -2,7 +2,15 @@
   import { resolve } from '$app/paths';
   import { toggleTheme, uiState } from '$lib/state/ui.svelte';
 
-  type OpusSection = 'opus' | 'about' | 'works' | 'services' | 'stack' | 'kaia';
+  type OpusSection =
+    | 'opus'
+    | 'about'
+    | 'works'
+    | 'services'
+    | 'stack'
+    | 'fleur'
+    | 'nvim'
+    | 'kaia';
 
   let {
     active,
@@ -60,8 +68,18 @@
   <nav class="opus-nav opus-nav--soon" aria-label="Upcoming sections">
     <span class="opus-nav__link opus-nav__link--soon">ipse</span>
     <span class="opus-nav__link opus-nav__link--soon">acedia</span>
-    <span class="opus-nav__link opus-nav__link--soon">fleur</span>
-    <span class="opus-nav__link opus-nav__link--soon">nvim</span>
+    <a
+      class="opus-nav__link"
+      class:opus-nav__link--active={active === 'fleur'}
+      href={resolve('/fleur')}
+      aria-current={active === 'fleur' ? 'page' : undefined}>fleur</a
+    >
+    <a
+      class="opus-nav__link"
+      class:opus-nav__link--active={active === 'nvim'}
+      href={resolve('/nvim')}
+      aria-current={active === 'nvim' ? 'page' : undefined}>nvim</a
+    >
   </nav>
   <nav class="opus-nav opus-nav--soon" aria-label="More upcoming sections">
     <span class="opus-nav__link opus-nav__link--soon">osn</span>

@@ -77,12 +77,18 @@
   target them — they live here instead. */
 .opus-about__desc strong,
 .opus-desc strong,
+.opus-fleur__desc strong,
+.opus-nvim__desc strong,
+.opus-services__desc strong,
 .opus-stack__desc strong {
   font-weight: 500;
 }
 
 .opus-about__desc em,
 .opus-desc em,
+.opus-fleur__desc em,
+.opus-nvim__desc em,
+.opus-services__desc em,
 .opus-stack__desc em {
   font-style: italic;
 }

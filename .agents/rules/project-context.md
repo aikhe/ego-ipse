@@ -2,31 +2,38 @@
 trigger: always_on
 ---
 
-# Project Context
+# Project Context — Ego Ipse
 
-## The Why
+## What
 
-**Ego Ipse** is a premium, high-fidelity personal portfolio and identity platform designed to showcase projects through an organic and interactive web experience. The project emphasizes visual excellence, fluid motion, and a deeply technical design language, moving away from generic web aesthetics toward a more sophisticated, curated digital presence.
+Premium, high-fidelity personal portfolio + identity platform. Organic, interactive web experience — visual excellence, fluid motion, and a technical design language over generic aesthetics.
 
 ## The System
 
 - **Apps**:
-  - `/apps/web`: A SvelteKit + Threlte (Three.js) frontend for the main interactive experience. Includes WebGL shader layouts via `@paper-design/shaders` and custom GLSL. Deploys to Cloudflare Pages.
-  - `/apps/studio`: A Sanity Studio instance for content management.
-- **Packages**:
-  - Centralized configurations for ESLint, Stylelint, and TypeScript to ensure monorepo consistency.
-- **Infrastructure**: Powered by Turborepo and Bun for fast, efficient build pipelines.
-- **Analytics**: removed (previously OpenPanel).
-- **Testing**: Vitest with Playwright browser provider for unit and component tests.
+  - `apps/web` — SvelteKit + Threlte (Three.js) frontend. WebGL shader layouts via `@paper-design/shaders` + custom GLSL. Deploys to Cloudflare Pages.
+  - `apps/studio` — Sanity Studio for content management.
+- **Packages**: shared ESLint, Stylelint, and TypeScript configs.
+- **Infra**: Turborepo + Bun.
+- **Testing**: Vitest with Playwright browser provider (unit + component).
 
-## Decision Making Context
+## Premium Bar
 
-Every technical decision should support the "Premium" nature of the project. If a change compromises the visual fidelity or the "organic" feel of the interactions, it must be reconsidered. Performance is critical, but never at the expense of necessary high-fidelity animations (leveraging GSAP, Threlte, and WebGL shaders).
+Every technical decision must support the premium feel. If a change compromises visual fidelity or organic motion, reconsider it. Performance matters, never at the expense of necessary high-fidelity animation (GSAP, Threlte, WebGL shaders).
 
-## Awareness Rules
+## Awareness
 
-- MUST be aware that changes in `packages/` affect the entire monorepo.
-- MUST keep Sanity schemas in sync with SvelteKit data fetching.
-- MUST maintain the "Thin Geist" aesthetic (200 weight, 0.34% tracking) across all new UI.
-- MUST ensure shader-based layouts (gem-smoke, preview-reveal) remain theme-reactive via `data-theme` attribute.
-- MUST use `$state` runes for reactive state (not Svelte stores).
+- Changes in `packages/` affect the whole monorepo.
+- Keep Sanity schemas in sync with SvelteKit data fetching.
+- Thin Geist aesthetic (200 weight, 0.34% tracking) across all new UI.
+- Shader layouts (gem-smoke, preview-reveal) stay theme-reactive via `data-theme`.
+- `$state` runes for reactive state, not Svelte stores.
+
+## Related Skills
+
+| Area                | Skill         |
+| ------------------- | ------------- |
+| UI implementation   | Load `style`  |
+| Work preview images | Load `webp`   |
+| Committing          | Load `commit` |
+| Creating PRs        | Load `pr`     |

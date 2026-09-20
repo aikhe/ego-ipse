@@ -329,6 +329,7 @@
     flex-direction: column;
     gap: 0;
     justify-content: flex-start;
+    min-width: 0;
     position: relative;
     z-index: 1;
   }
@@ -400,6 +401,7 @@
   }
 
   .opus-section {
+    min-width: 0;
     position: relative;
     z-index: 1;
   }
@@ -454,7 +456,9 @@
   }
 
   .opus-section--fleur-fig {
+    box-sizing: border-box;
     margin: 1rem 0 0;
+    min-width: 0;
     width: calc(100% + 4rem);
   }
 
@@ -465,6 +469,7 @@
   .opus-fleur__img {
     display: block;
     height: auto;
+    max-width: 100%;
     width: 100%;
   }
 
@@ -583,8 +588,15 @@
     }
   }
 
-  /* mobile: type steps down with the other opus descriptions. */
+  /* mobile: type steps down with the other opus descriptions.
+    figures stop bleeding into the gutter so sanity images
+    stay inside the single column. */
   @media (max-width: 48rem) {
+    .opus-section--fleur-fig {
+      max-width: 100%;
+      width: 100%;
+    }
+
     .opus-fleur__desc,
     .opus-fleur__card-title,
     .opus-fleur__card-desc {

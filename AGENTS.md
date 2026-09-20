@@ -1,63 +1,36 @@
-# Agentic Coding Guide
+# Ego Ipse
 
-This repository already has a local agent system under `.agents/`. Use this file as the root entrypoint for coding agents so the setup is discoverable from the workspace root.
+Project: **Ego Ipse**: portfolio + identity platform.
+Stack: Bun, Turborepo, SvelteKit 5, Threlte/Three.js, Sanity, GSAP, BEM CSS, Cloudflare Pages.
 
-## Source Of Truth
+## Entry Point
 
-- Rules: `.agents/rules/*.md`
-- Skills: `.agents/skills/*/SKILL.md`
-- Workflows: `.agents/workflows/*.md`
+Read `.agents/rules/` for context before making changes.
 
-## Recommended Load Order
+## Rules (`rules/`)
 
-1. Read `.agents/rules/project-context.md` for product context.
-2. Read `.agents/rules/architecture.md` for repo structure and boundaries.
-3. Read `.agents/rules/development-standards.md` for coding and UI standards.
-4. Read `.agents/rules/ui-system.md` when touching UI, motion, or styling.
-5. Read `.agents/rules/git-policy.md` when preparing commits or PRs.
-6. Read the relevant skill file before doing work in that domain.
-7. Follow the matching workflow file before finalizing changes.
+| File                       | When                                 |
+| -------------------------- | ------------------------------------ |
+| `project-context.md`       | First — product context, premium bar |
+| `architecture.md`          | Repo structure, package boundaries   |
+| `development-standards.md` | Coding conventions, lint, types      |
+| `ui-system.md`             | UI, motion, styling                  |
+| `git-policy.md`            | Commits, PRs                         |
 
-## Skill Map
+## Skills (`skills/`)
 
-- `design`: Svelte UI, BEM CSS, tokens, GSAP motion.
-- `tests`: unit tests, component tests, e2e checks.
-- `sync`: Sanity schema and frontend data synchronization.
-- `git`: commit and PR formatting.
-- `pr`: pull request creation with structured descriptions and verification.
-- `caveman`: ultra-brief responses when requested.
-- `grill-me`: relentless interview to sharpen a plan or design.
-- `webp`: PNG/JPG to webp conversion, work preview wiring, source cleanup.
+| Skill      | Use when                              |
+| ---------- | ------------------------------------- |
+| `style`    | Styling components, BEM, GSAP, tokens |
+| `webp`     | Work preview images                   |
+| `commit`   | Staging + committing changes          |
+| `pr`       | Creating PRs                          |
+| `grill-me` | Stress-testing a plan or design       |
 
-## Workflow Map
+## Expectations
 
-- `format-and-lint-workflow.md`: run repo checks and fix diagnostics.
-- `done-criteria.md`: final quality gate before handoff.
-- `commit-convention.md`: commit message rules and commit flow.
-- `pr-workflow.md`: PR-ready summary and change log format.
-
-## Repository Expectations
-
-- Keep changes within the monorepo structure under `apps/` and `packages/`.
-- Use `bun run check` for validation and `bun run build` for final verification when code changes.
-- Do not commit unless the user explicitly asks.
-- Do not stage or commit the `.agents` directory itself.
-- Prefer root-cause fixes over superficial patches.
-- Keep UI work aligned with the premium visual system and BEM naming conventions.
-
-## Tooling Notes
-
-- The repo uses Bun, Turborepo, SvelteKit, and Sanity.
-- CI runs `bun run check` and `bun run build`.
-- Commit messages are validated by Commitlint in CI.
-
-## Practical Setup For New Agents
-
-When introducing another agent or automation layer, mirror these files in the tool's preferred location:
-
-- Put workspace-level instructions in a root `AGENTS.md` or equivalent.
-- Keep detailed rules in `.agents/rules/`.
-- Keep reusable task playbooks in `.agents/workflows/`.
-- Keep domain-specific guidance in `.agents/skills/<skill>/SKILL.md`.
-
-If a tool supports only one instruction file, keep this file concise and use the `.agents/` tree as the detailed source of truth.
+- Changes live under `apps/` and `packages/`.
+- Validate: `bun run check && bun run build`.
+- Don't commit unless instructed.
+- Don't stage `.agents/`.
+- Root-cause fixes over patches.

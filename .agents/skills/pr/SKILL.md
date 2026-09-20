@@ -1,56 +1,69 @@
 ---
 name: pr
-description: Create structured pull requests with verification and attribution. Use when the user asks to open, draft, update, or describe a pull request.
+description: File a concise pull request. Use when the user asks to file, open, or create a PR.
 ---
 
-# PR Skill
+## Pull Request Workflow
 
-Create pull requests with a structured description, verification steps, and agent attribution.
+### 1. Pre-flight
 
-## When to use this skill
+- Check whether a PR already exists: `gh pr view --json number,title,state`
+  plus `gh pr list --head <branch>`. Edit it instead of opening a duplicate.
+- Review the diff locally against `origin/main` (`git diff origin/main...HEAD --stat`
+  plus full diff) to make sure its contents match the goal. Drop stray files,
+  never stage `.agents/`.
+- Skim recent git history (`git log --oneline -15`) for title conventions.
 
-- Use this when the user asks to open, draft, update, or describe a pull request.
-- Use this when turning a branch of commits into a review-ready PR via `gh`.
-- Do not use this for local commits — use the `commit` skill instead.
+### 2. Title
 
-## How to use it
+PR titles usually become squash messages, so keep the repo's one-line
+conventional format (`<type>(<scope>): <description>`, max 120 chars,
+`&` for correlated details, `+` for distinct ones). Within that format,
+explain why the change matters, not just what moved.
 
-Follow `.agents/rules/git-policy.md` and `.agents/workflows/pr-workflow.md` as the source of truth.
+- BAD (what-only): `refactor(web): move poster routes into app group`
+- GOOD (why): `feat(web): cut work navigation to one click with shader layout + split poster info views`
+- BAD (what-only): `fix(web): negotiate create param on the works route`
+- GOOD (why): `fix(web): stop preview modal reopening on refresh with intent store`
 
-### 1. Check the branch
+### 3. Description
 
-- Verify with `git status` and `git branch -a` that the branch is pushed to remote.
+Open with a simple explanation of the problem based on the user's original
+prompt, then briefly explain the solution. Do not lead with an
+implementation inventory.
 
-### 2. Draft the PR body as a markdown file
+- BAD: `Removed implicit parent requirement from CreateWorkSchema, deleted the
+preview insert from the orphan branch, moved 8 routes into (app)/...`
+- GOOD: `Creating a quick work entry always forced a preview pick, and everything
+lived under one crowded page. Works can now exist previewless, and
+poster/info get their own focused views behind a shader layout.`
 
-- Write the body to a `.md` temp file (e.g. `pr_body.md`). This avoids shell escaping issues with backticks and inline code when passing to `gh`.
+Then keep the rest compact. Draft the body to a temp `.md` file (avoids
+shell escaping with backticks) and use asterisks for bullet lists.
+MUST include:
 
-### 3. Create or edit the PR using the file
+- `### Summary`: problem plus outcome in 2-4 sentences (the GOOD paragraph above).
+- `### Changes`: compact table (`| File | Change |`) or short bullets,
+  only what a reviewer needs.
+- `### Verification`: validation steps and results (`bun run check`,
+  `bun run build`, plus manual checks).
+- `### Harness`: model plus harness that filed the PR.
+- `### Configuration`: only when the PR itself requires setup (new env vars,
+  scripts, deps). Omit otherwise.
+
+### 4. File it
 
 - Create: `gh pr create --title "<title>" --body-file <path/to/pr_body.md>`
 - Edit: `gh pr edit <number> --body-file <path/to/pr_body.md>`
-
-### 4. PR Title
-
-- Follows the conventional commit format (`<type>(<scope>): <description>`), single line, max 120 chars.
-
-### 5. PR Description
-
-MUST include these sections in order:
-
-- `### Summary`: High-level overview.
-- `### Features`: Bulleted list of new functionality.
-- `### Changes`: Technical breakdown of changes (bullets or `| File | Change |` table).
-- `### Verification`: Validation steps and results (e.g. lint, typecheck, build, review comments addressed).
-- `### Configuration`: (If applicable) code snippets for setup.
-- `### Environment`: Agent attribution. Always state the exact LLM model and version plus the harness, e.g.:
-  `Model: Muse Spark 1.3` + `Harness: OpenCode`.
-  Never omit this section; if the model or harness is unknown, write `Unknown` and ask the user to confirm rather than guessing.
+- Open a real PR rather than a draft so review bots run.
+- Automated gates: GitHub Actions validates the title (commitlint) and the
+  CI pipeline (`build`, `lint`, `format`) must stay green before merge.
 
 ## Review Comment Handling
 
 When Copilot or other reviewers leave feedback on a PR:
 
-- Evaluate each comment — address valid concerns (bugs, memory leaks, duplication) and acknowledge false positives.
+- Evaluate each comment: address valid concerns (bugs, memory leaks,
+  duplication) and acknowledge false positives.
 - Push fixes as separate, focused commits (one concern per commit where practical).
 - Post a summary comment on the PR listing what was addressed and how.

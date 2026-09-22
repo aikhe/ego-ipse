@@ -5,7 +5,7 @@ description: Style UI with BEM, tokens, and motion. Use when styling components,
 
 # Style Skill
 
-This skill ensures that all UI implementations adhere to the project's premium aesthetic and technical standards.
+This skill ensures that all UI implementations adhere to the project's aesthetic and technical standards.
 
 ## When to use this skill
 

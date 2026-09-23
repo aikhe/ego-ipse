@@ -10,6 +10,7 @@
     | 'services'
     | 'stack'
     | 'fleur'
+    | 'osn'
     | 'nvim'
     | 'kaia';
 

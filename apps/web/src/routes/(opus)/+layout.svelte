@@ -12,6 +12,7 @@
     | 'services'
     | 'stack'
     | 'fleur'
+    | 'osn'
     | 'nvim'
     | 'kaia';
 
@@ -23,6 +24,7 @@
     if (id === '/services') return 'services';
     if (id === '/stack') return 'stack';
     if (id === '/fleur') return 'fleur';
+    if (id === '/osn') return 'osn';
     if (id === '/nvim') return 'nvim';
     if (id === '/kaia') return 'kaia';
     return 'opus';

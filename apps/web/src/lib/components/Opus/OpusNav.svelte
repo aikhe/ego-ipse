@@ -9,6 +9,7 @@
     | 'services'
     | 'stack'
     | 'fleur'
+    | 'osn'
     | 'nvim'
     | 'kaia';
 
@@ -82,7 +83,12 @@
     >
   </nav>
   <nav class="opus-nav opus-nav--soon" aria-label="More upcoming sections">
-    <span class="opus-nav__link opus-nav__link--soon">osn</span>
+    <a
+      class="opus-nav__link"
+      class:opus-nav__link--active={active === 'osn'}
+      href={resolve('/osn')}
+      aria-current={active === 'osn' ? 'page' : undefined}>osn</a
+    >
     <span class="opus-nav__link opus-nav__link--soon">constituent</span>
     <span class="opus-nav__link opus-nav__link--soon">knots</span>
     <span class="opus-nav__link opus-nav__link--soon">katha</span>

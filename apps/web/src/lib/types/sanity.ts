@@ -78,6 +78,18 @@ export interface SanityOpusFleur {
   images?: SanityOpusFleurImage[];
   extras?: SanityOpusFleurExtra[];
 }
+export interface SanityOpusOsnImage {
+  src?: string;
+  alt?: string;
+  assetWidth?: number;
+  assetHeight?: number;
+  width?: number;
+  height?: number;
+}
+export interface SanityOpusOsn {
+  description?: string;
+  images?: SanityOpusOsnImage[];
+}
 export interface SanityOpusNvimPlugin {
   title?: string;
   description?: string;

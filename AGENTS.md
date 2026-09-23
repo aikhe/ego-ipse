@@ -16,6 +16,7 @@ Portfolio + identity platform. Organic, interactive, high-fidelity over generic.
 - Svelte 5 Runes (`$state`, `$derived`, `$effect`, `$props`) only, never stores. Logic/state in runes or utils, not components. `each` blocks need unique keys. `routes/api/` stays thin (fetch/serve).
 - Feature subdirs under `lib/components/`. No direct cross-feature imports — public API or bridge.
 - No hardcoded Sanity content. Keep schemas ↔ GROQ (`+page.server.ts`) ↔ `$lib/types/` in sync.
+- Sanity seeding: Editor `SANITY_TOKEN` lives in `apps/studio/.env.local`; load it from there when running `apps/studio/scripts/seed-*.mjs`, never print it.
 - Validate: `bun run check && bun run build`. `bun run format` auto-fixes. ESLint + Stylelint + Prettier; Stylelint: BEM patterns, alphabetical props, string imports.
 - Tests: Vitest + `vitest-browser-svelte` (Playwright). Colocated: `*.svelte.{test,spec}.{js,ts}` for components, `.{test,spec}.{js,ts}` for Node logic.
 - Git (PowerShell only): commit only when explicitly instructed. Never stage `.agents/`.

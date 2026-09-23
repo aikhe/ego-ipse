@@ -19,6 +19,7 @@
       : []
   );
   const nvimPlugins = $derived(data.sanityNvim?.plugins ?? []);
+  const nvimMiscs = $derived(data.sanityNvim?.miscs ?? []);
   const nvimConfigCard = $derived(data.sanityNvim?.configCard);
   const pluginStars = $derived(data.pluginStars ?? {});
 
@@ -34,29 +35,34 @@
   let introEl = $state<HTMLDivElement | null>(null);
   let featuresEl = $state<HTMLDivElement | null>(null);
   let pluginsTitleEl = $state<HTMLElement | null>(null);
+  let miscsTitleEl = $state<HTMLElement | null>(null);
 
   // same measured-index trick as the about page: 01 takes the intro
   // section's height and 02 takes the full features section's height
   // (+ the same 2rem top margin as the features section) so each index
   // sits level with its section instead of piling at the top.
-  // 03 follows the same pattern for the plugins title.
+  // 03 follows the same pattern for the plugins title, 04 for miscs.
   $effect(() => {
     if (!introEl) return;
     const sync = () => {
       const h = introEl!.getBoundingClientRect().height;
       const fh = featuresEl?.getBoundingClientRect().height;
       const ph = pluginsTitleEl?.getBoundingClientRect().height;
+      const mh = miscsTitleEl?.getBoundingClientRect().height;
       const root = document.documentElement.style;
       root.setProperty('--nvim-intro-h', `${h}px`);
       if (fh !== undefined) root.setProperty('--nvim-features-h', `${fh}px`);
       if (ph !== undefined)
         root.setProperty('--nvim-plugins-title-h', `${ph}px`);
+      if (mh !== undefined)
+        root.setProperty('--nvim-miscs-title-h', `${mh}px`);
     };
     sync();
     const ro = new ResizeObserver(sync);
     ro.observe(introEl);
     if (featuresEl) ro.observe(featuresEl);
     if (pluginsTitleEl) ro.observe(pluginsTitleEl);
+    if (miscsTitleEl) ro.observe(miscsTitleEl);
     window.addEventListener('resize', sync);
     return () => {
       ro.disconnect();
@@ -221,6 +227,9 @@
       <div class="opus-col__section opus-col__section--03">
         <span class="opus-col__index">03</span>
       </div>
+      <div class="opus-col__section opus-col__section--04">
+        <span class="opus-col__index">04</span>
+      </div>
     </div>
     <div class="opus-col opus-col--3">
       <div
@@ -295,6 +304,37 @@
                 </span>
                 <p class="opus-nvim__card-desc">
                   {plugin.description}
+                </p>
+              </a>
+            {/each}
+          </div>
+        {/if}
+      </div>
+      <div class="opus-section opus-section--nvim-miscs">
+        <h2 class="opus-nvim" bind:this={miscsTitleEl}>Miscs</h2>
+        <div class="opus-nvim__rule" aria-hidden="true"></div>
+        {#if nvimMiscs.length > 0}
+          <div
+            class="opus-nvim__plugins"
+            role="group"
+            aria-label="Misc repos"
+            onmousemove={showTip}
+            onmouseleave={hideTip}
+          >
+            {#each nvimMiscs as misc (misc.repo)}
+              <a
+                class="opus-nvim__plugin"
+                href={misc.repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-tip={starsTip(misc.repo)}
+                aria-label={`View ${misc.title} repo on GitHub`}
+              >
+                <span class="opus-nvim__card-title">
+                  {misc.title}
+                </span>
+                <p class="opus-nvim__card-desc">
+                  {misc.description}
                 </p>
               </a>
             {/each}
@@ -613,6 +653,11 @@
     margin-top: 3rem;
   }
 
+  .opus-col__section--04 {
+    height: var(--nvim-miscs-title-h);
+    margin-top: 3rem;
+  }
+
   .opus-col__index {
     color: var(--color-text-faint-opus);
     font-family: 'Geist Mono', monospace;
@@ -658,6 +703,14 @@
   }
 
   .opus-section--nvim-plugins {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    justify-content: flex-start;
+    margin-top: 3rem;
+  }
+
+  .opus-section--nvim-miscs {
     display: flex;
     flex-direction: column;
     gap: 0;

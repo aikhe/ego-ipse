@@ -103,6 +103,7 @@ export interface SanityOpusNvim {
   description?: string;
   configCard?: SanityOpusNvimConfigCard;
   plugins?: SanityOpusNvimPlugin[];
+  miscs?: SanityOpusNvimPlugin[];
 }
 export interface SanityOpusServices {
   description?: string;

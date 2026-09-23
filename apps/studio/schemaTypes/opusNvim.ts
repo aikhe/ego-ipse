@@ -95,6 +95,54 @@ export default defineType({
       ],
       validation: (Rule) => Rule.max(20).error('Maximum 20 plugins allowed'),
     }),
+    defineField({
+      title: 'Miscs',
+      name: 'miscs',
+      type: 'array',
+      description: 'Misc list under the Miscs heading. Each item links out to its repo.',
+      of: [
+        {
+          type: 'object',
+          name: 'nvimMisc',
+          title: 'Misc',
+          fields: [
+            defineField({
+              title: 'Title',
+              name: 'title',
+              type: 'string',
+              validation: (Rule) => [
+                Rule.required().error('Title is required'),
+                Rule.max(80).error('Title cannot exceed 80 characters'),
+              ],
+            }),
+            defineField({
+              title: 'Description',
+              name: 'description',
+              type: 'text',
+              rows: 2,
+              validation: (Rule) => [
+                Rule.required().error('Description is required'),
+                Rule.max(300).error('Description cannot exceed 300 characters'),
+              ],
+            }),
+            defineField({
+              title: 'Repo',
+              name: 'repo',
+              type: 'url',
+              description: 'Link to the misc repo.',
+              validation: (Rule) => [
+                Rule.required().error('Repo link is required'),
+                Rule.uri({scheme: ['http', 'https']}).error('Must be a valid URL (http/https)'),
+              ],
+            }),
+          ],
+          preview: {
+            select: {title: 'title', subtitle: 'repo'},
+          },
+        },
+      ],
+      validation: (Rule) => Rule.max(20).error('Maximum 20 miscs allowed'),
+    }),
   ],
   preview: {
     select: {title: 'description'},

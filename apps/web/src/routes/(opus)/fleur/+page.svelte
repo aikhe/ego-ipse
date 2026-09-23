@@ -22,6 +22,18 @@
   const fleurExtras = $derived(data.sanityFleur?.extras ?? []);
   const extraCount = $derived(fleurExtras.length);
 
+  // extras filter (same pattern as the works page search).
+  let query = $state('');
+  const queryText = $derived(query.trim().toLowerCase());
+  const filteredExtras = $derived(
+    fleurExtras.filter(extra => {
+      if (queryText === '') return true;
+      const haystack =
+        `${extra.title} ${extra.description} ${extra.repo ?? ''}`.toLowerCase();
+      return haystack.includes(queryText);
+    })
+  );
+
   const figLabel = (i: number) => `Fig ${String(i + 1).padStart(2, '0')}`;
 
   // left index column mirrors the right content heights so 01 sits level
@@ -139,10 +151,22 @@
         <div
           class="opus-section opus-section--fleur-extras opus-section--fleur-part"
         >
-          <h2 class="opus-fleur" bind:this={extrasTitleEl}>Extras</h2>
+          <div class="opus-fleur__head">
+            <h2 class="opus-fleur" bind:this={extrasTitleEl}>Extras</h2>
+            <div class="opus-search">
+              <input
+                class="opus-search__input"
+                type="text"
+                placeholder="Filter extras..."
+                aria-label="Filter extras"
+                autocomplete="off"
+                bind:value={query}
+              />
+            </div>
+          </div>
           <div class="opus-fleur__rule" aria-hidden="true"></div>
           <div class="opus-fleur__extras">
-            {#each fleurExtras as extra (extra.repo)}
+            {#each filteredExtras as extra (extra.repo)}
               <a
                 class="opus-fleur__extra"
                 href={extra.repo}
@@ -159,6 +183,11 @@
               </a>
             {/each}
           </div>
+          {#if filteredExtras.length === 0}
+            <p class="opus-fleur__empty">
+              No extras match "{query.trim()}" yet.
+            </p>
+          {/if}
         </div>
       {/if}
       <OpusFooter showCard={false} />
@@ -505,6 +534,43 @@
     margin-top: 3rem;
   }
 
+  .opus-fleur__head {
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .opus-search {
+    margin-left: auto;
+    margin-right: 0;
+  }
+
+  .opus-search__input {
+    background: var(--color-overlay-05);
+    border: none;
+    color: var(--color-text);
+    font-family: Geist, sans-serif;
+    font-size: 0.92rem;
+    font-weight: 400;
+    letter-spacing: 0.18%;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0.4rem 0.75rem;
+    width: 20rem;
+  }
+
+  .opus-search__input::placeholder {
+    color: var(--color-text-faint-opus);
+    opacity: 1;
+  }
+
+  .opus-search__input:focus-visible {
+    outline: 1px solid var(--color-border-solid);
+    outline-offset: 0;
+  }
+
   .opus-fleur__rule {
     background-color: var(--color-overlay-03);
     height: 2px;
@@ -517,6 +583,16 @@
     flex-direction: column;
     gap: 0;
     justify-content: flex-start;
+  }
+
+  .opus-fleur__empty {
+    color: var(--color-text-muted-opus);
+    font-family: Geist, sans-serif;
+    font-size: 1.08rem;
+    font-weight: 400;
+    letter-spacing: 0.18%;
+    line-height: 1.48;
+    margin: 1.25rem 0 0;
   }
 
   .opus-fleur__extra {
@@ -600,9 +676,19 @@
       width: 100%;
     }
 
+    .opus-fleur__head {
+      flex-wrap: wrap;
+    }
+
+    .opus-search {
+      flex-basis: 100%;
+      margin-left: 0;
+    }
+
     .opus-fleur__desc,
     .opus-fleur__card-title,
-    .opus-fleur__card-desc {
+    .opus-fleur__card-desc,
+    .opus-fleur__empty {
       font-size: 1rem;
     }
   }

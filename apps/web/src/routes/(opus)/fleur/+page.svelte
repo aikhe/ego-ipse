@@ -445,7 +445,7 @@
   }
 
   .opus-col__section--01 + .opus-col__section--fleur-fig {
-    margin-top: 1rem;
+    margin-top: 2rem;
   }
 
   .opus-col__section--fleur-extras {
@@ -466,7 +466,7 @@
   }
 
   .opus-section--fleur + .opus-section--fleur-fig {
-    margin-top: 1rem;
+    margin-top: 2rem;
   }
 
   .opus-fleur__img {

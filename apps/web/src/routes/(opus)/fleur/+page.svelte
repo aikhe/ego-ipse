@@ -42,7 +42,7 @@
         ':scope > .opus-section--fleur-part'
       );
       partHeights = Array.from(parts).map(
-        (el) => (el as HTMLElement).getBoundingClientRect().height
+        el => (el as HTMLElement).getBoundingClientRect().height
       );
     };
     const schedule = () => {
@@ -100,7 +100,10 @@
       {/if}
     </div>
     <div class="opus-col opus-col--3" bind:this={rightColEl}>
-      <div class="opus-col__border opus-col__border--right" aria-hidden="true"></div>
+      <div
+        class="opus-col__border opus-col__border--right"
+        aria-hidden="true"
+      ></div>
       <div class="opus-section opus-section--fleur opus-section--fleur-part">
         <h2 class="opus-fleur">Fleur</h2>
         {#each fleurParagraphs as para, k (k)}
@@ -438,11 +441,11 @@
   }
 
   .opus-col__section--fleur-fig {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
   }
 
   .opus-col__section--01 + .opus-col__section--fleur-fig {
-    margin-top: 2rem;
+    margin-top: 1rem;
   }
 
   .opus-col__section--fleur-extras {
@@ -457,13 +460,13 @@
 
   .opus-section--fleur-fig {
     box-sizing: border-box;
-    margin: 1rem 0 0;
+    margin: 0.5rem 0 0;
     min-width: 0;
-    width: calc(100% + 4rem);
+    width: 100%;
   }
 
   .opus-section--fleur + .opus-section--fleur-fig {
-    margin-top: 2rem;
+    margin-top: 1rem;
   }
 
   .opus-fleur__img {

@@ -58,12 +58,3 @@ MUST include:
 - Open a real PR rather than a draft so review bots run.
 - Automated gates: GitHub Actions validates the title (commitlint) and the
   CI pipeline (`build`, `lint`, `format`) must stay green before merge.
-
-## Review Comment Handling
-
-When Copilot or other reviewers leave feedback on a PR:
-
-- Evaluate each comment: address valid concerns (bugs, memory leaks,
-  duplication) and acknowledge false positives.
-- Push fixes as separate, focused commits (one concern per commit where practical).
-- Post a summary comment on the PR listing what was addressed and how.

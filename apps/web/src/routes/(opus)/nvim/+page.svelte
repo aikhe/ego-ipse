@@ -34,6 +34,7 @@
 
   let introEl = $state<HTMLDivElement | null>(null);
   let featuresEl = $state<HTMLDivElement | null>(null);
+  let pluginsEl = $state<HTMLDivElement | null>(null);
   let pluginsTitleEl = $state<HTMLElement | null>(null);
   let miscsTitleEl = $state<HTMLElement | null>(null);
 
@@ -42,18 +43,23 @@
   // (+ the same 2rem top margin as the features section) so each index
   // sits level with its section instead of piling at the top.
   // 03 follows the same pattern for the plugins title, 04 for miscs.
+  // 04 also spans the plugins body (rule + list) so it lands level
+  // with the miscs title instead of floating under the plugins title.
   $effect(() => {
     if (!introEl) return;
     const sync = () => {
       const h = introEl!.getBoundingClientRect().height;
       const fh = featuresEl?.getBoundingClientRect().height;
       const ph = pluginsTitleEl?.getBoundingClientRect().height;
+      const pb =
+        (pluginsEl?.getBoundingClientRect().height ?? ph ?? 0) - (ph ?? 0);
       const mh = miscsTitleEl?.getBoundingClientRect().height;
       const root = document.documentElement.style;
       root.setProperty('--nvim-intro-h', `${h}px`);
       if (fh !== undefined) root.setProperty('--nvim-features-h', `${fh}px`);
       if (ph !== undefined)
         root.setProperty('--nvim-plugins-title-h', `${ph}px`);
+      root.setProperty('--nvim-plugins-body-h', `${Math.max(pb, 0)}px`);
       if (mh !== undefined)
         root.setProperty('--nvim-miscs-title-h', `${mh}px`);
     };
@@ -61,6 +67,7 @@
     const ro = new ResizeObserver(sync);
     ro.observe(introEl);
     if (featuresEl) ro.observe(featuresEl);
+    if (pluginsEl) ro.observe(pluginsEl);
     if (pluginsTitleEl) ro.observe(pluginsTitleEl);
     if (miscsTitleEl) ro.observe(miscsTitleEl);
     window.addEventListener('resize', sync);
@@ -279,7 +286,7 @@
           </a>
         {/if}
       </div>
-      <div class="opus-section opus-section--nvim-plugins">
+      <div class="opus-section opus-section--nvim-plugins" bind:this={pluginsEl}>
         <h2 class="opus-nvim" bind:this={pluginsTitleEl}>Plugins</h2>
         <div class="opus-nvim__rule" aria-hidden="true"></div>
         {#if nvimPlugins.length > 0}
@@ -655,7 +662,7 @@
 
   .opus-col__section--04 {
     height: var(--nvim-miscs-title-h);
-    margin-top: 3rem;
+    margin-top: calc(3rem + var(--nvim-plugins-body-h, 0px));
   }
 
   .opus-col__index {

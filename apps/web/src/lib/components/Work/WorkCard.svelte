@@ -154,7 +154,6 @@
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
-    padding-bottom: 8rem;
     position: sticky;
     top: 4rem;
   }

@@ -38,7 +38,7 @@
       class="opus-nav__link"
       class:opus-nav__link--active={active === 'opus'}
       href={resolve('/')}
-      aria-current={active === 'opus' ? 'page' : undefined}>opus</a
+      aria-current={active === 'opus' ? 'page' : undefined}>home</a
     >
     <a
       class="opus-nav__link"

@@ -416,8 +416,9 @@
   .opus-section--osn-fig {
     box-sizing: border-box;
     margin: 0.5rem 0 0;
+    max-width: none;
     min-width: 0;
-    width: 100%;
+    width: calc(100% + 20rem + 4px);
   }
 
   .opus-section--osn + .opus-section--osn-fig {

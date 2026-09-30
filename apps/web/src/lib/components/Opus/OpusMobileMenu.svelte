@@ -9,6 +9,7 @@
     | 'works'
     | 'services'
     | 'stack'
+    | 'blogs'
     | 'fleur'
     | 'osn'
     | 'nvim'

@@ -11,6 +11,7 @@
     | 'works'
     | 'services'
     | 'stack'
+    | 'blogs'
     | 'fleur'
     | 'osn'
     | 'nvim'
@@ -23,6 +24,7 @@
     if (id === '/about') return 'about';
     if (id === '/services') return 'services';
     if (id === '/stack') return 'stack';
+    if (id === '/blogs') return 'blogs';
     if (id === '/fleur') return 'fleur';
     if (id === '/osn') return 'osn';
     if (id === '/nvim') return 'nvim';

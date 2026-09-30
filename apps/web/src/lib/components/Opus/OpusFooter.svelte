@@ -64,7 +64,8 @@
 <style>
   /* col-3 (36rem) + col-4 (12rem) + border */
   .opus-section--footer {
-    margin-top: 8rem;
+    margin-top: auto;
+    padding-top: 8rem;
     position: relative;
     width: calc(48rem + 2px);
     z-index: 1;

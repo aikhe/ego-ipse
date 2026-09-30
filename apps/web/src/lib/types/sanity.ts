@@ -108,6 +108,9 @@ export interface SanityOpusNvim {
 export interface SanityOpusServices {
   description?: string;
 }
+export interface SanityOpusBlogs {
+  description?: string;
+}
 export interface SanityOpusKaia {
   description?: string;
 }

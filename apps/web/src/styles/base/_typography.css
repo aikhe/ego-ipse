@@ -76,6 +76,7 @@
   <strong>/<em> arrive via {@html}, so scoped component styles cannot
   target them — they live here instead. */
 .opus-about__desc strong,
+.opus-blogs__desc strong,
 .opus-desc strong,
 .opus-fleur__desc strong,
 .opus-osn__desc strong,
@@ -86,6 +87,7 @@
 }
 
 .opus-about__desc em,
+.opus-blogs__desc em,
 .opus-desc em,
 .opus-fleur__desc em,
 .opus-osn__desc em,

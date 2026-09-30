@@ -492,7 +492,7 @@
     margin: 0.5rem 0 0;
     max-width: none;
     min-width: 0;
-    width: calc(100% + 20rem + 4px);
+    width: calc(100% + 12rem + 2px);
   }
 
   .opus-section--fleur + .opus-section--fleur-fig {

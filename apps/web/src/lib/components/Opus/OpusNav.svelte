@@ -8,6 +8,7 @@
     | 'works'
     | 'services'
     | 'stack'
+    | 'blogs'
     | 'fleur'
     | 'osn'
     | 'nvim'
@@ -67,8 +68,18 @@
   </nav>
   <!-- future routes — unclickable for now -->
   <nav class="opus-nav opus-nav--soon" aria-label="Upcoming sections">
-    <span class="opus-nav__link opus-nav__link--soon">ipse</span>
-    <span class="opus-nav__link opus-nav__link--soon">acedia</span>
+    <a
+      class="opus-nav__link"
+      class:opus-nav__link--active={active === 'blogs'}
+      href={resolve('/blogs')}
+      aria-current={active === 'blogs' ? 'page' : undefined}>blogs</a
+    >
+    <a
+      class="opus-nav__link"
+      href="https://aikhe.pages.dev/"
+      target="_blank"
+      rel="noopener noreferrer">ipse</a
+    >
     <a
       class="opus-nav__link"
       class:opus-nav__link--active={active === 'fleur'}

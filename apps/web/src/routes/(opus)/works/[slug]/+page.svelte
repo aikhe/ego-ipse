@@ -123,7 +123,7 @@
     gap: 0;
     grid-template-columns: 14rem 4rem 36rem 12rem 8rem;
     justify-content: center;
-    min-height: calc(100dvh + 16rem);
+    min-height: 100dvh;
     width: fit-content;
   }
 

@@ -244,6 +244,12 @@
   a.opus-work-detail__quote-by {
     color: var(--color-text-muted-opus);
     text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  a.opus-work-detail__quote-by:hover,
+  a.opus-work-detail__quote-by:focus-visible {
+    color: var(--color-text);
   }
 
   .opus-work-detail__gallery {

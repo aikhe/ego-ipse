@@ -281,6 +281,12 @@
   a.opus-work__quote-by {
     color: var(--color-text-muted-opus);
     text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  a.opus-work__quote-by:hover,
+  a.opus-work__quote-by:focus-visible {
+    color: var(--color-text);
   }
 
   .opus-work__preview {
@@ -359,6 +365,14 @@
     .opus-work__title-link:active {
       color: var(--color-text-muted-opus);
       text-decoration: none;
+    }
+
+    a.opus-work__quote-by:hover {
+      color: var(--color-text-muted-opus);
+    }
+
+    a.opus-work__quote-by:active {
+      color: var(--color-text);
     }
 
     .opus-work__preview-cell:hover::after {

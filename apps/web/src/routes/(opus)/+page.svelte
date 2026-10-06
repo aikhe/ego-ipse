@@ -1248,6 +1248,12 @@
 
   .opus-paper-link {
     display: inline-flex;
+    transition: opacity 0.2s ease;
+  }
+
+  .opus-paper-link:hover,
+  .opus-paper-link:focus-visible {
+    opacity: 0.7;
   }
 
   .paper-wordmark {
@@ -1374,6 +1380,14 @@
       background: var(--color-text);
       color: var(--color-bg);
       opacity: 1;
+    }
+
+    .opus-paper-link:hover {
+      opacity: 1;
+    }
+
+    .opus-paper-link:active {
+      opacity: 0.7;
     }
   }
 </style>

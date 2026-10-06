@@ -95,19 +95,9 @@
     >
   </nav>
   <nav class="opus-nav opus-nav--soon" aria-label="More upcoming sections">
-    <a
-      class="opus-nav__link"
-      class:opus-nav__link--active={active === 'osn'}
-      href={resolve('/osn')}
-      aria-current={active === 'osn' ? 'page' : undefined}>osn</a
-    >
+    <span class="opus-nav__link opus-nav__link--soon">osn</span>
     <span class="opus-nav__link opus-nav__link--soon">constituent</span>
-    <a
-      class="opus-nav__link"
-      class:opus-nav__link--active={active === 'knots'}
-      href={resolve('/knots')}
-      aria-current={active === 'knots' ? 'page' : undefined}>knots</a
-    >
+    <span class="opus-nav__link opus-nav__link--soon">knots</span>
     <span class="opus-nav__link opus-nav__link--soon">katha</span>
   </nav>
   <nav class="opus-kaia" aria-label="Personal agent">
@@ -228,6 +218,7 @@
   .opus-nav__link--soon {
     color: var(--color-text-faint-opus);
     cursor: default;
+    transition: none;
   }
 
   .opus-nav__link:not(.opus-nav__link--active, .opus-nav__link--soon):hover {

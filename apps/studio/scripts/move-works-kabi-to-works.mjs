@@ -47,9 +47,7 @@ const mutations = [{patch: {id: DOC_ID, set: {selected: false, order: target}}}]
 console.log(`move Kabi Redesign: selected order ${kabi.order} -> works order ${target}`)
 
 // close the gap left in selected works.
-const selected = await sanityQuery(
-  `*[_type == "opusWork" && selected == true]{_id, title, order}`,
-)
+const selected = await sanityQuery(`*[_type == "opusWork" && selected == true]{_id, title, order}`)
 for (const item of selected) {
   if (item._id === DOC_ID || typeof item.order !== 'number' || item.order <= kabi.order) continue
   mutations.push({patch: {id: item._id, set: {order: item.order - 1}}})
@@ -57,9 +55,7 @@ for (const item of selected) {
 }
 
 // open room under mylo in regular works.
-const regular = await sanityQuery(
-  `*[_type == "opusWork" && selected != true]{_id, title, order}`,
-)
+const regular = await sanityQuery(`*[_type == "opusWork" && selected != true]{_id, title, order}`)
 for (const item of regular) {
   if (item._id === DOC_ID || typeof item.order !== 'number' || item.order < target) continue
   mutations.push({patch: {id: item._id, set: {order: item.order + 1}}})

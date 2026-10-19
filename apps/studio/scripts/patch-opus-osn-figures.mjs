@@ -49,9 +49,7 @@ async function uploadImage(absPath, filename) {
   return {_type: 'image', asset: {_type: 'reference', _ref: asset._id ?? asset.document?._id}}
 }
 
-const doc = await sanityQuery(
-  `*[_type == "opusOsn" && _id == "${DOC_ID}"][0]{_id, images}`,
-)
+const doc = await sanityQuery(`*[_type == "opusOsn" && _id == "${DOC_ID}"][0]{_id, images}`)
 if (!doc) {
   console.error('No opusOsn singleton found.')
   process.exit(1)

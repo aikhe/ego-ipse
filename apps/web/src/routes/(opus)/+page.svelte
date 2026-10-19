@@ -466,12 +466,7 @@
 </script>
 
 <svelte:head>
-  <link
-    rel="preload"
-    as="image"
-    href={poster1Thumb}
-    fetchpriority="high"
-  />
+  <link rel="preload" as="image" href={poster1Thumb} fetchpriority="high" />
 </svelte:head>
 
 <div class="opus-canvas">

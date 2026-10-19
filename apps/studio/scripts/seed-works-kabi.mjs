@@ -89,11 +89,17 @@ if (existing) {
   process.exit(0)
 }
 
-const gymBro = await uploadImage(path.join(kabiDir, 'greatest-gym-bro.webp'), 'kabi-greatest-gym-bro.webp')
+const gymBro = await uploadImage(
+  path.join(kabiDir, 'greatest-gym-bro.webp'),
+  'kabi-greatest-gym-bro.webp',
+)
 console.log('Uploaded kabi/greatest-gym-bro.webp (3000x3000)')
 const heat = await uploadImage(path.join(kabiDir, 'heat.webp'), 'kabi-heat.webp')
 console.log('Uploaded kabi/heat.webp (3000x3000)')
-const modelInit = await uploadImage(path.join(kabiDir, 'kabi-model-init.webp'), 'kabi-model-init.webp')
+const modelInit = await uploadImage(
+  path.join(kabiDir, 'kabi-model-init.webp'),
+  'kabi-model-init.webp',
+)
 console.log('Uploaded kabi/kabi-model-init.webp (6596x4660)')
 
 // preview grid is 2 columns with preview=4: two square cells sit side by side.

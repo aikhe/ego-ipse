@@ -42,9 +42,9 @@ export const works: Work[] = [];
 export const allWorks: Work[] = [...selectedWorks, ...works];
 
 export function getWorkBySlug(slug: string): Work | undefined {
-  return allWorks.find((work) => work.slug === slug);
+  return allWorks.find(work => work.slug === slug);
 }
 
 export function getWorkSlugs(): string[] {
-  return allWorks.map((work) => work.slug);
+  return allWorks.map(work => work.slug);
 }

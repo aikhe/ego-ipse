@@ -20,8 +20,7 @@ const extras = [
     _key: 'nvim',
     _type: 'fleurExtra',
     title: 'Nvim',
-    description:
-      'Hyperextensible modal text editor focused on speed and customization.',
+    description: 'Hyperextensible modal text editor focused on speed and customization.',
     repo: 'https://github.com/aikhe/fleur.nvim',
   },
   {

@@ -88,8 +88,10 @@
     u_image: { value: null as THREE.Texture | null },
     u_colors: {
       value: padColorsTo6(
-        ['#454545', '#141414', '#2e2e2e', '#000000'].map(getShaderColorFromString)
-      )
+        ['#454545', '#141414', '#2e2e2e', '#000000'].map(
+          getShaderColorFromString
+        )
+      ),
     },
     u_colorsCount: { value: 4 },
     u_colorBack: { value: getShaderColorFromString('#ffffff') },

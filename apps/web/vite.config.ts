@@ -6,10 +6,10 @@ import { sveltekit } from '@sveltejs/kit/vite';
 export default defineConfig({
   plugins: [tailwindcss(), sveltekit()],
   server: {
-    host: true
+    host: true,
   },
   optimizeDeps: {
-    include: ['three', 'gsap', '@threlte/core', '@paper-design/shaders']
+    include: ['three', 'gsap', '@threlte/core', '@paper-design/shaders'],
   },
   build: {
     // lighthouse "minify javascript": keep esbuild minify + css minify
@@ -25,11 +25,12 @@ export default defineConfig({
           // three/threlte/paper-design only run on /ipse + /shaders routes:
           // isolate them so the opus homepage ships without webgl weight.
           if (id.includes('@paper-design/shaders')) return 'vendor-shaders';
-          if (id.includes('@threlte/') || id.includes('three')) return 'vendor-three';
+          if (id.includes('@threlte/') || id.includes('three'))
+            return 'vendor-three';
           if (id.includes('gsap')) return 'vendor-gsap';
-        }
-      }
-    }
+        },
+      },
+    },
   },
   test: {
     expect: { requireAssertions: true },

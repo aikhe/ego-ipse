@@ -76,10 +76,7 @@ export const load: PageServerLoad = async ({ fetch, setHeaders }) => {
     '/api/opus-nvim'
   );
   const sanityNvim = nvimData?.sanityNvim ?? null;
-  const repos = [
-    ...(sanityNvim?.plugins ?? []),
-    ...(sanityNvim?.miscs ?? []),
-  ]
+  const repos = [...(sanityNvim?.plugins ?? []), ...(sanityNvim?.miscs ?? [])]
     .map(plugin => plugin.repo?.trim() ?? '')
     .filter(repo => repo.length > 0);
   const pluginStars = await getRepoStars(fetch, repos);

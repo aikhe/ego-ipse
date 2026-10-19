@@ -102,10 +102,10 @@ const gallery = (kabi.gallery ?? []).map((entry) =>
     : entry,
 )
 
-const mutations = [
-  {patch: {id: DOC_ID, set: {selected: true, order: 1, cells, gallery}}},
-]
-console.log(`move ${kabi.title}: selected=${kabi.selected} order=${kabi.order} -> selected=true order=1`)
+const mutations = [{patch: {id: DOC_ID, set: {selected: true, order: 1, cells, gallery}}}]
+console.log(
+  `move ${kabi.title}: selected=${kabi.selected} order=${kabi.order} -> selected=true order=1`,
+)
 
 // make room at the top: bump every other selected work down by one.
 const selected = await sanityQuery(`*[_type == "opusWork" && selected == true]{_id, title, order}`)
@@ -118,9 +118,7 @@ for (const item of selected) {
 
 // close the gap left in regular works.
 if (kabi.selected !== true && kabiOldOrder !== null) {
-  const regular = await sanityQuery(
-    `*[_type == "opusWork" && selected != true]{_id, title, order}`,
-  )
+  const regular = await sanityQuery(`*[_type == "opusWork" && selected != true]{_id, title, order}`)
   for (const item of regular) {
     if (item._id === DOC_ID || typeof item.order !== 'number' || item.order <= kabiOldOrder)
       continue

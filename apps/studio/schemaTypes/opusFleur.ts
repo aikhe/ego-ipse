@@ -46,7 +46,8 @@ export default defineType({
       title: 'Extras',
       name: 'extras',
       type: 'array',
-      description: 'Supported apps and projects under the Extras heading. Each item links out to its repo.',
+      description:
+        'Supported apps and projects under the Extras heading. Each item links out to its repo.',
       of: [
         {
           type: 'object',

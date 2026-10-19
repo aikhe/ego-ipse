@@ -58,7 +58,12 @@
       <div class="opus-work-detail__quote-body">
         <p class="opus-work-detail__quote-text">“{work.quote.text}”</p>
         {#if work.quote.href}
-          <a class="opus-work-detail__quote-by" href={work.quote.href} target="_blank" rel="noopener noreferrer">
+          <a
+            class="opus-work-detail__quote-by"
+            href={work.quote.href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <span class="opus-work-detail__quote-avatar" aria-hidden="true">
               {#if work.quote.avatar}
                 <img

@@ -23,9 +23,7 @@ async function sanityQuery(query) {
   return (await res.json()).result
 }
 
-const doc = await sanityQuery(
-  `*[_type == "opusOsn" && _id == "${DOC_ID}"][0]{_id, images}`,
-)
+const doc = await sanityQuery(`*[_type == "opusOsn" && _id == "${DOC_ID}"][0]{_id, images}`)
 if (!doc) {
   console.error('No opusOsn singleton found.')
   process.exit(1)

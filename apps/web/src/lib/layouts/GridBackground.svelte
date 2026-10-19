@@ -39,12 +39,12 @@
   }
 
   .bg-grid-column:is(
-    :nth-child(1),
-    :nth-child(2),
-    :nth-child(4),
-    :nth-child(7),
-    :nth-child(10)
-  )::after {
+      :nth-child(1),
+      :nth-child(2),
+      :nth-child(4),
+      :nth-child(7),
+      :nth-child(10)
+    )::after {
     background: var(--color-overlay-20);
     content: '';
     height: 10px;
@@ -68,12 +68,12 @@
   }
 
   .bg-grid-column:is(
-    :nth-child(1),
-    :nth-child(2),
-    :nth-child(4),
-    :nth-child(7),
-    :nth-child(10)
-  )::before {
+      :nth-child(1),
+      :nth-child(2),
+      :nth-child(4),
+      :nth-child(7),
+      :nth-child(10)
+    )::before {
     background: var(--color-overlay-20);
     bottom: 4px;
     content: '';

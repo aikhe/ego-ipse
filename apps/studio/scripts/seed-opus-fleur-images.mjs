@@ -4,9 +4,9 @@
 // Sources: ../../web/src/lib/assets/fleur/1.webp, 2.webp (converted from PNG via sharp-cli).
 // Rerunnable: re-uploads assets then `set`s images on `opusFleur-singleton`.
 
-import { readFile } from 'node:fs/promises'
+import {readFile} from 'node:fs/promises'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
+import {fileURLToPath} from 'node:url'
 
 const PROJECT_ID = 'dn2lfgdt'
 const DATASET = 'production'
@@ -37,20 +37,20 @@ async function uploadImage(absPath, filename) {
   )
   if (!res.ok) throw new Error(`Upload failed for ${filename}: ${await res.text()}`)
   const asset = await res.json()
-  return { _type: 'image', asset: { _type: 'reference', _ref: asset._id ?? asset.document?._id } }
+  return {_type: 'image', asset: {_type: 'reference', _ref: asset._id ?? asset.document?._id}}
 }
 
 // 1.png: 3840x2160, 2.png: 3840x1126 (webp ~50% smaller).
 const figures = [
-  { file: '1.webp', key: 'fig-001', alt: 'Fleur colorscheme preview one' },
-  { file: '2.webp', key: 'fig-002', alt: 'Fleur colorscheme preview two' },
+  {file: '1.webp', key: 'fig-001', alt: 'Fleur colorscheme preview one'},
+  {file: '2.webp', key: 'fig-002', alt: 'Fleur colorscheme preview two'},
 ]
 
 const images = []
 for (const fig of figures) {
   const image = await uploadImage(path.join(fleurDir, fig.file), `fleur-${fig.file}`)
   console.log(`Uploaded fleur/${fig.file}`)
-  images.push({ _type: 'object', _key: fig.key, image, alt: fig.alt })
+  images.push({_type: 'object', _key: fig.key, image, alt: fig.alt})
 }
 
 const mutateRes = await fetch(
@@ -61,7 +61,7 @@ const mutateRes = await fetch(
       Authorization: `Bearer ${TOKEN}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ mutations: [{ patch: { id: DOC_ID, set: { images } } }] }),
+    body: JSON.stringify({mutations: [{patch: {id: DOC_ID, set: {images}}}]}),
   },
 )
 if (!mutateRes.ok) throw new Error(`Mutate failed: ${await mutateRes.text()}`)

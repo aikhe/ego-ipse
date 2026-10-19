@@ -21,9 +21,7 @@ async function sanityQuery(query) {
   return (await res.json()).result
 }
 
-const doc = await sanityQuery(
-  `*[_type == "opusWork" && slug.current == "kabi"][0]{_id, gallery}`,
-)
+const doc = await sanityQuery(`*[_type == "opusWork" && slug.current == "kabi"][0]{_id, gallery}`)
 if (!doc) {
   console.error('No opusWork with slug "kabi" found.')
   process.exit(1)

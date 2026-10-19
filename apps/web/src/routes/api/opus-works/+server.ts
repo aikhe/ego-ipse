@@ -11,8 +11,7 @@ export const GET: RequestHandler = async () => {
   const result = await fetchSanityOpusWorks();
   // empty means the sanity fetch failed (or no docs exist): never let the
   // edge cache an outage and serve blank works after recovery.
-  const ok =
-    result.sanitySelected.length > 0 || result.sanityWorks.length > 0;
+  const ok = result.sanitySelected.length > 0 || result.sanityWorks.length > 0;
   return json(result, {
     headers: {
       'Cache-Control': ok

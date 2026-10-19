@@ -60,8 +60,7 @@
       if (ph !== undefined)
         root.setProperty('--nvim-plugins-title-h', `${ph}px`);
       root.setProperty('--nvim-plugins-body-h', `${Math.max(pb, 0)}px`);
-      if (mh !== undefined)
-        root.setProperty('--nvim-miscs-title-h', `${mh}px`);
+      if (mh !== undefined) root.setProperty('--nvim-miscs-title-h', `${mh}px`);
     };
     sync();
     const ro = new ResizeObserver(sync);
@@ -286,7 +285,10 @@
           </a>
         {/if}
       </div>
-      <div class="opus-section opus-section--nvim-plugins" bind:this={pluginsEl}>
+      <div
+        class="opus-section opus-section--nvim-plugins"
+        bind:this={pluginsEl}
+      >
         <h2 class="opus-nvim" bind:this={pluginsTitleEl}>Plugins</h2>
         <div class="opus-nvim__rule" aria-hidden="true"></div>
         {#if nvimPlugins.length > 0}

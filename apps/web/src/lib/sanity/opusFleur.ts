@@ -20,7 +20,7 @@ function normalizeFleurImages(
 ): SanityOpusFleur['images'] | undefined {
   if (!raw) return undefined;
   const out = raw
-    .map((img) => ({
+    .map(img => ({
       src: img.src?.trim() || undefined,
       alt: img.alt?.trim() || undefined,
       assetWidth: img.assetWidth,
@@ -28,7 +28,7 @@ function normalizeFleurImages(
       width: img.width,
       height: img.height,
     }))
-    .filter((img) => img.src);
+    .filter(img => img.src);
   return out.length > 0 ? out : undefined;
 }
 
@@ -48,12 +48,12 @@ export function normalizeOpusFleur(
   const description = raw.description?.trim();
   const images = normalizeFleurImages(raw.images);
   const extras = (raw.extras ?? [])
-    .map((extra) => ({
+    .map(extra => ({
       title: extra.title?.trim() ?? '',
       description: extra.description?.trim() ?? '',
       repo: extra.repo?.trim() ?? '',
     }))
-    .filter((extra) => extra.title.length > 0 && extra.repo.length > 0);
+    .filter(extra => extra.title.length > 0 && extra.repo.length > 0);
   if (!description && !images && extras.length === 0) return null;
   return {
     ...(description ? { description } : {}),

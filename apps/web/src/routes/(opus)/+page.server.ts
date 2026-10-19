@@ -7,7 +7,10 @@ export const prerender = false;
 // Same-origin APIs (see src/routes/api/opus-*): Sanity is fetched
 // server-side so phones never need to reach api.sanity.io directly.
 // each request settles on its own: one failing section never blanks the other.
-async function getJson<T>(fetchFn: typeof fetch, url: string): Promise<T | null> {
+async function getJson<T>(
+  fetchFn: typeof fetch,
+  url: string
+): Promise<T | null> {
   try {
     const res = await fetchFn(url);
     if (!res.ok) return null;

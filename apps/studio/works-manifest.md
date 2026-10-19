@@ -29,13 +29,13 @@ Landing page showcase, and the top of the `/works` list.
 - Habi — `habi` — preview 4
 - Bananasplit — `bananasplit` — preview 1
 - Mylo — `mylo` — preview 4
-- Aikhe — `aikhe` — preview 4
 
 ## Works
 
 Regular list on `/works`, shown after Selected Works.
 
 - Katha — `katha` — preview 4
+- Aikhe — `aikhe` — preview 4
 
 ## Remove
 

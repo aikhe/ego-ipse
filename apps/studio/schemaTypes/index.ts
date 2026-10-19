@@ -6,6 +6,7 @@ import opusAbout from './opusAbout'
 import opusBlogs from './opusBlogs'
 import opusFleur from './opusFleur'
 import opusOsn from './opusOsn'
+import opusKnots from './opusKnots'
 import opusNvim from './opusNvim'
 import opusServices from './opusServices'
 import opusKaia from './opusKaia'
@@ -22,6 +23,7 @@ export const schemaTypes = [
   opusBlogs,
   opusFleur,
   opusOsn,
+  opusKnots,
   opusNvim,
   opusServices,
   opusKaia,

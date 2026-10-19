@@ -90,6 +90,18 @@ export interface SanityOpusOsn {
   description?: string;
   images?: SanityOpusOsnImage[];
 }
+export interface SanityOpusKnotsImage {
+  src?: string;
+  alt?: string;
+  assetWidth?: number;
+  assetHeight?: number;
+  width?: number;
+  height?: number;
+}
+export interface SanityOpusKnots {
+  description?: string;
+  images?: SanityOpusKnotsImage[];
+}
 export interface SanityOpusNvimPlugin {
   title?: string;
   description?: string;

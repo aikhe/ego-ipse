@@ -32,12 +32,12 @@ Portfolio + identity platform. Organic, interactive, high-fidelity over generic.
 
 ## Skills (`.agents/skills/`)
 
-| Skill      | Use when                            |
-| ---------- | ----------------------------------- |
-| `style`    | Styling components, BEM, GSAP       |
-| `webp`     | Work preview images                 |
-| `commit`   | Staging + committing                |
-| `pr`       | PRs with structured descriptions    |
-| `grill-me` | Stress-testing a plan or design     |
+| Skill      | Use when                         |
+| ---------- | -------------------------------- |
+| `style`    | Styling components, BEM, GSAP    |
+| `webp`     | Work preview images              |
+| `commit`   | Staging + committing             |
+| `pr`       | PRs with structured descriptions |
+| `grill-me` | Stress-testing a plan or design  |
 
 Bar: if a change hurts visual fidelity or organic motion, reconsider it. Performance never at the expense of required high-fidelity animation.

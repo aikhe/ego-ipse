@@ -12,6 +12,7 @@
     | 'blogs'
     | 'fleur'
     | 'osn'
+    | 'knots'
     | 'nvim'
     | 'kaia';
 

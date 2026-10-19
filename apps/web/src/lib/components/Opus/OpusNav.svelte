@@ -11,6 +11,7 @@
     | 'blogs'
     | 'fleur'
     | 'osn'
+    | 'knots'
     | 'nvim'
     | 'kaia';
 
@@ -101,7 +102,12 @@
       aria-current={active === 'osn' ? 'page' : undefined}>osn</a
     >
     <span class="opus-nav__link opus-nav__link--soon">constituent</span>
-    <span class="opus-nav__link opus-nav__link--soon">knots</span>
+    <a
+      class="opus-nav__link"
+      class:opus-nav__link--active={active === 'knots'}
+      href={resolve('/knots')}
+      aria-current={active === 'knots' ? 'page' : undefined}>knots</a
+    >
     <span class="opus-nav__link opus-nav__link--soon">katha</span>
   </nav>
   <nav class="opus-kaia" aria-label="Personal agent">

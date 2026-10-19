@@ -14,6 +14,7 @@
     | 'blogs'
     | 'fleur'
     | 'osn'
+    | 'knots'
     | 'nvim'
     | 'kaia';
 
@@ -27,6 +28,7 @@
     if (id === '/blogs') return 'blogs';
     if (id === '/fleur') return 'fleur';
     if (id === '/osn') return 'osn';
+    if (id === '/knots') return 'knots';
     if (id === '/nvim') return 'nvim';
     if (id === '/kaia') return 'kaia';
     return 'opus';

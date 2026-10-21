@@ -5,9 +5,6 @@ import { sveltekit } from '@sveltejs/kit/vite';
 
 export default defineConfig({
   plugins: [tailwindcss(), sveltekit()],
-  server: {
-    host: true,
-  },
   optimizeDeps: {
     include: ['three', 'gsap', '@threlte/core', '@paper-design/shaders'],
   },

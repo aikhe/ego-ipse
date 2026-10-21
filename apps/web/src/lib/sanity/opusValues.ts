@@ -1,8 +1,5 @@
 import type { SanityOpusValues } from '$lib/types/sanity';
-
-// same project/dataset as the opusWorks loader in `./opusWorks`
-export const SANITY_URL =
-  'https://dn2lfgdt.api.sanity.io/v2022-03-07/data/query/production';
+import { sanityQueryUrl } from './config';
 
 export const opusValuesQuery = `*[_type == "opusValues"][0]{
   description,
@@ -63,9 +60,7 @@ export async function fetchSanityOpusValues(
   fetchFn: typeof fetch = fetch
 ): Promise<SanityOpusValues | null> {
   try {
-    const res = await fetchFn(
-      `${SANITY_URL}?query=${encodeURIComponent(opusValuesQuery)}`
-    );
+    const res = await fetchFn(sanityQueryUrl(opusValuesQuery));
     if (!res.ok) {
       console.error('Failed to fetch opusValues from Sanity', await res.text());
       return null;

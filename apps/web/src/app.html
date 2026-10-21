@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script>
+    <script nonce="%sveltekit.nonce%">
       // restore saved theme before first paint to avoid a light flash
       (function () {
         try {
@@ -26,11 +26,23 @@
       href="https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,200;0,300;0,400;0,500;1,400&family=Geist+Mono:wght@400;500;600&family=Geist+Pixel&display=swap"
     />
     <link
+      id="fonts-css"
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,200;0,300;0,400;0,500;1,400&family=Geist+Mono:wght@400;500;600&family=Geist+Pixel&display=swap"
       media="print"
-      onload="this.media = 'all'"
     />
+    <script nonce="%sveltekit.nonce%">
+      // non-blocking font css: apply once loaded (csp forbids inline onload)
+      (function () {
+        var l = document.getElementById('fonts-css');
+        if (!l) return;
+        var apply = function () {
+          l.media = 'all';
+        };
+        if (l.sheet) apply();
+        else l.addEventListener('load', apply);
+      })();
+    </script>
     <noscript>
       <link
         rel="stylesheet"

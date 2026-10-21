@@ -1,5 +1,5 @@
 import type { SanityOpusNvim } from '$lib/types/sanity';
-import { SANITY_URL } from './opusValues';
+import { sanityQueryUrl } from './config';
 
 // deterministic pick: oldest document wins if duplicates ever exist.
 export const opusNvimQuery = `*[_type == "opusNvim"] | order(_createdAt asc)[0]{
@@ -49,9 +49,7 @@ export async function fetchSanityOpusNvim(
   fetchFn: typeof fetch = fetch
 ): Promise<SanityOpusNvim | null> {
   try {
-    const res = await fetchFn(
-      `${SANITY_URL}?query=${encodeURIComponent(opusNvimQuery)}`
-    );
+    const res = await fetchFn(sanityQueryUrl(opusNvimQuery));
     if (!res.ok) {
       console.error('Failed to fetch opusNvim from Sanity', await res.text());
       return null;

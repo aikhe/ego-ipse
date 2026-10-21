@@ -1,5 +1,5 @@
 import type { SanityOpusAbout } from '$lib/types/sanity';
-import { SANITY_URL } from './opusValues';
+import { sanityQueryUrl } from './config';
 
 // deterministic pick: oldest document wins if duplicates ever exist.
 export const opusAboutQuery = `*[_type == "opusAbout"] | order(_createdAt asc)[0]{
@@ -20,9 +20,7 @@ export async function fetchSanityOpusAbout(
   fetchFn: typeof fetch = fetch
 ): Promise<SanityOpusAbout | null> {
   try {
-    const res = await fetchFn(
-      `${SANITY_URL}?query=${encodeURIComponent(opusAboutQuery)}`
-    );
+    const res = await fetchFn(sanityQueryUrl(opusAboutQuery));
     if (!res.ok) {
       console.error('Failed to fetch opusAbout from Sanity', await res.text());
       return null;

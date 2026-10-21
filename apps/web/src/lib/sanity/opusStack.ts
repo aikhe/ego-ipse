@@ -2,7 +2,7 @@ import type {
   SanityOpusStack,
   SanityOpusStackCategory,
 } from '$lib/types/sanity';
-import { SANITY_URL } from './opusValues';
+import { sanityQueryUrl } from './config';
 
 // deterministic pick: oldest document wins if duplicates ever exist.
 export const opusStackQuery = `*[_type == "opusStack"] | order(_createdAt asc)[0]{
@@ -73,9 +73,7 @@ export async function fetchSanityOpusStack(
   fetchFn: typeof fetch = fetch
 ): Promise<SanityOpusStack | null> {
   try {
-    const res = await fetchFn(
-      `${SANITY_URL}?query=${encodeURIComponent(opusStackQuery)}`
-    );
+    const res = await fetchFn(sanityQueryUrl(opusStackQuery));
     if (!res.ok) {
       console.error('Failed to fetch opusStack from Sanity', await res.text());
       return null;

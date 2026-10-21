@@ -1,9 +1,11 @@
 import type { Work, WorkCell, WorkPreview } from '$lib/data/works';
 import type { SanityOpusWork, SanityOpusWorkCell } from '$lib/types/sanity';
+import { sanityQueryUrl } from './config';
 
-// same project/dataset as the landing-page loader in `src/routes/+page.server.ts`
-export const SANITY_URL =
-  'https://dn2lfgdt.api.sanity.io/v2022-03-07/data/query/production';
+// sanity-generated slugs only; anything else cannot match a doc.
+export function isOpusWorkSlug(slug: string): boolean {
+  return /^[a-z0-9-]{1,96}$/.test(slug);
+}
 
 const cellProjection = `{
   "src": image.asset->url,
@@ -37,8 +39,7 @@ const opusWorkProjection = `{
 
 export const opusWorksQuery = `*[_type == "opusWork"] ${opusWorkProjection}`;
 
-const opusWorkBySlugQuery = (slug: string) =>
-  `*[_type == "opusWork" && slug.current == ${JSON.stringify(slug)}][0] ${opusWorkProjection}`;
+const opusWorkBySlugQuery = `*[_type == "opusWork" && slug.current == $slug][0] ${opusWorkProjection}`;
 
 const opusWorkSlugsQuery = `*[_type == "opusWork" && defined(slug.current)].slug.current`;
 
@@ -204,9 +205,7 @@ export async function fetchSanityOpusWorks(
 ): Promise<SanityOpusWorksResult> {
   const empty: SanityOpusWorksResult = { sanitySelected: [], sanityWorks: [] };
   try {
-    const res = await fetchFn(
-      `${SANITY_URL}?query=${encodeURIComponent(opusWorksQuery)}`
-    );
+    const res = await fetchFn(sanityQueryUrl(opusWorksQuery));
     if (!res.ok) {
       console.error('Failed to fetch opusWorks from Sanity', await res.text());
       return empty;
@@ -224,9 +223,7 @@ export async function fetchSanityOpusWorkBySlug(
   slug: string
 ): Promise<Work | null> {
   try {
-    const res = await fetchFn(
-      `${SANITY_URL}?query=${encodeURIComponent(opusWorkBySlugQuery(slug))}`
-    );
+    const res = await fetchFn(sanityQueryUrl(opusWorkBySlugQuery, { slug }));
     if (!res.ok) return null;
     const data = (await res.json()) as { result?: SanityOpusWork | null };
     if (!data.result) return null;
@@ -241,9 +238,7 @@ export async function fetchSanityOpusWorkSlugs(
   fetchFn: typeof fetch = fetch
 ): Promise<string[]> {
   try {
-    const res = await fetchFn(
-      `${SANITY_URL}?query=${encodeURIComponent(opusWorkSlugsQuery)}`
-    );
+    const res = await fetchFn(sanityQueryUrl(opusWorkSlugsQuery));
     if (!res.ok) return [];
     const data = (await res.json()) as { result?: string[] };
     return (data.result ?? []).filter(

@@ -1,6 +1,7 @@
 import type { PageServerLoad } from './$types';
 import type { Project } from '$lib/types/project';
 import type { Social } from '$lib/types/social';
+import { sanityQueryUrl } from '$lib/sanity/config';
 import type {
   SanityProject,
   SanitySocial,
@@ -8,9 +9,6 @@ import type {
 } from '$lib/types/sanity';
 
 export const prerender = false;
-
-const SANITY_URL =
-  'https://dn2lfgdt.api.sanity.io/v2022-03-07/data/query/production';
 
 export const load: PageServerLoad = async ({ fetch }) => {
   // ── Projects ──────────────────────────────────────────────
@@ -31,7 +29,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
     index
   }`;
 
-  const projectUrl = `${SANITY_URL}?query=${encodeURIComponent(projectQuery)}`;
+  const projectUrl = sanityQueryUrl(projectQuery);
   const GRID_SIZE = 5;
   const slots: (Project | null)[] = Array(GRID_SIZE).fill(null);
 
@@ -134,9 +132,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
   const socialSlots: (Social | null)[] = Array(SOCIAL_GRID).fill(null);
 
   try {
-    const res = await fetch(
-      `${SANITY_URL}?query=${encodeURIComponent(socialQuery)}`
-    );
+    const res = await fetch(sanityQueryUrl(socialQuery));
     if (res.ok) {
       const data = (await res.json()) as { result?: SanitySocial[] };
       const rawSocials = data.result || [];
@@ -196,9 +192,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
   let github: Social | null = null;
 
   try {
-    const res = await fetch(
-      `${SANITY_URL}?query=${encodeURIComponent(githubQuery)}`
-    );
+    const res = await fetch(sanityQueryUrl(githubQuery));
     if (res.ok) {
       const data = (await res.json()) as { result?: SanityGitHub | null };
       const raw = data.result;

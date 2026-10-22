@@ -50,10 +50,6 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Lockfiles
-bun.lock
-bun.lockb
-
 mouse-effects
 gsap-threejs-codrops
 screenshots

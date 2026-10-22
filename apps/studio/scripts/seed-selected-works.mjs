@@ -1,24 +1,12 @@
 // Seeds all remaining hardcoded selected works into Sanity as `opusWork` docs.
-// Run:  node --env-file=.env.local scripts/seed-selected-works.mjs  (from apps/studio)
+// Run:  bun --env-file=.env.local scripts/seed-selected-works.mjs  (from apps/studio)
 // Rerunnable: uses createIfNotExists per doc. Orders 3-11 preserve hardcoded
 // display order (1 = Tarsi Redesign, 2 = Paperfolio, already seeded).
 
-import {readFile} from 'node:fs/promises'
 import path from 'node:path'
-import {fileURLToPath} from 'node:url'
+import {mutate, uploadImage, seedAssets} from './_client.mjs'
 
-const PROJECT_ID = 'dn2lfgdt'
-const DATASET = 'production'
-const API_VERSION = 'v2022-03-07'
-
-const TOKEN = process.env.SANITY_TOKEN?.trim()
-if (!TOKEN) {
-  console.error('Missing SANITY_TOKEN. Add it to .env.local and retry.')
-  process.exit(1)
-}
-
-const here = path.dirname(fileURLToPath(import.meta.url))
-const worksDir = path.resolve(here, '..', '..', 'web', 'src', 'lib', 'assets', 'works')
+const worksDir = path.join(seedAssets, 'works')
 
 const DESCRIPTION =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
@@ -195,23 +183,9 @@ const WORKS = [
 
 const assetCache = new Map()
 
-async function uploadImage(file) {
+async function uploadCached(file) {
   if (assetCache.has(file)) return assetCache.get(file)
-  const buf = await readFile(path.join(worksDir, file))
-  const res = await fetch(
-    `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/assets/images/${DATASET}?filename=${encodeURIComponent(path.basename(file))}`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${TOKEN}`,
-        'Content-Type': 'image/webp',
-      },
-      body: buf,
-    },
-  )
-  if (!res.ok) throw new Error(`Upload failed for ${file}: ${await res.text()}`)
-  const asset = await res.json()
-  const ref = {_type: 'image', asset: {_type: 'reference', _ref: asset._id ?? asset.document?._id}}
+  const ref = await uploadImage(path.join(worksDir, file), path.basename(file))
   assetCache.set(file, ref)
   console.log(`Uploaded ${file}`)
   return ref
@@ -221,7 +195,7 @@ const mutations = []
 for (const work of WORKS) {
   const cells = []
   for (const [index, [file, alt, wide, width, height, ratio]] of work.cells.entries()) {
-    const image = await uploadImage(file)
+    const image = await uploadCached(file)
     cells.push({_type: 'object', _key: `cell-${index + 1}`, image, alt, wide, ratio, width, height})
   }
   mutations.push({
@@ -244,16 +218,5 @@ for (const work of WORKS) {
   })
 }
 
-const mutateRes = await fetch(
-  `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/mutate/${DATASET}`,
-  {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({mutations}),
-  },
-)
-if (!mutateRes.ok) throw new Error(`Mutate failed: ${await mutateRes.text()}`)
-console.log('Seeded selected works:', await mutateRes.json())
+const mutateRes = await mutate(mutations)
+console.log('Seeded selected works:', mutateRes)

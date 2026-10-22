@@ -1,4 +1,4 @@
-import {defineType, defineField} from 'sanity'
+import {defineType, defineField, type PreviewValue} from 'sanity'
 
 // Singleton content for the Stack page: intro under the "Stack" heading plus
 // categorized logo grids. Keep it a single document — frontend reads
@@ -118,8 +118,8 @@ export default defineType({
                     }: {
                       title?: string
                       subtitle?: string
-                      media?: unknown
-                      mediaDark?: unknown
+                      media?: PreviewValue['media']
+                      mediaDark?: PreviewValue['media']
                     }) {
                       return {
                         title,

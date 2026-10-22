@@ -1,7 +1,6 @@
 import {defineType, defineField} from 'sanity'
 
-// Mirrors the hardcoded `Work` shape in `apps/web/src/lib/data/works.ts`.
-// New CMS surface for Selected Works + Works. `work` / `workRoot` are untouched.
+// cms surface for Selected Works + Works; mirrors `Work` in `apps/web/src/lib/types/work.ts`.
 export default defineType({
   title: 'Opus Work',
   name: 'opusWork',

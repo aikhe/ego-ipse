@@ -6,25 +6,17 @@
 //   - Title — `slug` — preview 4
 //   - Title — `slug` — preview 4 — remove
 //
-// Run: node --env-file=.env.local scripts/apply-works-manifest.mjs
-//      node --env-file=.env.local scripts/apply-works-manifest.mjs --apply
+// Run: bun --env-file=.env.local scripts/apply-works-manifest.mjs  (from apps/studio)
+//      bun --env-file=.env.local scripts/apply-works-manifest.mjs --apply
 
 import {readFile} from 'node:fs/promises'
 import path from 'node:path'
 import {fileURLToPath} from 'node:url'
+import {mutate, query} from './_client.mjs'
 
-const PROJECT_ID = 'dn2lfgdt'
-const DATASET = 'production'
-const API_VERSION = 'v2022-03-07'
 const APPLY = process.argv.includes('--apply')
 
-const TOKEN = process.env.SANITY_TOKEN?.trim()
-if (!TOKEN) {
-  console.error('Missing SANITY_TOKEN. Add it to .env.local and retry.')
-  process.exitCode = 1
-} else {
-  await main()
-}
+await main()
 
 async function main() {
   const here = path.dirname(fileURLToPath(import.meta.url))
@@ -115,13 +107,8 @@ async function main() {
 
   // --- read current state ---
 
-  const query = `*[_type == "opusWork"]{_id, title, "slug": slug.current, selected, order, preview}`
-  const res = await fetch(
-    `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?perspective=raw&query=${encodeURIComponent(query)}`,
-    {headers: {Authorization: `Bearer ${TOKEN}`}},
-  )
-  if (!res.ok) throw new Error(`Fetch failed: ${await res.text()}`)
-  const {result: rawDocs = []} = await res.json()
+  const groq = `*[_type == "opusWork"]{_id, title, "slug": slug.current, selected, order, preview}`
+  const rawDocs = (await query(groq, {raw: true})) ?? []
 
   const draftIds = new Set(
     rawDocs.filter((doc) => doc._id.startsWith('drafts.')).map((doc) => doc._id),
@@ -225,14 +212,5 @@ async function main() {
     ...[...deletes].map((id) => ({delete: {id}})),
     ...[...patches].map(([id, set]) => ({patch: {id, set}})),
   ]
-  const mutateRes = await fetch(
-    `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/mutate/${DATASET}`,
-    {
-      method: 'POST',
-      headers: {Authorization: `Bearer ${TOKEN}`, 'Content-Type': 'application/json'},
-      body: JSON.stringify({mutations}),
-    },
-  )
-  if (!mutateRes.ok) throw new Error(`Mutate failed: ${await mutateRes.text()}`)
-  console.log('Applied:', await mutateRes.json())
+  console.log('Applied:', await mutate(mutations))
 }

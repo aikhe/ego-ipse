@@ -6,10 +6,8 @@ import {
 } from '$lib/sanity/opusWorks';
 import type { RequestHandler } from './$types';
 
-export const prerender = false;
-
 // Same-origin proxy (see ../+server.ts): `{ work: null }` when Sanity has no
-// doc for the slug so the page can fall back to hardcoded data.
+// doc for the slug.
 export const GET: RequestHandler = async event => {
   const { slug } = event.params;
   // junk slugs can never match a doc: answer without touching sanity.

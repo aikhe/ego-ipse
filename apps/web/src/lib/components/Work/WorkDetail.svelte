@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Work, WorkCell } from '$lib/data/works';
+  import type { Work, WorkCell } from '$lib/types/work';
 
   let { work }: { work: Work } = $props();
 

@@ -14,6 +14,6 @@ export function createShaderColors(theme: string) {
   return {
     shaderColors: isDark ? darkColors : lightColors,
     shaderColorInner: isDark ? darkColorInner : lightColorInner,
-    baseGlow: isDark ? 0 : 0,
+    baseGlow: 0,
   };
 }

@@ -10,7 +10,7 @@
     GemSmokeShapes,
     type Vec4,
     type GemSmokeShape,
-  } from './gem-smoke.ts';
+  } from './gem-smoke';
   import { toProcessedGemSmoke } from '@paper-design/shaders';
   import logoSvg from '$lib/assets/logo.svg';
 
@@ -213,12 +213,13 @@
       try {
         const processed = await toProcessedGemSmoke(logoSvg);
         const img = new Image();
-        imageUrl = URL.createObjectURL(processed.pngBlob);
+        const url = URL.createObjectURL(processed.pngBlob);
+        imageUrl = url;
         await new Promise<void>((resolve, reject) => {
           img.onload = () => resolve();
           img.onerror = () =>
             reject(new Error('Failed to load processed image'));
-          img.src = imageUrl;
+          img.src = url;
         });
         const tex = new THREE.Texture(img);
         tex.wrapS = THREE.ClampToEdgeWrapping;

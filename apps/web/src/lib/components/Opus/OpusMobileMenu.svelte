@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fade, fly } from 'svelte/transition';
-  import { page } from '$app/state';
+  import { afterNavigate } from '$app/navigation';
   import OpusNav from '$lib/components/Opus/OpusNav.svelte';
 
   type OpusSection =
@@ -28,9 +28,7 @@
   }
 
   // the menu lives in the layout and outlives route changes.
-  $effect(() => {
-    if (page.url.pathname !== '') open = false;
-  });
+  afterNavigate(close);
 
   function closeOnEscape(event: KeyboardEvent) {
     if (open && event.key === 'Escape') close();

@@ -1,22 +1,6 @@
-import type { PageServerLoad } from './$types';
+import { getJson } from '$lib/server/getJson';
 import type { SanityOpusNvim } from '$lib/types/sanity';
-
-export const prerender = false;
-
-// Same-origin API (see src/routes/api/opus-nvim): Sanity is fetched
-// server-side so phones never need to reach api.sanity.io directly.
-async function getJson<T>(
-  fetchFn: typeof fetch,
-  url: string
-): Promise<T | null> {
-  try {
-    const res = await fetchFn(url);
-    if (!res.ok) return null;
-    return (await res.json()) as T;
-  } catch {
-    return null;
-  }
-}
+import type { PageServerLoad } from './$types';
 
 // Accepts full GitHub URLs and owner/repo shorthand, returns the
 // owner/repo pair or null when the value is not a GitHub repo ref.
@@ -70,6 +54,8 @@ async function getRepoStars(
   return stars;
 }
 
+// Same-origin API (see src/routes/api/opus-nvim): Sanity is fetched
+// server-side so phones never need to reach api.sanity.io directly.
 export const load: PageServerLoad = async ({ fetch, setHeaders }) => {
   const nvimData = await getJson<{ sanityNvim?: SanityOpusNvim | null }>(
     fetch,

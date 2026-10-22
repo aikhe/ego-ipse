@@ -1,6 +1,7 @@
-import type { Work, WorkCell, WorkPreview } from '$lib/data/works';
+import type { Work, WorkCell } from '$lib/types/work';
 import type { SanityOpusWork, SanityOpusWorkCell } from '$lib/types/sanity';
-import { sanityQueryUrl } from './config';
+import { sizedSanityUrl } from './common';
+import { fetchSanity } from './fetch';
 
 // sanity-generated slugs only; anything else cannot match a doc.
 export function isOpusWorkSlug(slug: string): boolean {
@@ -37,24 +38,13 @@ const opusWorkProjection = `{
   meta
 }`;
 
-export const opusWorksQuery = `*[_type == "opusWork"] ${opusWorkProjection}`;
+const opusWorksQuery = `*[_type == "opusWork"] ${opusWorkProjection}`;
 
 const opusWorkBySlugQuery = `*[_type == "opusWork" && slug.current == $slug][0] ${opusWorkProjection}`;
 
-const opusWorkSlugsQuery = `*[_type == "opusWork" && defined(slug.current)].slug.current`;
-
-function toPreview(value: number | undefined): WorkPreview {
+function toPreview(value: number | undefined): Work['preview'] {
   if (value === 1 || value === 2 || value === 3 || value === 4) return value;
   return 4;
-}
-
-// sanity cdn serves raw full-res files by default: cap width + auto format
-// so cards ship ~100-200kb instead of multi-mb originals. non-sanity
-// urls pass through untouched.
-export function sizedSanityUrl(src: string, width: number): string {
-  if (!src.includes('cdn.sanity.io')) return src;
-  const sep = src.includes('?') ? '&' : '?';
-  return `${src}${sep}auto=format&w=${width}&q=75&fit=max`;
 }
 
 function slugify(title: string): string {
@@ -85,7 +75,7 @@ function toWorkCell(
     : `${fallbackTitle} preview ${index + 1}`;
   // width/height stay intrinsic so aspect-ratio lock + cls are unaffected.
   return {
-    src: sizedSanityUrl(src, cdnWidth),
+    src: sizedSanityUrl(src, cdnWidth, 75),
     alt,
     span: raw.wide ? 'wide' : undefined,
     ratio,
@@ -94,68 +84,68 @@ function toWorkCell(
   };
 }
 
-export function mapSanityOpusWorkToWork(raw: SanityOpusWork): Work | null {
+// fixed display order for meta rows.
+const META_ORDER = [
+  ['role', 'Role'],
+  ['platform', 'Platform'],
+  ['year', 'Year'],
+  ['stack', 'Stack'],
+  ['status', 'Status'],
+] as const;
+
+// accepts the `meta` object and the legacy `meta[]` list so existing
+// Sanity docs keep rendering during migration.
+function toMeta(rawMeta: SanityOpusWork['meta']): Work['meta'] {
+  if (!rawMeta) return [];
+  if (Array.isArray(rawMeta)) {
+    const byKey = new Map<string, string>();
+    for (const row of rawMeta) {
+      const k = row.k?.trim().toLowerCase();
+      const v = row.v?.trim();
+      if (k && v && !byKey.has(k)) byKey.set(k, v);
+    }
+    const out: Work['meta'] = [];
+    for (const [field, label] of META_ORDER) {
+      const v = byKey.get(field);
+      if (v) {
+        out.push({ k: label, v });
+        byKey.delete(field);
+      }
+    }
+    // preserve any custom legacy rows instead of dropping them.
+    for (const [k, v] of byKey) out.push({ k, v });
+    return out;
+  }
+  const out: Work['meta'] = [];
+  for (const [field, label] of META_ORDER) {
+    const v = rawMeta[field]?.trim();
+    if (v) out.push({ k: label, v });
+  }
+  return out;
+}
+
+function mapSanityOpusWorkToWork(raw: SanityOpusWork): Work | null {
   const title = raw.title?.trim();
   if (!title) return null;
   const slug = raw.slug?.trim() ? raw.slug.trim() : slugify(title);
   if (!slug) return null;
-  const cells = (raw.cells ?? [])
-    .map((cell, i) => toWorkCell(cell, title, i))
-    .filter((cell): cell is WorkCell => cell !== null);
+  const cells = (raw.cells ?? []).flatMap(
+    (cell, i) => toWorkCell(cell, title, i) ?? []
+  );
   // detail gallery spans past the column (100% + 20rem): 1600px so wide
   // desktop cells stay sharp while cards stay capped at 900px.
-  const gallery = (raw.gallery ?? [])
-    .map((cell, i) => toWorkCell(cell, title, i, 1600))
-    .filter((cell): cell is WorkCell => cell !== null);
-  const previewCells = cells.length > 0 ? cells : gallery;
-  const detailImages = gallery.length > 0 ? gallery : cells;
+  const gallery = (raw.gallery ?? []).flatMap(
+    (cell, i) => toWorkCell(cell, title, i, 1600) ?? []
+  );
   const quoteText = raw.quote?.text?.trim();
   const quoteBy = raw.quote?.by?.trim();
-  // Fixed order for display. Accepts the new `meta` object and the
-  // legacy `meta[]` list so existing Sanity docs keep rendering during migration.
-  const META_ORDER = [
-    ['role', 'Role'],
-    ['platform', 'Platform'],
-    ['year', 'Year'],
-    ['stack', 'Stack'],
-    ['status', 'Status'],
-  ] as const;
-  function toMeta(rawMeta: SanityOpusWork['meta']): { k: string; v: string }[] {
-    if (!rawMeta) return [];
-    if (Array.isArray(rawMeta)) {
-      const byKey = new Map<string, string>();
-      for (const row of rawMeta) {
-        const k = row.k?.trim().toLowerCase();
-        const v = row.v?.trim();
-        if (k && v && !byKey.has(k)) byKey.set(k, v);
-      }
-      const out: { k: string; v: string }[] = [];
-      for (const [field, label] of META_ORDER) {
-        const v = byKey.get(field);
-        if (v) {
-          out.push({ k: label, v });
-          byKey.delete(field);
-        }
-      }
-      // Preserve any custom legacy rows instead of dropping them.
-      for (const [k, v] of byKey) out.push({ k, v });
-      return out;
-    }
-    const out: { k: string; v: string }[] = [];
-    for (const [field, label] of META_ORDER) {
-      const v = rawMeta[field]?.trim();
-      if (v) out.push({ k: label, v });
-    }
-    return out;
-  }
-  const meta = toMeta(raw.meta);
   return {
     title,
     slug,
     description: raw.description?.trim() ?? '',
     preview: toPreview(raw.preview),
-    cells: previewCells,
-    images: detailImages,
+    cells: cells.length > 0 ? cells : gallery,
+    images: gallery.length > 0 ? gallery : cells,
     quote:
       quoteText && quoteBy
         ? {
@@ -164,11 +154,11 @@ export function mapSanityOpusWorkToWork(raw: SanityOpusWork): Work | null {
             href: raw.quote?.href?.trim() ? raw.quote.href.trim() : undefined,
             // 64px avatar slot: 96px cdn output is plenty.
             avatar: raw.quote?.avatar?.trim()
-              ? sizedSanityUrl(raw.quote.avatar.trim(), 96)
+              ? sizedSanityUrl(raw.quote.avatar.trim(), 96, 75)
               : undefined,
           }
         : undefined,
-    meta,
+    meta: toMeta(raw.meta),
   };
 }
 
@@ -183,75 +173,35 @@ export interface SanityOpusWorksResult {
   sanityWorks: Work[];
 }
 
-export function splitMappedOpusWorks(
-  rawList: SanityOpusWork[]
+function splitMappedOpusWorks(
+  rawList: SanityOpusWork[] | null | undefined
 ): SanityOpusWorksResult {
-  const selected = rawList
-    .filter(item => item.selected === true)
-    .sort(sortByOrder)
-    .map(mapSanityOpusWorkToWork)
-    .filter((work): work is Work => work !== null);
-  const regular = rawList
-    .filter(item => item.selected !== true)
-    .sort(sortByOrder)
-    .map(mapSanityOpusWorkToWork)
-    .filter((work): work is Work => work !== null);
-  return { sanitySelected: selected, sanityWorks: regular };
+  const mapGroup = (selected: boolean) =>
+    (rawList ?? [])
+      .filter(item => (item.selected === true) === selected)
+      .sort(sortByOrder)
+      .flatMap(item => mapSanityOpusWorkToWork(item) ?? []);
+  return { sanitySelected: mapGroup(true), sanityWorks: mapGroup(false) };
 }
 
-// sanity first, hardcoded stays as fallback — never throws, returns empty lists on failure.
-export async function fetchSanityOpusWorks(
-  fetchFn: typeof fetch = fetch
-): Promise<SanityOpusWorksResult> {
-  const empty: SanityOpusWorksResult = { sanitySelected: [], sanityWorks: [] };
-  try {
-    const res = await fetchFn(sanityQueryUrl(opusWorksQuery));
-    if (!res.ok) {
-      console.error('Failed to fetch opusWorks from Sanity', await res.text());
-      return empty;
-    }
-    const data = (await res.json()) as { result?: SanityOpusWork[] };
-    return splitMappedOpusWorks(data.result ?? []);
-  } catch (err) {
-    console.error('Error fetching opusWorks from Sanity:', err);
-    return empty;
-  }
+// never throws, returns empty lists on failure.
+export function fetchSanityOpusWorks(fetchFn: typeof fetch = fetch) {
+  return fetchSanity(fetchFn, {
+    label: 'opusWorks',
+    query: opusWorksQuery,
+    normalize: splitMappedOpusWorks,
+    fallback: { sanitySelected: [], sanityWorks: [] },
+  });
 }
 
-export async function fetchSanityOpusWorkBySlug(
-  fetchFn: typeof fetch,
-  slug: string
-): Promise<Work | null> {
-  try {
-    const res = await fetchFn(sanityQueryUrl(opusWorkBySlugQuery, { slug }));
-    if (!res.ok) return null;
-    const data = (await res.json()) as { result?: SanityOpusWork | null };
-    if (!data.result) return null;
-    return mapSanityOpusWorkToWork(data.result);
-  } catch (err) {
-    console.error('Error fetching opusWork by slug from Sanity:', err);
-    return null;
-  }
-}
-
-export async function fetchSanityOpusWorkSlugs(
-  fetchFn: typeof fetch = fetch
-): Promise<string[]> {
-  try {
-    const res = await fetchFn(sanityQueryUrl(opusWorkSlugsQuery));
-    if (!res.ok) return [];
-    const data = (await res.json()) as { result?: string[] };
-    return (data.result ?? []).filter(
-      slug => typeof slug === 'string' && slug.length > 0
-    );
-  } catch (err) {
-    console.error('Error fetching opusWork slugs from Sanity:', err);
-    return [];
-  }
-}
-
-// prepend sanity before hardcoded; on slug collision sanity wins so card keys stay unique.
-export function mergePreferSanity(sanity: Work[], hardcoded: Work[]): Work[] {
-  const seen = new Set(sanity.map(work => work.slug));
-  return [...sanity, ...hardcoded.filter(work => !seen.has(work.slug))];
+// null when the doc is missing or the fetch failed.
+export function fetchSanityOpusWorkBySlug(fetchFn: typeof fetch, slug: string) {
+  return fetchSanity(fetchFn, {
+    label: 'opusWork by slug',
+    query: opusWorkBySlugQuery,
+    params: { slug },
+    normalize: (raw: SanityOpusWork | null | undefined) =>
+      raw ? mapSanityOpusWorkToWork(raw) : null,
+    fallback: null,
+  });
 }

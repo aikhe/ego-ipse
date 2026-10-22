@@ -1,4 +1,5 @@
 import { json, type RequestEvent } from '@sveltejs/kit';
+import { SECURITY_HEADERS } from './securityHeaders';
 
 export const CACHE_CONTROL =
   'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400';
@@ -40,8 +41,13 @@ export async function cachedJson(
   }
 
   const { body, ok } = await load();
+  // security headers go in the stored copy: the adapter worker matches this
+  // entry for query-less requests and serves it without running hooks.
   const res = json(body, {
-    headers: { 'Cache-Control': ok ? cacheControl : 'no-store' },
+    headers: {
+      ...SECURITY_HEADERS,
+      'Cache-Control': ok ? cacheControl : 'no-store',
+    },
   });
   if (ok && cache) event.platform?.ctx.waitUntil(cache.put(key, res.clone()));
   return res;

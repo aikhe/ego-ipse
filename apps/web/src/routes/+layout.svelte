@@ -137,10 +137,7 @@
     property="og:description"
     content="Designer & Developer based in Caloocan, Philippines. Freelancing since 2025."
   />
-  <meta
-    property="og:image"
-    content="https://ikerosacay.pages.dev/banner.webp"
-  />
+  <meta property="og:image" content="https://ikerosacay.com/banner.webp" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta
@@ -153,10 +150,7 @@
     name="twitter:description"
     content="Designer & Developer based in Caloocan, Philippines. Freelancing since 2025."
   />
-  <meta
-    name="twitter:image"
-    content="https://ikerosacay.pages.dev/banner.webp"
-  />
+  <meta name="twitter:image" content="https://ikerosacay.com/banner.webp" />
   <link rel="icon" type="image/png" href={favicon} />
   <link rel="apple-touch-icon" href={favicon} />
 </svelte:head>

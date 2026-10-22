@@ -1,42 +1,20 @@
-# sv
+# Web
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+SvelteKit frontend for Ego Ipse, deployed to Cloudflare Pages. Content comes from Sanity (`apps/studio`).
 
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
+## Develop
 
 ```sh
-# create a new project
-npx sv create my-app
+bun run dev
 ```
 
-To recreate this project with the same configuration:
+## Validate
 
 ```sh
-# recreate this project
-bun x sv create --template minimal --types ts --add prettier eslint vitest="usages:unit,component" tailwindcss="plugins:none" sveltekit-adapter="adapter:cloudflare+cfTarget:pages" mcp="ide:other+setup:local" --install bun .
+bun run check-types
+bun run lint
+bun run test
+bun run build
 ```
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+`bun run preview` serves the Cloudflare build locally with wrangler.

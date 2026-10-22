@@ -1,16 +1,10 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # Dependencies
 node_modules
-.pnp
-.pnp.js
 
-# Local env files
+# Env
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 
 # Testing
 coverage
@@ -18,12 +12,7 @@ coverage
 # Turbo
 .turbo
 
-# Vercel
-.vercel
-
 # Outputs
-.next/
-out/
 build
 dist
 
@@ -33,14 +22,6 @@ dist
 
 # Debug
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Env Files
-.env
-.env.*
-.env.*.local
-!.env.example
 
 # OS Junk
 .DS_Store
@@ -50,8 +31,6 @@ Thumbs.db
 .vscode/
 .idea/
 
-mouse-effects
-gsap-threejs-codrops
-screenshots
+# Agent scratch
 .agents/skills/commit/pr_body.md
 .agents/skills/pr/pr_body.md

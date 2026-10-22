@@ -4,8 +4,11 @@ Portfolio + identity platform. Organic, interactive, high-fidelity over generic.
 
 ## Structure
 
-- `apps/web` — SvelteKit frontend: `lib/assets/`, `lib/components/` (feature-grouped: Header/, Info/, Poster/, Shaders/), `lib/layouts/`, `lib/shaders/` (gem-smoke, preview-reveal), `lib/state/` (`$state` runes), `lib/types/` (mirror Sanity), `lib/utils/`, `lib/styles/` (tokens: base/, layout/, utilities/), `routes/` (+ `api/`, `shaders/`). Deploys to Cloudflare Pages.
-- `apps/studio` — Sanity Studio (`schemaTypes/`).
+- `apps/web` — SvelteKit frontend. Deploys to Cloudflare Pages.
+  - `src/lib/`: `assets/` (runtime-imported files only), `components/` (feature-grouped: Header/, Info/, Opus/, Poster/, Shaders/, Work/), `layouts/`, `sanity/` (per-feature GROQ + normalizers on the shared `fetch.ts`/`common.ts`), `server/` (edge cache, security headers, `getJson`), `shaders/` (gem-smoke, preview-reveal, preview-reveal-grid), `state/` (`$state` runes), `types/` (mirror Sanity), `utils/`.
+  - `src/styles/`: tokens + globals (`base/`, `layout/`, `utilities/`, `main.css`).
+  - `src/routes/`: `(opus)/` (site pages), `api/` (edge-cached Sanity/GitHub JSON), `ipse/` (hidden landing), `opus/[...rest]` (legacy redirects).
+- `apps/studio` — Sanity Studio: `schemaTypes/`, `scripts/` (seed scripts on `_client.mjs`), `seed-assets/` (source images for seed scripts).
 - `packages/eslint|stylelint|tsconfig` — shared configs. Changes in `packages/` affect the monorepo.
 - No new top-level `apps/`/`packages/`. Changes live under `apps/` + `packages/`.
 
@@ -17,7 +20,7 @@ Portfolio + identity platform. Organic, interactive, high-fidelity over generic.
 - Feature subdirs under `lib/components/`. No direct cross-feature imports — public API or bridge.
 - No hardcoded Sanity content. Keep schemas ↔ GROQ (`+page.server.ts`) ↔ `$lib/types/` in sync.
 - Sanity seeding: Editor `SANITY_TOKEN` lives in `apps/studio/.env.local`; load it from there when running `apps/studio/scripts/seed-*.mjs`, never print it.
-- Validate: `bun run check && bun run build`. `bun run format` auto-fixes. ESLint + Stylelint + Prettier; Stylelint: BEM patterns, alphabetical props, string imports.
+- Validate: `bun run check && bun run build` (`check` = prettier + lint + check-types). `bun run format` auto-fixes. ESLint + Stylelint + Prettier; Stylelint: BEM patterns, alphabetical props, string imports.
 - Tests: Vitest + `vitest-browser-svelte` (Playwright). Colocated: `*.svelte.{test,spec}.{js,ts}` for components, `.{test,spec}.{js,ts}` for Node logic.
 - Git (PowerShell only): commit only when explicitly instructed. Never stage `.agents/`.
 

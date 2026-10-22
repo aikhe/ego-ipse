@@ -1,13 +1,5 @@
 import type { Handle } from '@sveltejs/kit';
-
-const SECURITY_HEADERS = {
-  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
-  'X-Content-Type-Options': 'nosniff',
-  'X-Frame-Options': 'DENY',
-  'Referrer-Policy': 'strict-origin-when-cross-origin',
-  'Permissions-Policy':
-    'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()',
-} as const;
+import { SECURITY_HEADERS } from '$lib/server/securityHeaders';
 
 // pages functions responses skip static/_headers, so set them here
 export const handle: Handle = async ({ event, resolve }) => {

@@ -4,14 +4,11 @@
   "type": "module",
   "scripts": {
     "build": "turbo build",
-    "build:turbopack": "turbo build:turbopack",
     "dev": "turbo dev",
-    "dev:turbopack": "turbo dev:turbopack",
-    "check": "bun run prettier; turbo lint",
+    "check": "bun run prettier && turbo lint check-types",
     "format": "bun run prettier:fix; turbo lint:fix",
     "prettier": "prettier \"**/*.{js,mjs,ts,tsx,json,yml,css,svelte,md,html}\" --check --cache --cache-strategy=content --cache-location=.prettiercache",
     "prettier:fix": "bun run prettier -- --write",
-    "start": "turbo start",
     "deploy": "turbo deploy"
   },
   "devDependencies": {

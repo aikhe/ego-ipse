@@ -8,27 +8,16 @@
       "types": "./base.d.ts",
       "default": "./base.js"
     },
-    "./next-js": {
-      "types": "./next.d.ts",
-      "default": "./next.js"
-    },
-    "./react-internal": {
-      "types": "./react-internal.d.ts",
-      "default": "./react-internal.js"
-    },
     "./svelte": {
-      "types": "./react-internal.d.ts",
+      "types": "./svelte.d.ts",
       "default": "./svelte.js"
     }
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
-    "@next/eslint-plugin-next": "^16.2.0",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-only-warn": "^1.1.0",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-svelte": "^3.14.0",
     "eslint-plugin-turbo": "^2.7.1",
     "globals": "^16.5.0",

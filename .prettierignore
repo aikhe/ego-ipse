@@ -1,9 +1,11 @@
 .svelte-kit
+.wrangler
+.sanity
 node_modules
 dist
-.next
 .turbo
 .prettiercache
 build
 package-lock.json
 bun.lock
+apps/web/static

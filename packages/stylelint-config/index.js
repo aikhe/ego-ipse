@@ -8,7 +8,6 @@ export default {
   ignoreFiles: [
     '**/dist/**',
     '**/build/**',
-    '**/.next/**',
     '**/.turbo/**',
     '**/node_modules/**',
   ],

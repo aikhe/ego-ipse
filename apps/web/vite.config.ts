@@ -19,7 +19,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // three/threlte/paper-design only run on /ipse + /shaders routes:
+          // three/threlte/paper-design only run on the /ipse route:
           // isolate them so the opus homepage ships without webgl weight.
           if (id.includes('@paper-design/shaders')) return 'vendor-shaders';
           if (id.includes('@threlte/') || id.includes('three'))

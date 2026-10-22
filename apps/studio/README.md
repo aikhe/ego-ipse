@@ -1,9 +1,21 @@
-# Sanity Clean Content Studio
+# Studio
 
-Congratulations, you have now installed the Sanity Content Studio, an open-source real-time content editing environment connected to the Sanity backend.
+Sanity Studio for the Ego Ipse content (project `dn2lfgdt`, dataset `production`). Schemas live in `schemaTypes/` and mirror the types in `apps/web/src/lib/types/`.
 
-Now you can do the following things:
+## Develop
 
-- [Read “getting started” in the docs](https://www.sanity.io/docs/introduction/getting-started?utm_source=readme)
-- [Join the Sanity community](https://www.sanity.io/community/join?utm_source=readme)
-- [Extend and build plugins](https://www.sanity.io/docs/content-studio/extending?utm_source=readme)
+```sh
+bun run dev
+```
+
+## Seed scripts
+
+`scripts/seed-*.mjs` write to the **production** dataset. Put an Editor `SANITY_TOKEN` in `.env.local` (gitignored, never commit it) and run from `apps/studio`:
+
+```sh
+bun --env-file=.env.local scripts/<name>.mjs
+```
+
+`scripts/apply-works-manifest.mjs` is a dry run unless passed `--apply`. Shared client helpers live in `scripts/_client.mjs`.
+
+`seed-assets/` holds the source images the seed scripts upload to Sanity. They are not used by the web app.

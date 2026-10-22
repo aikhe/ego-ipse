@@ -1,18 +1,10 @@
 // Seeds the current Services page copy into Sanity as an `opusServices` doc.
-// Run:  $env:SANITY_TOKEN="<editor-token>"; node scripts/seed-opus-services.mjs
-// Token: Sanity Manage -> API -> Tokens (Editor write access, production dataset).
+// Run:  bun --env-file=.env.local scripts/seed-opus-services.mjs  (from apps/studio)
 // Rerunnable: uses createIfNotExists on _id `opusServices-singleton`.
 
-const PROJECT_ID = 'dn2lfgdt'
-const DATASET = 'production'
-const API_VERSION = 'v2022-03-07'
-const DOC_ID = 'opusServices-singleton'
+import {mutate} from './_client.mjs'
 
-const TOKEN = process.env.SANITY_TOKEN?.trim()
-if (!TOKEN) {
-  console.error('Missing SANITY_TOKEN. Create an Editor token and retry.')
-  process.exit(1)
-}
+const DOC_ID = 'opusServices-singleton'
 
 // current copy from apps/web/src/routes/(opus)/services/+page.svelte
 const DESCRIPTION =
@@ -24,17 +16,6 @@ const doc = {
   description: DESCRIPTION,
 }
 
-const mutateRes = await fetch(
-  `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/mutate/${DATASET}`,
-  {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({mutations: [{createIfNotExists: doc}]}),
-  },
-)
-if (!mutateRes.ok) throw new Error(`Mutate failed: ${await mutateRes.text()}`)
-console.log('Seeded opusServices:', await mutateRes.json())
+const mutateRes = await mutate([{createIfNotExists: doc}])
+console.log('Seeded opusServices:', mutateRes)
 console.log('Verify: *[_type=="opusServices"][0]{description}')

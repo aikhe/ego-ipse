@@ -1,26 +1,15 @@
 // Seeds "Kabi" into Sanity as the first selected `opusWork` doc.
-// Run:  node --env-file=.env.local scripts/seed-works-kabi.mjs  (from apps/studio)
+// Run:  bun --env-file=.env.local scripts/seed-works-kabi.mjs  (from apps/studio)
 // Rerunnable: uses createIfNotExists for kabi; existing selected works shift
 // down by one only when kabi is newly created. selected=true, order=1.
 // Preview cells = greatest-gym-bro + heat, detail gallery adds kabi-model-init.
 
-import {readFile} from 'node:fs/promises'
 import path from 'node:path'
-import {fileURLToPath} from 'node:url'
+import {mutate, query, uploadImage, seedAssets} from './_client.mjs'
 
-const PROJECT_ID = 'dn2lfgdt'
-const DATASET = 'production'
-const API_VERSION = 'v2022-03-07'
 const DOC_ID = 'opusWork-kabi'
 
-const TOKEN = process.env.SANITY_TOKEN?.trim()
-if (!TOKEN) {
-  console.error('Missing SANITY_TOKEN. Add it to .env.local and retry.')
-  process.exit(1)
-}
-
-const here = path.dirname(fileURLToPath(import.meta.url))
-const kabiDir = path.resolve(here, '..', '..', 'web', 'src', 'lib', 'assets', 'works', 'kabi')
+const kabiDir = path.join(seedAssets, 'works', 'kabi')
 
 const DESCRIPTION =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
@@ -40,24 +29,6 @@ const QUOTE = {
   },
 }
 
-async function uploadImage(absPath, filename) {
-  const buf = await readFile(absPath)
-  const res = await fetch(
-    `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/assets/images/${DATASET}?filename=${encodeURIComponent(filename)}`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${TOKEN}`,
-        'Content-Type': 'image/webp',
-      },
-      body: buf,
-    },
-  )
-  if (!res.ok) throw new Error(`Upload failed for ${filename}: ${await res.text()}`)
-  const asset = await res.json()
-  return {_type: 'image', asset: {_type: 'reference', _ref: asset._id ?? asset.document?._id}}
-}
-
 function cell(image, key, alt, width, height) {
   return {
     _type: 'object',
@@ -71,18 +42,8 @@ function cell(image, key, alt, width, height) {
   }
 }
 
-async function sanityQuery(query) {
-  const res = await fetch(
-    `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/query/${DATASET}?query=${encodeURIComponent(query)}`,
-    {headers: {Authorization: `Bearer ${TOKEN}`}},
-  )
-  if (!res.ok) throw new Error(`Query failed: ${await res.text()}`)
-  const data = await res.json()
-  return data.result
-}
-
 // skip the order shift on reruns so existing works never drift twice.
-const existing = await sanityQuery(`*[_type == "opusWork" && _id == "${DOC_ID}"][0]{_id, order}`)
+const existing = await query(`*[_type == "opusWork" && _id == "${DOC_ID}"][0]{_id, order}`)
 if (existing) {
   console.log(`Kabi already seeded (${existing._id}, order=${existing.order}) — nothing to do.`)
   console.log('Verify: *[_type=="opusWork" && slug.current=="kabi"]')
@@ -138,7 +99,7 @@ const doc = {
 const mutations = [{createIfNotExists: doc}]
 
 // make room at the top: bump every other selected work down by one.
-const selected = await sanityQuery(`*[_type == "opusWork" && selected == true]{_id, title, order}`)
+const selected = await query(`*[_type == "opusWork" && selected == true]{_id, title, order}`)
 for (const item of selected) {
   if (item._id === DOC_ID) continue
   if (typeof item.order !== 'number') continue
@@ -146,17 +107,6 @@ for (const item of selected) {
   console.log(`shift ${item.title}: order ${item.order} -> ${item.order + 1}`)
 }
 
-const mutateRes = await fetch(
-  `https://${PROJECT_ID}.api.sanity.io/${API_VERSION}/data/mutate/${DATASET}`,
-  {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({mutations}),
-  },
-)
-if (!mutateRes.ok) throw new Error(`Mutate failed: ${await mutateRes.text()}`)
-console.log('Seeded opusWork kabi:', await mutateRes.json())
+const mutateRes = await mutate(mutations)
+console.log('Seeded opusWork kabi:', mutateRes)
 console.log('Verify: *[_type=="opusWork" && slug.current=="kabi"]')

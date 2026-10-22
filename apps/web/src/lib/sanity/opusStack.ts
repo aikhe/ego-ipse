@@ -2,10 +2,11 @@ import type {
   SanityOpusStack,
   SanityOpusStackCategory,
 } from '$lib/types/sanity';
-import { sanityQueryUrl } from './config';
+import { sizedSanityUrl } from './common';
+import { fetchSanity } from './fetch';
 
 // deterministic pick: oldest document wins if duplicates ever exist.
-export const opusStackQuery = `*[_type == "opusStack"] | order(_createdAt asc)[0]{
+const query = `*[_type == "opusStack"] | order(_createdAt asc)[0]{
   description,
   "categories": categories[]{
     title,
@@ -24,8 +25,7 @@ function normalizeIconUrl(url: string | undefined): string | undefined {
   if (!trimmed) return undefined;
   // svg assets bypass the cdn sizing params (no raster transform available).
   if (trimmed.endsWith('.svg') || trimmed.includes('.svg?')) return trimmed;
-  const sep = trimmed.includes('?') ? '&' : '?';
-  return `${trimmed}${sep}auto=format&w=320&q=80&fit=max`;
+  return sizedSanityUrl(trimmed, 320);
 }
 
 function normalizeSize(size: unknown): number | undefined {
@@ -55,7 +55,7 @@ function normalizeCategories(
   return out.length > 0 ? out : undefined;
 }
 
-export function normalizeOpusStack(
+function normalizeOpusStack(
   raw: SanityOpusStack | null | undefined
 ): SanityOpusStack | null {
   if (!raw) return null;
@@ -69,19 +69,11 @@ export function normalizeOpusStack(
 }
 
 // never throws, returns null on failure so callers render nothing.
-export async function fetchSanityOpusStack(
-  fetchFn: typeof fetch = fetch
-): Promise<SanityOpusStack | null> {
-  try {
-    const res = await fetchFn(sanityQueryUrl(opusStackQuery));
-    if (!res.ok) {
-      console.error('Failed to fetch opusStack from Sanity', await res.text());
-      return null;
-    }
-    const data = (await res.json()) as { result?: SanityOpusStack | null };
-    return normalizeOpusStack(data.result);
-  } catch (err) {
-    console.error('Error fetching opusStack from Sanity:', err);
-    return null;
-  }
+export function fetchSanityOpusStack(fetchFn: typeof fetch = fetch) {
+  return fetchSanity(fetchFn, {
+    label: 'opusStack',
+    query,
+    normalize: normalizeOpusStack,
+    fallback: null,
+  });
 }

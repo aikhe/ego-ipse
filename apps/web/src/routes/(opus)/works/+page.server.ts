@@ -1,33 +1,14 @@
+import { getJson } from '$lib/server/getJson';
+import type { SanityOpusWorksResult } from '$lib/sanity/opusWorks';
 import type { PageServerLoad } from './$types';
-import type { Work } from '$lib/data/works';
-
-export const prerender = false;
 
 // Same-origin API (see src/routes/api/opus-works): Sanity is fetched
 // server-side so phones never need to reach api.sanity.io directly.
 export const load: PageServerLoad = async ({ fetch }) => {
-  try {
-    const res = await fetch('/api/opus-works');
-    if (!res.ok)
-      return {
-        sanitySelected: [] as Work[],
-        sanityWorks: [] as Work[],
-        sanityError: true,
-      };
-    const data = (await res.json()) as {
-      sanitySelected?: Work[];
-      sanityWorks?: Work[];
-    };
-    return {
-      sanitySelected: data.sanitySelected ?? [],
-      sanityWorks: data.sanityWorks ?? [],
-      sanityError: false,
-    };
-  } catch {
-    return {
-      sanitySelected: [] as Work[],
-      sanityWorks: [] as Work[],
-      sanityError: true,
-    };
-  }
+  const data = await getJson<SanityOpusWorksResult>(fetch, '/api/opus-works');
+  return {
+    sanitySelected: data?.sanitySelected ?? [],
+    sanityWorks: data?.sanityWorks ?? [],
+    sanityError: data === null,
+  };
 };

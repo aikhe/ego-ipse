@@ -38,3 +38,16 @@
 <span class="opus-side__note">[Temporary portfolio]</span>
 <OpusMobileMenu {active} />
 {@render children()}
+
+<style>
+  :global(html) {
+    height: auto;
+    overflow: auto;
+  }
+
+  :global(body) {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+</style>

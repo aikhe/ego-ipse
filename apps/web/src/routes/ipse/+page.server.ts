@@ -8,8 +8,6 @@ import type {
   SanityGitHub,
 } from '$lib/types/sanity';
 
-export const prerender = false;
-
 export const load: PageServerLoad = async ({ fetch }) => {
   // ── Projects ──────────────────────────────────────────────
   const projectQuery = `*[_type == "workRoot"] | order(index asc) [0...5] {
@@ -77,7 +75,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
           }
         }
 
-        const slotIndex = Number(p.index ?? 0) - 1;
+        const slotIndex = (p.index ?? 0) - 1;
         if (slotIndex >= 0 && slotIndex < GRID_SIZE) {
           slots[slotIndex] = {
             name: p.title || '',
@@ -138,7 +136,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
       const rawSocials = data.result || [];
 
       rawSocials.forEach((s: SanitySocial) => {
-        const slotIndex = Number(s.index ?? 1) - 1;
+        const slotIndex = (s.index ?? 1) - 1;
         if (slotIndex >= 0 && slotIndex < SOCIAL_GRID) {
           socialSlots[slotIndex] = {
             name: s.name || '',

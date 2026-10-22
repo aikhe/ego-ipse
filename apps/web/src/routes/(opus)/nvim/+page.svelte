@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { cubicIn, cubicOut, quartOut } from 'svelte/easing';
-  import type { TransitionConfig } from 'svelte/transition';
+  import { popIn, popOut, textSwap } from '$lib/utils/transitions';
   import { uiState } from '$lib/state/ui.svelte';
   import OpusNav from '$lib/components/Opus/OpusNav.svelte';
   import OpusFooter from '$lib/components/Opus/OpusFooter.svelte';
@@ -170,52 +169,6 @@
     lastX = null;
     lastY = null;
   }
-
-  // subtle settle: faint scale with no overshoot in, quick fade out.
-  // base transform is read live so centering is preserved mid-animation.
-  function pop(
-    node: HTMLElement,
-    { duration = 170 }: { duration?: number } = {}
-  ): TransitionConfig {
-    const base = getComputedStyle(node).transform;
-    return {
-      duration,
-      easing: cubicOut,
-      css: (t: number) =>
-        `transform: ${base} scale(${0.94 + 0.06 * t}); opacity: ${t};`,
-    };
-  }
-
-  function popOut(
-    node: HTMLElement,
-    { duration = 120 }: { duration?: number } = {}
-  ): TransitionConfig {
-    const base = getComputedStyle(node).transform;
-    return {
-      duration,
-      easing: cubicIn,
-      css: (t: number) =>
-        `transform: ${base} scale(${0.97 + 0.03 * t}); opacity: ${t};`,
-    };
-  }
-
-  // text swap: new text glides in from the side the cursor came from,
-  // sharpening from a soft blur with a long decelerating ease
-  function textSwap(
-    _node: HTMLElement,
-    {
-      dx = 0,
-      dy = 1,
-      duration = 280,
-    }: { dx?: number; dy?: number; duration?: number } = {}
-  ): TransitionConfig {
-    return {
-      duration,
-      easing: quartOut,
-      css: (t: number) =>
-        `transform: translate(${dx * (1 - t) * 10}px, ${dy * (1 - t) * 10}px); filter: blur(${(1 - t) * 6}px); opacity: ${t};`,
-    };
-  }
 </script>
 
 <div class="opus-canvas">
@@ -373,7 +326,7 @@
       style:left={`${tip.x}px`}
       style:top={`${tip.y}px`}
       bind:this={tipEl}
-      in:pop
+      in:popIn
       out:popOut
       aria-hidden="true"
     >
@@ -399,253 +352,9 @@
 </div>
 
 <style>
-  :global(html) {
-    height: auto;
-    overflow: auto;
-  }
-
-  :global(body) {
-    height: auto;
-    min-height: 100vh;
-    overflow: visible;
-  }
-
-  .opus-canvas {
-    align-items: start;
-    background: var(--color-bg-opus);
-    display: grid;
-    justify-items: center;
-    min-height: 100dvh;
-    overflow: visible;
-    position: relative;
-    width: 100%;
-  }
-
-  .opus-grid {
-    box-sizing: border-box;
-    display: grid;
-    gap: 0;
-    grid-template-columns: 14rem 4rem 36rem 12rem 8rem;
-    justify-content: center;
-    min-height: 100dvh;
-    width: fit-content;
-  }
-
-  .opus-grid--overlay {
-    box-sizing: border-box;
-    height: 100dvh;
-    inset: 0;
-    margin: auto;
-    pointer-events: none;
-    position: absolute;
-    z-index: 2;
-  }
-
-  .opus-stripe {
-    height: 24px;
-    left: 0;
-    pointer-events: none;
-    position: absolute;
-    right: 0;
-    z-index: 1;
-  }
-
-  .opus-stripe::before {
-    background-color: var(--color-overlay-05);
-    content: '';
-    inset: 0;
-    mask-image: url('$lib/assets/stripe.svg');
-    mask-repeat: repeat;
-    mask-size: 7px 7px;
-    pointer-events: none;
-    position: absolute;
-  }
-
-  .opus-stripe--top {
-    border-bottom: 1px solid var(--color-overlay-05);
-    top: 0;
-  }
-
-  .opus-stripe--bottom {
-    border-top: 1px solid var(--color-overlay-05);
-    bottom: 0;
-  }
-
-  .opus-col {
-    box-sizing: border-box;
-    min-height: 100%;
-    padding: 4.5rem 0 7rem;
-    position: relative;
-  }
-
-  .opus-grid:not(.opus-grid--overlay) {
-    border-right: 2px solid var(--color-overlay-02);
-    position: relative;
-  }
-
-  .opus-grid:not(.opus-grid--overlay) .opus-col {
-    border-left: 2px solid var(--color-overlay-02);
-  }
-
-  .opus-grid:not(.opus-grid--overlay) .opus-col::after {
-    background: var(--color-overlay-10);
-    content: '';
-    height: 24px;
-    left: -2px;
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    width: 2px;
-    z-index: 0;
-  }
-
-  .opus-grid:not(.opus-grid--overlay) .opus-col::before {
-    background: var(--color-overlay-10);
-    bottom: 0;
-    content: '';
-    height: 24px;
-    left: -2px;
-    pointer-events: none;
-    position: absolute;
-    width: 2px;
-    z-index: 0;
-  }
-
-  .opus-grid:not(.opus-grid--overlay)::after {
-    background: var(--color-overlay-10);
-    content: '';
-    height: 24px;
-    pointer-events: none;
-    position: absolute;
-    right: -2px;
-    top: 0;
-    width: 2px;
-  }
-
-  .opus-grid:not(.opus-grid--overlay)::before {
-    background: var(--color-overlay-10);
-    bottom: 0;
-    content: '';
-    height: 24px;
-    pointer-events: none;
-    position: absolute;
-    right: -2px;
-    width: 2px;
-  }
-
-  .opus-grid:not(.opus-grid--overlay) .opus-col--3 {
-    align-items: stretch;
-    border-left: 2px solid transparent;
-    border-image: linear-gradient(
-        to bottom,
-        var(--color-overlay-02) 0%,
-        var(--color-overlay-02) 5%,
-        transparent 30%,
-        transparent 60%,
-        var(--color-overlay-02) 80%,
-        var(--color-overlay-02) 100%
-      )
-      1;
-    border-right: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    justify-content: flex-start;
-    position: relative;
-    z-index: 1;
-  }
-
-  .opus-col__border--right {
-    background: linear-gradient(
-      to bottom,
-      var(--color-overlay-02) 0%,
-      var(--color-overlay-02) 20%,
-      transparent 30%,
-      transparent 60%,
-      var(--color-overlay-02) 80%,
-      var(--color-overlay-02) 100%
-    );
-    bottom: 0;
-    pointer-events: none;
-    position: absolute;
-    right: -2px;
-    top: 0;
-    width: 2px;
-    z-index: 0;
-  }
-
-  .opus-col__border--right::before {
-    background: var(--color-overlay-10);
-    bottom: 0;
-    content: '';
-    height: 24px;
-    position: absolute;
-    width: 2px;
-  }
-
-  .opus-col__border--right::after {
-    background: var(--color-overlay-10);
-    content: '';
-    height: 24px;
-    position: absolute;
-    top: 0;
-    width: 2px;
-  }
-
-  .opus-grid:not(.opus-grid--overlay) .opus-col--4 {
-    border-left: none;
-    pointer-events: none;
-    position: relative;
-    z-index: 0;
-  }
-
-  .opus-grid:not(.opus-grid--overlay) .opus-col--4::after,
-  .opus-grid:not(.opus-grid--overlay) .opus-col--4::before {
-    display: none;
-  }
-
-  .opus-grid:not(.opus-grid--overlay) .opus-col--5 {
-    border-image: linear-gradient(
-        to bottom,
-        var(--color-overlay-02) 0%,
-        var(--color-overlay-02) 20%,
-        transparent 30%,
-        transparent 60%,
-        var(--color-overlay-02) 80%,
-        var(--color-overlay-02) 100%
-      )
-      1;
-    border-left: 2px solid transparent;
-    pointer-events: none;
-    position: relative;
-    z-index: 0;
-  }
-
   .opus-section {
     position: relative;
     z-index: 1;
-  }
-
-  .opus-col__section {
-    position: relative;
-    z-index: 1;
-  }
-
-  .opus-col--1 {
-    align-items: stretch;
-  }
-
-  .opus-col--2 {
-    align-items: stretch;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    justify-content: flex-start;
-  }
-
-  .opus-col__section {
-    align-items: flex-start;
-    display: flex;
   }
 
   .opus-col__section--01 {
@@ -665,15 +374,6 @@
   .opus-col__section--04 {
     height: var(--nvim-miscs-title-h);
     margin-top: calc(3rem + var(--nvim-plugins-body-h, 0px));
-  }
-
-  .opus-col__index {
-    color: var(--color-text-faint-opus);
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.72rem;
-    font-weight: 400;
-    letter-spacing: 0.04em;
-    line-height: 1;
   }
 
   .opus-section--nvim {
@@ -774,6 +474,7 @@
   }
 
   /* 90% of col-3 (36rem), same as the footer services card */
+
   .opus-nvim__card {
     background: var(--color-overlay-03);
     box-sizing: border-box;
@@ -856,6 +557,7 @@
   /* cursor-following hover tip copied from the root activity
     heatmap: pill offset, hide/out settle and pointer diamond all
     match, the content shows the repo's live GitHub star count. */
+
   .opus-nvim__tip {
     background: var(--color-text);
     color: var(--color-bg);
@@ -882,6 +584,7 @@
   }
 
   /* pointer diamond bridging the gap between the pill and the cursor */
+
   .opus-nvim__tip::after {
     background: var(--color-text);
     content: '';
@@ -894,6 +597,7 @@
   }
 
   /* sits after the base rule: same specificity, so this wins for below tips */
+
   .opus-nvim__tip--below::after {
     top: 0;
   }
@@ -912,6 +616,7 @@
   }
 
   /* touch: press states replace hover states */
+
   @media (hover: none) {
     .opus-nvim__plugin:hover .opus-nvim__card-title {
       color: var(--color-text);
@@ -949,6 +654,7 @@
   /* mobile: single fluid column (see _opus.css) — the fixed 36rem
     column and 32.4rem cards no longer apply, so cards go full-width
     and type steps down with the other opus descriptions. */
+
   @media (max-width: 48rem) {
     .opus-nvim__card {
       width: 100%;
@@ -959,26 +665,5 @@
     .opus-nvim__card-desc {
       font-size: 1rem;
     }
-  }
-
-  /* debug grid — Shift+G — background only */
-  .opus-grid--overlay .opus-col--1 {
-    background: color-mix(in srgb, var(--color-text) 5%, transparent);
-  }
-
-  .opus-grid--overlay .opus-col--2 {
-    background: color-mix(in srgb, var(--color-text) 8%, transparent);
-  }
-
-  .opus-grid--overlay .opus-col--3 {
-    background: color-mix(in srgb, var(--color-text) 11%, transparent);
-  }
-
-  .opus-grid--overlay .opus-col--4 {
-    background: color-mix(in srgb, var(--color-text) 14%, transparent);
-  }
-
-  .opus-grid--overlay .opus-col--5 {
-    background: color-mix(in srgb, var(--color-text) 17%, transparent);
   }
 </style>

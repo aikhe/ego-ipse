@@ -1,7 +1,7 @@
 import type { SanityOpusValues } from '$lib/types/sanity';
-import { sanityQueryUrl } from './config';
+import { fetchSanity } from './fetch';
 
-export const opusValuesQuery = `*[_type == "opusValues"][0]{
+const query = `*[_type == "opusValues"][0]{
   description,
   "columns": columns[]{ title, items },
   quote{ text, by }
@@ -33,7 +33,7 @@ export function renderRichInline(text: string): string {
     .replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, '<em>$1</em>');
 }
 
-export function normalizeOpusValues(
+function normalizeOpusValues(
   raw: SanityOpusValues | null | undefined
 ): SanityOpusValues | null {
   if (!raw) return null;
@@ -56,19 +56,11 @@ export function normalizeOpusValues(
 }
 
 // never throws, returns null on failure so callers render nothing.
-export async function fetchSanityOpusValues(
-  fetchFn: typeof fetch = fetch
-): Promise<SanityOpusValues | null> {
-  try {
-    const res = await fetchFn(sanityQueryUrl(opusValuesQuery));
-    if (!res.ok) {
-      console.error('Failed to fetch opusValues from Sanity', await res.text());
-      return null;
-    }
-    const data = (await res.json()) as { result?: SanityOpusValues | null };
-    return normalizeOpusValues(data.result);
-  } catch (err) {
-    console.error('Error fetching opusValues from Sanity:', err);
-    return null;
-  }
+export function fetchSanityOpusValues(fetchFn: typeof fetch = fetch) {
+  return fetchSanity(fetchFn, {
+    label: 'opusValues',
+    query,
+    normalize: normalizeOpusValues,
+    fallback: null,
+  });
 }

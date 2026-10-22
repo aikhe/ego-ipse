@@ -21,13 +21,8 @@
   let stageHeight = $state<number | null>(null);
   let stageOffsetX = $state(0);
   let isMobile = $state(false);
-  // opus pages live in the (opus) route group; everything else
-  // (/ipse, /shaders) gets the staged landing treatment.
-  let isOpus = $derived(
-    (page.route.id ?? '').startsWith('/(opus)') ||
-      page.url.pathname === '/opus' ||
-      page.url.pathname.startsWith('/opus/')
-  );
+  // opus pages live in the (opus) route group; /ipse gets the staged landing treatment.
+  let isOpus = $derived((page.route.id ?? '').startsWith('/(opus)'));
 
   $effect(() => {
     document.documentElement.setAttribute('data-theme', uiState.theme);

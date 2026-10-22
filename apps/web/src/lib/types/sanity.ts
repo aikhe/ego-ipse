@@ -9,14 +9,14 @@ export interface SanityOpusWorkCell {
   assetHeight?: number;
 }
 
-export interface SanityOpusWorkQuote {
+interface SanityOpusWorkQuote {
   text?: string;
   by?: string;
   href?: string;
   avatar?: string;
 }
 
-export interface SanityOpusWorkMeta {
+interface SanityOpusWorkMeta {
   role?: string;
   platform?: string;
   year?: string;
@@ -24,7 +24,7 @@ export interface SanityOpusWorkMeta {
   status?: string;
 }
 
-export interface SanityOpusWorkMetaLegacyItem {
+interface SanityOpusWorkMetaLegacyItem {
   k?: string;
   v?: string;
 }
@@ -42,12 +42,13 @@ export interface SanityOpusWork {
   quote?: SanityOpusWorkQuote;
   meta?: SanityOpusWorkMeta | SanityOpusWorkMetaLegacyItem[];
 }
-export interface SanityOpusValuesColumn {
+
+interface SanityOpusValuesColumn {
   title?: string;
   items?: string[];
 }
 
-export interface SanityOpusValuesQuote {
+interface SanityOpusValuesQuote {
   text?: string;
   by?: string;
 }
@@ -57,10 +58,13 @@ export interface SanityOpusValues {
   columns?: SanityOpusValuesColumn[];
   quote?: SanityOpusValuesQuote;
 }
-export interface SanityOpusAbout {
+
+// about, blogs, kaia and services are description-only documents.
+export interface SanityOpusDescription {
   description?: string;
 }
-export interface SanityOpusFleurImage {
+
+export interface SanityOpusImage {
   src?: string;
   alt?: string;
   assetWidth?: number;
@@ -68,79 +72,51 @@ export interface SanityOpusFleurImage {
   width?: number;
   height?: number;
 }
-export interface SanityOpusFleurExtra {
+
+// knots and osn; fleur extends it.
+export interface SanityOpusGallery extends SanityOpusDescription {
+  images?: SanityOpusImage[];
+}
+
+// plugin / misc / extra entries that link to a repo.
+export interface SanityOpusRepoLink {
   title?: string;
   description?: string;
   repo?: string;
 }
-export interface SanityOpusFleur {
-  description?: string;
-  images?: SanityOpusFleurImage[];
-  extras?: SanityOpusFleurExtra[];
+
+export interface SanityOpusFleur extends SanityOpusGallery {
+  extras?: SanityOpusRepoLink[];
 }
-export interface SanityOpusOsnImage {
-  src?: string;
-  alt?: string;
-  assetWidth?: number;
-  assetHeight?: number;
-  width?: number;
-  height?: number;
-}
-export interface SanityOpusOsn {
-  description?: string;
-  images?: SanityOpusOsnImage[];
-}
-export interface SanityOpusKnotsImage {
-  src?: string;
-  alt?: string;
-  assetWidth?: number;
-  assetHeight?: number;
-  width?: number;
-  height?: number;
-}
-export interface SanityOpusKnots {
-  description?: string;
-  images?: SanityOpusKnotsImage[];
-}
-export interface SanityOpusNvimPlugin {
-  title?: string;
-  description?: string;
-  repo?: string;
-}
-export interface SanityOpusNvimConfigCard {
+
+interface SanityOpusNvimConfigCard {
   title?: string;
   description?: string;
 }
-export interface SanityOpusNvim {
-  description?: string;
+
+export interface SanityOpusNvim extends SanityOpusDescription {
   configCard?: SanityOpusNvimConfigCard;
-  plugins?: SanityOpusNvimPlugin[];
-  miscs?: SanityOpusNvimPlugin[];
+  plugins?: SanityOpusRepoLink[];
+  miscs?: SanityOpusRepoLink[];
 }
-export interface SanityOpusServices {
-  description?: string;
-}
-export interface SanityOpusBlogs {
-  description?: string;
-}
-export interface SanityOpusKaia {
-  description?: string;
-}
-export interface SanityOpusStackItem {
+
+interface SanityOpusStackItem {
   name?: string;
   href?: string;
   size?: number;
   iconLightUrl?: string;
   iconDarkUrl?: string;
 }
+
 export interface SanityOpusStackCategory {
   title?: string;
   items?: SanityOpusStackItem[];
 }
-export interface SanityOpusStack {
-  description?: string;
+
+export interface SanityOpusStack extends SanityOpusDescription {
   categories?: SanityOpusStackCategory[];
 }
+
 export interface SanityProject {
   title?: string;
   duration?: {
@@ -158,7 +134,7 @@ export interface SanityProject {
   tags?: string[];
   width?: number;
   height?: number;
-  index?: string;
+  index?: number;
 }
 
 export interface SanitySocial {
@@ -172,7 +148,7 @@ export interface SanitySocial {
   tags?: string[];
   status?: string;
   imageUrl?: string;
-  index?: string;
+  index?: number;
 }
 
 export interface SanityGitHub {

@@ -488,7 +488,7 @@
     font-size: 0.8rem;
     font-weight: 400;
     letter-spacing: 0.034em;
-    margin: 0rem 0 0;
+    margin: 0;
     text-wrap: nowrap;
   }
 
@@ -579,8 +579,8 @@
   .social-card__img {
     display: block;
     height: 102%;
-    width: 102%;
     object-fit: contain;
+    width: 102%;
   }
 
   .social-card__dot {

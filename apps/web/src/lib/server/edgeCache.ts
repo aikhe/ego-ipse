@@ -1,7 +1,7 @@
 import { json, type RequestEvent } from '@sveltejs/kit';
 import { SECURITY_HEADERS } from './securityHeaders';
 
-export const CACHE_CONTROL =
+const CACHE_CONTROL =
   'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400';
 
 interface Loaded {

@@ -3,8 +3,6 @@
   import { fade, scale } from 'svelte/transition';
   import { uiState } from '$lib/state/ui.svelte';
   import OpusNav from '$lib/components/Opus/OpusNav.svelte';
-  import { selectedWorks, works } from '$lib/data/works';
-  import { mergePreferSanity } from '$lib/sanity/opusWorks';
   import type { PageProps } from './$types';
   import WorkCard from '$lib/components/Work/WorkCard.svelte';
   import OpusFooter from '$lib/components/Opus/OpusFooter.svelte';
@@ -33,14 +31,7 @@
 
   let { data }: PageProps = $props();
 
-  // sanity first, hardcoded stays as fallback.
-  const mergedSelected = $derived(
-    mergePreferSanity(data.sanitySelected ?? [], selectedWorks)
-  );
-  const mergedWorks = $derived(
-    mergePreferSanity(data.sanityWorks ?? [], works)
-  );
-  const allWorks = $derived([...mergedSelected, ...mergedWorks]);
+  const allWorks = $derived([...data.sanitySelected, ...data.sanityWorks]);
 
   let selectedId = $state('all');
   let query = $state('');
@@ -224,6 +215,7 @@
           </div>
           <div
             class="opus-filter"
+            role="presentation"
             bind:this={filterEl}
             onmouseenter={openFilter}
             onmouseleave={scheduleClose}
@@ -315,6 +307,7 @@
       </div>
       <div
         class="opus-filter opus-filter--sticky"
+        role="presentation"
         bind:this={stickyFilterEl}
         onmouseenter={openStickyFilter}
         onmouseleave={scheduleStickyClose}
@@ -385,262 +378,9 @@
 </div>
 
 <style>
-  :global(html) {
-    height: auto;
-    overflow: auto;
-  }
-
-  :global(body) {
-    height: auto;
-    min-height: 100vh;
-    overflow: visible;
-  }
-
-  .opus-canvas {
-    align-items: start;
-    background: var(--color-bg-opus);
-    display: grid;
-    justify-items: center;
-    min-height: 100dvh;
-    overflow: visible;
-    position: relative;
-    width: 100%;
-  }
-
-  .opus-grid {
-    box-sizing: border-box;
-    display: grid;
-    gap: 0;
-    grid-template-columns: 14rem 4rem 36rem 12rem 8rem;
-    justify-content: center;
-    min-height: 100dvh;
-    width: fit-content;
-  }
-
-  .opus-grid--overlay {
-    box-sizing: border-box;
-    height: 100dvh;
-    inset: 0;
-    margin: auto;
-    pointer-events: none;
-    position: absolute;
-    z-index: 2;
-  }
-
-  .opus-stripe {
-    height: 24px;
-    left: 0;
-    pointer-events: none;
-    position: absolute;
-    right: 0;
-    z-index: 1;
-  }
-
-  .opus-stripe::before {
-    background-color: var(--color-overlay-05);
-    content: '';
-    inset: 0;
-    mask-image: url('$lib/assets/stripe.svg');
-    mask-repeat: repeat;
-    mask-size: 7px 7px;
-    pointer-events: none;
-    position: absolute;
-  }
-
-  .opus-stripe--top {
-    border-bottom: 1px solid var(--color-overlay-05);
-    top: 0;
-  }
-
-  .opus-stripe--bottom {
-    border-top: 1px solid var(--color-overlay-05);
-    bottom: 0;
-  }
-
-  .opus-col {
-    box-sizing: border-box;
-    min-height: 100%;
-    padding: 4.5rem 0 7rem;
-    position: relative;
-  }
-
-  .opus-grid:not(.opus-grid--overlay) {
-    border-right: 2px solid var(--color-overlay-02);
-    position: relative;
-  }
-
-  .opus-grid:not(.opus-grid--overlay) .opus-col {
-    border-left: 2px solid var(--color-overlay-02);
-  }
-
-  .opus-grid:not(.opus-grid--overlay) .opus-col::after {
-    background: var(--color-overlay-10);
-    content: '';
-    height: 24px;
-    left: -2px;
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    width: 2px;
-    z-index: 0;
-  }
-
-  .opus-grid:not(.opus-grid--overlay) .opus-col::before {
-    background: var(--color-overlay-10);
-    bottom: 0;
-    content: '';
-    height: 24px;
-    left: -2px;
-    pointer-events: none;
-    position: absolute;
-    width: 2px;
-    z-index: 0;
-  }
-
-  .opus-grid:not(.opus-grid--overlay)::after {
-    background: var(--color-overlay-10);
-    content: '';
-    height: 24px;
-    pointer-events: none;
-    position: absolute;
-    right: -2px;
-    top: 0;
-    width: 2px;
-  }
-
-  .opus-grid:not(.opus-grid--overlay)::before {
-    background: var(--color-overlay-10);
-    bottom: 0;
-    content: '';
-    height: 24px;
-    pointer-events: none;
-    position: absolute;
-    right: -2px;
-    width: 2px;
-  }
-
-  .opus-grid:not(.opus-grid--overlay) .opus-col--3 {
-    align-items: stretch;
-    border-left: 2px solid transparent;
-    border-image: linear-gradient(
-        to bottom,
-        var(--color-overlay-02) 0%,
-        var(--color-overlay-02) 5%,
-        transparent 30%,
-        transparent 60%,
-        var(--color-overlay-02) 80%,
-        var(--color-overlay-02) 100%
-      )
-      1;
-    border-right: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    justify-content: flex-start;
-    position: relative;
-    z-index: 1;
-  }
-
-  .opus-col__border--right {
-    background: linear-gradient(
-      to bottom,
-      var(--color-overlay-02) 0%,
-      var(--color-overlay-02) 20%,
-      transparent 30%,
-      transparent 60%,
-      var(--color-overlay-02) 80%,
-      var(--color-overlay-02) 100%
-    );
-    bottom: 0;
-    pointer-events: none;
-    position: absolute;
-    right: -2px;
-    top: 0;
-    width: 2px;
-    z-index: 0;
-  }
-
-  .opus-col__border--right::before {
-    background: var(--color-overlay-10);
-    bottom: 0;
-    content: '';
-    height: 24px;
-    position: absolute;
-    width: 2px;
-  }
-
-  .opus-col__border--right::after {
-    background: var(--color-overlay-10);
-    content: '';
-    height: 24px;
-    position: absolute;
-    top: 0;
-    width: 2px;
-  }
-
-  .opus-grid:not(.opus-grid--overlay) .opus-col--4 {
-    border-left: none;
-    pointer-events: none;
-    position: relative;
-    z-index: 0;
-  }
-
-  .opus-grid:not(.opus-grid--overlay) .opus-col--4::after,
-  .opus-grid:not(.opus-grid--overlay) .opus-col--4::before {
-    display: none;
-  }
-
-  .opus-grid:not(.opus-grid--overlay) .opus-col--5 {
-    border-image: linear-gradient(
-        to bottom,
-        var(--color-overlay-02) 0%,
-        var(--color-overlay-02) 20%,
-        transparent 30%,
-        transparent 60%,
-        var(--color-overlay-02) 80%,
-        var(--color-overlay-02) 100%
-      )
-      1;
-    border-left: 2px solid transparent;
-    pointer-events: none;
-    position: relative;
-    z-index: 0;
-  }
-
   .opus-section {
     position: relative;
     z-index: 1;
-  }
-
-  .opus-col__section {
-    position: relative;
-    z-index: 1;
-  }
-
-  .opus-col--1 {
-    align-items: stretch;
-  }
-
-  .opus-col--2 {
-    align-items: stretch;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    justify-content: flex-start;
-  }
-
-  .opus-col__section {
-    align-items: flex-start;
-    display: flex;
-  }
-
-  .opus-col__index {
-    color: var(--color-text-faint-opus);
-    font-family: 'Geist Mono', monospace;
-    font-size: 0.72rem;
-    font-weight: 400;
-    letter-spacing: 0.04em;
-    line-height: 1;
   }
 
   .opus-section--works {
@@ -836,28 +576,8 @@
     width: auto;
   }
 
-  /* debug grid — Shift+G — background only */
-  .opus-grid--overlay .opus-col--1 {
-    background: color-mix(in srgb, var(--color-text) 5%, transparent);
-  }
-
-  .opus-grid--overlay .opus-col--2 {
-    background: color-mix(in srgb, var(--color-text) 8%, transparent);
-  }
-
-  .opus-grid--overlay .opus-col--3 {
-    background: color-mix(in srgb, var(--color-text) 11%, transparent);
-  }
-
-  .opus-grid--overlay .opus-col--4 {
-    background: color-mix(in srgb, var(--color-text) 14%, transparent);
-  }
-
-  .opus-grid--overlay .opus-col--5 {
-    background: color-mix(in srgb, var(--color-text) 17%, transparent);
-  }
-
   /* touch: press states replace hover states */
+
   @media (hover: none) {
     .opus-filter__option:hover {
       background-color: transparent;

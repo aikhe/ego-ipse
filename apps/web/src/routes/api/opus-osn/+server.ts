@@ -3,8 +3,6 @@ import { cachedJson } from '$lib/server/edgeCache';
 import { fetchSanityOpusOsn } from '$lib/sanity/opusOsn';
 import type { RequestHandler } from './$types';
 
-export const prerender = false;
-
 // hidden until the osn case study is ready — remove to re-enable
 // (together with the page gate in (opus)/osn/+layout.server.ts)
 const hidden: boolean = true;

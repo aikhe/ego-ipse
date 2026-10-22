@@ -2,8 +2,6 @@ import { cachedJson } from '$lib/server/edgeCache';
 import { fetchSanityOpusValues } from '$lib/sanity/opusValues';
 import type { RequestHandler } from './$types';
 
-export const prerender = false;
-
 // Same-origin proxy like opus-works: keeps Sanity server-side so mobile
 // content-blockers never need to reach api.sanity.io directly.
 export const GET: RequestHandler = event =>

@@ -3,8 +3,6 @@ import { cachedJson } from '$lib/server/edgeCache';
 import { fetchSanityOpusKnots } from '$lib/sanity/opusKnots';
 import type { RequestHandler } from './$types';
 
-export const prerender = false;
-
 // hidden until the knots case study is ready — remove to re-enable
 // (together with the page gate in (opus)/knots/+layout.server.ts)
 const hidden: boolean = true;

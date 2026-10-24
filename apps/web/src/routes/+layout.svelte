@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import '../styles/main.css';
-  import favicon from '$lib/assets/ike-favicon.png';
   import { page } from '$app/state';
+  import { SITE_JSON_LD_TAG, SITE_URL } from '$lib/site';
   import {
     calculateStageMetrics,
     STAGE_DESIGN_WIDTH,
@@ -116,7 +116,7 @@
 
 <svelte:head>
   <title>Ike Rosacay</title>
-  <link rel="canonical" href={page.url.origin + page.url.pathname} />
+  <link rel="canonical" href={SITE_URL + page.url.pathname} />
   <meta
     name="theme-color"
     content={uiState.theme === 'dark' ? '#080807' : '#f5f5f5'}
@@ -126,6 +126,7 @@
     content="Designer & Developer based in Caloocan, Philippines. Freelancing since 2025."
   />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content={SITE_URL + page.url.pathname} />
   <meta property="og:site_name" content="Ike Rosacay" />
   <meta property="og:title" content="Ike Rosacay" />
   <meta
@@ -146,8 +147,13 @@
     content="Designer & Developer based in Caloocan, Philippines. Freelancing since 2025."
   />
   <meta name="twitter:image" content="https://ikerosacay.com/banner.webp" />
-  <link rel="icon" type="image/png" href={favicon} />
-  <link rel="apple-touch-icon" href={favicon} />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" href="/favicon.png" sizes="256x256" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
+  {#if page.url.pathname === '/'}
+    <!-- eslint-disable-next-line svelte/no-at-html-tags -- static, `<`-escaped json -->
+    {@html SITE_JSON_LD_TAG}
+  {/if}
 </svelte:head>
 
 {#if isOpus}

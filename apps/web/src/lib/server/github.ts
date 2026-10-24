@@ -26,36 +26,53 @@ function parseGitHubRepo(raw: string): string | null {
   return `${url[1]}/${url[2]}`;
 }
 
-// live star counts keyed by the repo value as given. never throws: `ok` is
-// false when any github lookup failed so callers can skip caching the gap.
+const STARS_TTL_MS = 10 * 60 * 1000;
+
+// last good count per owner/repo, alive as long as the dev server or worker
+// isolate. reloads reuse it instead of spending the hourly budget (vite dev
+// has no edge cache), and a failed lookup falls back to it.
+const starsMemo = new Map<string, { count: number; at: number }>();
+
+async function fetchStars(
+  fetchFn: typeof fetch,
+  slug: string,
+  headers: Record<string, string>
+): Promise<number | null> {
+  const res = await fetchFn(`https://api.github.com/repos/${slug}`, {
+    headers,
+  });
+  if (!res.ok) return null;
+  const data = (await res.json()) as { stargazers_count?: unknown };
+  return typeof data.stargazers_count === 'number'
+    ? data.stargazers_count
+    : null;
+}
+
+// star counts keyed by the repo value as given. never throws: `ok` is false
+// when any github repo has no count so callers can skip caching the gap.
 // non-github values are skipped without counting as a failure.
 export async function getRepoStars(
   fetchFn: typeof fetch,
   repos: string[]
 ): Promise<{ stars: Record<string, number>; ok: boolean }> {
   const headers = githubHeaders();
-  const results = await Promise.all(
+  const stars: Record<string, number> = {};
+  let ok = true;
+  await Promise.all(
     repos.map(async repo => {
       const slug = parseGitHubRepo(repo);
-      if (!slug) return { repo, count: null, failed: false };
-      try {
-        const res = await fetchFn(`https://api.github.com/repos/${slug}`, {
-          headers,
-        });
-        if (!res.ok) return { repo, count: null, failed: true };
-        const data = (await res.json()) as { stargazers_count?: unknown };
-        const count = data.stargazers_count;
-        if (typeof count !== 'number')
-          return { repo, count: null, failed: true };
-        return { repo, count, failed: false };
-      } catch {
-        return { repo, count: null, failed: true };
+      if (!slug) return;
+      const memo = starsMemo.get(slug);
+      let count =
+        memo && Date.now() - memo.at < STARS_TTL_MS ? memo.count : null;
+      if (count === null) {
+        count = await fetchStars(fetchFn, slug, headers).catch(() => null);
+        if (count !== null) starsMemo.set(slug, { count, at: Date.now() });
+        else count = memo?.count ?? null;
       }
+      if (count === null) ok = false;
+      else stars[repo] = count;
     })
   );
-  const stars: Record<string, number> = {};
-  for (const { repo, count } of results) {
-    if (count !== null) stars[repo] = count;
-  }
-  return { stars, ok: results.every(result => !result.failed) };
+  return { stars, ok };
 }

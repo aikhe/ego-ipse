@@ -1,4 +1,5 @@
 import { cachedJson } from '$lib/server/edgeCache';
+import { githubHeaders } from '$lib/server/github';
 import type { RequestHandler } from './$types';
 
 const GITHUB_USERNAME = 'aikhe';
@@ -17,13 +18,8 @@ interface GitHubSearch {
   total_count: number;
 }
 
-const headers = {
-  Accept: 'application/vnd.github+json',
-  'User-Agent': 'ego-ipse',
-};
-
-// unauthenticated github allows 60 req/hr/ip and this makes 3 per miss, so
-// only fully successful results are cached; anything partial is no-store.
+// this makes 3 github calls per miss, so only fully successful results
+// are cached; anything partial is no-store.
 export const GET: RequestHandler = event =>
   cachedJson(
     event,
@@ -33,6 +29,7 @@ export const GET: RequestHandler = event =>
       let repos = '—';
       let followers = '—';
       let ok = false;
+      const headers = githubHeaders();
 
       try {
         const [userRes, reposRes, commitsRes] = await Promise.all([

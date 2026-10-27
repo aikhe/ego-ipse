@@ -3,6 +3,7 @@
   import '../styles/main.css';
   import { page } from '$app/state';
   import { SITE_JSON_LD_TAG, SITE_URL } from '$lib/site';
+  import { getPageMetadata } from '$lib/utils/pageMetadata';
   import {
     calculateStageMetrics,
     STAGE_DESIGN_WIDTH,
@@ -23,6 +24,7 @@
   let isMobile = $state(false);
   // opus pages live in the (opus) route group; /ipse gets the staged landing treatment.
   let isOpus = $derived((page.route.id ?? '').startsWith('/(opus)'));
+  const metadata = $derived(getPageMetadata(page.url.pathname, page.data));
 
   $effect(() => {
     document.documentElement.setAttribute('data-theme', uiState.theme);
@@ -115,37 +117,28 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <svelte:head>
-  <title>Ike Rosacay</title>
+  <title>{metadata.title}</title>
   <link rel="canonical" href={SITE_URL + page.url.pathname} />
   <meta
     name="theme-color"
     content={uiState.theme === 'dark' ? '#080807' : '#f5f5f5'}
   />
-  <meta
-    name="description"
-    content="Designer & Developer based in Caloocan, Philippines. Freelancing since 2025."
-  />
+  <meta name="description" content={metadata.description} />
   <meta property="og:type" content="website" />
   <meta property="og:url" content={SITE_URL + page.url.pathname} />
   <meta property="og:site_name" content="Ike Rosacay" />
-  <meta property="og:title" content="Ike Rosacay" />
-  <meta
-    property="og:description"
-    content="Designer & Developer based in Caloocan, Philippines. Freelancing since 2025."
-  />
+  <meta property="og:title" content={metadata.title} />
+  <meta property="og:description" content={metadata.description} />
   <meta property="og:image" content="https://ikerosacay.com/banner.webp" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta
     property="og:image:alt"
-    content="Ike Andrie Rosacay — Designer and Developer"
+    content="Ike Andrie Rosacay - Designer and Developer"
   />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Ike Rosacay" />
-  <meta
-    name="twitter:description"
-    content="Designer & Developer based in Caloocan, Philippines. Freelancing since 2025."
-  />
+  <meta name="twitter:title" content={metadata.title} />
+  <meta name="twitter:description" content={metadata.description} />
   <meta name="twitter:image" content="https://ikerosacay.com/banner.webp" />
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" href="/favicon.png" sizes="256x256" />

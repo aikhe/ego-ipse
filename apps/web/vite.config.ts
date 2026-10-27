@@ -15,19 +15,10 @@ export default defineConfig({
     cssMinify: true,
     sourcemap: false,
     target: 'es2020',
+    // no manualChunks: forcing three/threlte into a named chunk also pulled
+    // the shared svelte runtime in, so every opus page loaded webgl weight.
+    // route-level splitting already keeps three on /ipse only.
     chunkSizeWarningLimit: 600,
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          // three/threlte/paper-design only run on the /ipse route:
-          // isolate them so the opus homepage ships without webgl weight.
-          if (id.includes('@paper-design/shaders')) return 'vendor-shaders';
-          if (id.includes('@threlte/') || id.includes('three'))
-            return 'vendor-three';
-          if (id.includes('gsap')) return 'vendor-gsap';
-        },
-      },
-    },
   },
   test: {
     expect: { requireAssertions: true },

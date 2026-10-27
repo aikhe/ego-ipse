@@ -7,6 +7,7 @@ interface WorkMeta {
 
 export interface WorkCell {
   src?: string;
+  srcset?: string;
   alt?: string;
   span?: 'wide';
   ratio?: string;

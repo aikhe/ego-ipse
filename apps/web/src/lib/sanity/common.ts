@@ -27,6 +27,22 @@ export function sizedSanityUrl(
   return `${src}${sep}auto=format&w=${width}&q=${quality}&fit=max`;
 }
 
+// responsive widths for sanity images: 400w / 600w cover 1x grid and wide
+// cells, the capped width serves dense or large displays. undefined for
+// non-sanity urls.
+const SRCSET_STEPS = [400, 600];
+
+export function sanitySrcset(
+  src: string,
+  width = 1200,
+  quality = 80
+): string | undefined {
+  if (!src.includes('cdn.sanity.io')) return undefined;
+  const widths = [...SRCSET_STEPS.filter(w => w < width), width];
+  if (widths.length < 2) return undefined;
+  return widths.map(w => `${sizedSanityUrl(src, w, quality)} ${w}w`).join(', ');
+}
+
 // description-only documents (about, blogs, kaia, services).
 export function normalizeOpusDescription(
   raw: SanityOpusDescription | null | undefined

@@ -27,11 +27,7 @@
 
 <div class="opus-section opus-section--footer opus-footer" bind:this={ref}>
   {#if showCard}
-    <a
-      class="opus-footer__card"
-      href={resolve('/services')}
-      aria-label="View services"
-    >
+    <a class="opus-footer__card" href={resolve('/services')}>
       <span class="opus-footer__top">
         <span class="opus-footer__title">Services</span>
         <svg

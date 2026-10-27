@@ -14,6 +14,11 @@
   import poster2Thumb from '$lib/assets/posters/2.webp';
   import poster3Thumb from '$lib/assets/posters/3.webp';
   import poster4Thumb from '$lib/assets/posters/4.webp';
+  // 400w thumbs: the 1x pick at desktop grid size (~282px wide).
+  import poster1Small from '$lib/assets/posters/1-400.webp';
+  import poster2Small from '$lib/assets/posters/2-400.webp';
+  import poster3Small from '$lib/assets/posters/3-400.webp';
+  import poster4Small from '$lib/assets/posters/4-400.webp';
   // full-res webp: fullscreen overlay only. the grid keeps the small
   // thumbs so the initial page stays light; the overlay lazy-loads
   // these on demand. (1-full is resized to 1600w: covers 2x dpr at
@@ -23,7 +28,16 @@
   import poster3Full from '$lib/assets/posters/3-full.webp';
   import poster4Full from '$lib/assets/posters/4-full.webp';
 
-  const posters = [poster1Thumb, poster4Thumb, poster3Thumb, poster2Thumb];
+  const posters = [
+    { src: poster1Thumb, small: poster1Small },
+    { src: poster4Thumb, small: poster4Small },
+    { src: poster3Thumb, small: poster3Small },
+    { src: poster2Thumb, small: poster2Small },
+  ];
+  // grid cell width: half the 36rem column, 78vw on the mobile scroller.
+  const posterSizes = '(max-width: 48rem) 78vw, 17.65rem';
+  const posterSrcset = (p: (typeof posters)[number]) =>
+    `${p.small} 400w, ${p.src} 800w`;
   const posterFulls = [poster1Full, poster4Full, poster3Full, poster2Full];
 
   let { data }: PageProps = $props();
@@ -482,10 +496,17 @@
 </script>
 
 <svelte:head>
-  <link rel="preload" as="image" href={poster1Thumb} fetchpriority="high" />
+  <link
+    rel="preload"
+    as="image"
+    href={poster1Thumb}
+    imagesrcset={posterSrcset(posters[0])}
+    imagesizes={posterSizes}
+    fetchpriority="high"
+  />
 </svelte:head>
 
-<div class="opus-canvas">
+<main class="opus-canvas">
   <div class="opus-grid">
     <div class="opus-col opus-col--1">
       <OpusNav active="opus" />
@@ -559,7 +580,7 @@
             bind:this={trackEl}
             style:transform={nativeSwipe ? 'none' : `translateX(${-pos}px)`}
           >
-            {#each posters as src, i (src)}
+            {#each posters as poster, i (poster.src)}
               <div class="opus-poster-wrap">
                 <div
                   class="opus-poster"
@@ -576,7 +597,9 @@
                   }}
                 >
                   <img
-                    {src}
+                    src={poster.src}
+                    srcset={posterSrcset(poster)}
+                    sizes={posterSizes}
                     alt={`Poster ${i + 1}`}
                     width="800"
                     height="1037"
@@ -691,7 +714,7 @@
         {/if}
         <div class="opus-more">
           <a class="opus-more__btn" href={resolve('/works')}>
-            <span>See more</span>
+            <span>See more<span class="opus-more__hint"> works</span></span>
           </a>
         </div>
       </div>
@@ -717,7 +740,7 @@
   {/if}
   <div class="opus-stripe opus-stripe--top" aria-hidden="true"></div>
   <div class="opus-stripe opus-stripe--bottom" aria-hidden="true"></div>
-</div>
+</main>
 
 {#if selectedPoster !== null && PosterOverlayCmp}
   <PosterOverlayCmp bind:selected={selectedPoster} images={posterFulls} />
@@ -828,6 +851,17 @@
     transition:
       background 0.25s ease,
       color 0.25s ease;
+  }
+
+  /* screen-reader-only suffix: gives the link a descriptive name without
+    changing the visible label. */
+  .opus-more__hint {
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
   }
 
   .opus-more__btn:hover {

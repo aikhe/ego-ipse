@@ -145,7 +145,7 @@
   }
 </script>
 
-<div class="opus-canvas">
+<main class="opus-canvas">
   <div class="opus-grid">
     <div class="opus-col opus-col--1">
       <OpusNav active="nvim" />
@@ -323,7 +323,7 @@
       {/key}
     </div>
   {/if}
-</div>
+</main>
 
 <style>
   .opus-section {

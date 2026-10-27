@@ -50,6 +50,11 @@
   }
 
   const placed = buildPlaced();
+
+  // rendered cell widths: half / full of the ~34rem preview grid on desktop,
+  // the stacked full-width grid on mobile.
+  const CELL_SIZES = '(max-width: 48rem) 50vw, 17rem';
+  const WIDE_SIZES = '(max-width: 48rem) 100vw, 34rem';
 </script>
 
 <article class="opus-work">
@@ -123,6 +128,8 @@
           {#if p.cell.src}
             <img
               src={p.cell.src}
+              srcset={p.cell.srcset}
+              sizes={p.wide ? WIDE_SIZES : CELL_SIZES}
               alt={p.cell.alt ?? `${work.title} preview`}
               width={p.cell.width}
               height={p.cell.height}

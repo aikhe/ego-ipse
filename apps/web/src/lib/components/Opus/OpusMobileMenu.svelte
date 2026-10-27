@@ -1,5 +1,7 @@
 <script lang="ts">
   import { fade, fly } from 'svelte/transition';
+  import { cubicOut } from 'svelte/easing';
+  import { reducedMotion } from '$lib/utils/opusMotion';
   import { afterNavigate } from '$app/navigation';
   import OpusNav from '$lib/components/Opus/OpusNav.svelte';
 
@@ -99,7 +101,7 @@
     aria-label="Site menu"
     tabindex="-1"
     onkeydown={trapTab}
-    transition:fade={{ duration: 180 }}
+    transition:fade={{ duration: 180, easing: cubicOut }}
   >
     <button
       class="opus-menu__backdrop"
@@ -111,7 +113,11 @@
       class="opus-menu__panel"
       bind:this={panelEl}
       tabindex="-1"
-      transition:fly={{ x: 48, duration: 220 }}
+      transition:fly={{
+        x: reducedMotion.current ? 0 : 48,
+        duration: reducedMotion.current ? 180 : 220,
+        easing: cubicOut,
+      }}
     >
       <OpusNav {active} overlay={true} />
       <span class="opus-menu__note">[Temporary portfolio]</span>

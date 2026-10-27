@@ -1,9 +1,15 @@
 <script lang="ts">
   import { page } from '$app/state';
+  import { onDestroy } from 'svelte';
   import OpusMobileMenu from '$lib/components/Opus/OpusMobileMenu.svelte';
+  import { cancelOpusThemeTransition } from '$lib/utils/opusTheme';
   import type { LayoutProps } from './$types';
 
   let { children }: LayoutProps = $props();
+
+  onDestroy(() => {
+    if (typeof document !== 'undefined') cancelOpusThemeTransition();
+  });
 
   type OpusSection =
     | 'opus'
@@ -40,6 +46,32 @@
 {@render children()}
 
 <style>
+  :global(html[data-opus-theme-transition]::view-transition) {
+    pointer-events: none;
+  }
+
+  :global(html[data-opus-theme-transition]::view-transition-old(root)),
+  :global(html[data-opus-theme-transition]::view-transition-new(root)) {
+    animation-duration: 250ms;
+    animation-timing-function: ease-out;
+  }
+
+  :global(html[data-opus-theme-fallback] body),
+  :global(html[data-opus-theme-fallback] body *) {
+    transition:
+      background-color 0.25s ease,
+      border-color 0.25s ease,
+      color 0.25s ease,
+      fill 0.25s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html[data-opus-theme-transition]::view-transition-old(root)),
+    :global(html[data-opus-theme-transition]::view-transition-new(root)) {
+      animation-duration: 120ms;
+    }
+  }
+
   :global(html) {
     height: auto;
     overflow: auto;

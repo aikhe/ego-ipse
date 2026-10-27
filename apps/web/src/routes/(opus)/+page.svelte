@@ -2,6 +2,7 @@
   import { resolve } from '$app/paths';
   import type { Component } from 'svelte';
   import { uiState } from '$lib/state/ui.svelte';
+  import { reducedMotion } from '$lib/utils/opusMotion';
   import OpusNav from '$lib/components/Opus/OpusNav.svelte';
   import type { PageProps } from './$types';
   import WorkCard from '$lib/components/Work/WorkCard.svelte';
@@ -103,7 +104,7 @@
     const viewport = viewportEl;
     const onScroll = () => {
       scrollPos = viewport.scrollLeft;
-      if (settling) return;
+      if (settling || reducedMotion.current) return;
       if (quietTimer) clearTimeout(quietTimer);
       quietTimer = setTimeout(() => settleFromRest(), 140);
     };
@@ -126,7 +127,10 @@
   function nudge(dir: -1 | 1) {
     if (nativeSwipe && viewportEl) {
       cancelSettle();
-      viewportEl.scrollBy({ left: dir * stepWidth(), behavior: 'smooth' });
+      viewportEl.scrollBy({
+        left: dir * stepWidth(),
+        behavior: reducedMotion.current ? 'instant' : 'smooth',
+      });
       return;
     }
     go(dir);
@@ -163,7 +167,14 @@
   }
 
   function settleFromRest() {
-    if (!viewportEl || !trackEl || settling || touchActive) return;
+    if (
+      !viewportEl ||
+      !trackEl ||
+      settling ||
+      touchActive ||
+      reducedMotion.current
+    )
+      return;
     const wraps = Array.from(trackEl.children) as HTMLElement[];
     if (wraps.length === 0) return;
     const trackRect = trackEl.getBoundingClientRect();
@@ -218,6 +229,15 @@
     settling = false;
   }
 
+  $effect(() => {
+    if (reducedMotion.current && viewportEl) {
+      cancelSettle();
+      // stop an in-flight native smooth scroll when the preference changes.
+      viewportEl.scrollTo({ left: viewportEl.scrollLeft, behavior: 'instant' });
+    }
+    return cancelSettle;
+  });
+
   // tracks the touch gesture so the settle knows the swipe direction. the
   // drag itself is untouched, native scroll owns it.
   $effect(() => {
@@ -232,6 +252,7 @@
     const onTouchDone = () => {
       touchActive = false;
       if (quietTimer) clearTimeout(quietTimer);
+      if (reducedMotion.current) return;
       quietTimer = setTimeout(() => settleFromRest(), 140);
     };
     viewport.addEventListener('touchstart', onTouchStart, { passive: true });
@@ -868,12 +889,18 @@
   .opus-posters {
     display: flex;
     gap: 0.7rem;
-    transition: transform 0.72s cubic-bezier(0.25, 1, 0.5, 1);
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
     will-change: transform;
   }
 
   .opus-posters--dragging {
     transition: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .opus-posters {
+      transition: none;
+    }
   }
 
   .opus-poster-wrap {

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { resolve } from '$app/paths';
   import { fade, scale } from 'svelte/transition';
+  import { reducedMotion } from '$lib/utils/opusMotion';
   import { uiState } from '$lib/state/ui.svelte';
   import OpusNav from '$lib/components/Opus/OpusNav.svelte';
   import type { PageProps } from './$types';
@@ -251,7 +252,10 @@
                 class="opus-filter__menu"
                 role="listbox"
                 aria-label="Filter works by platform"
-                in:scale={{ duration: 140, start: 0.96 }}
+                in:scale={{
+                  duration: 140,
+                  start: reducedMotion.current ? 1 : 0.96,
+                }}
                 out:fade={{ duration: 110 }}
               >
                 {#each categories as cat (cat.id)}
@@ -343,7 +347,10 @@
             class="opus-filter__menu"
             role="listbox"
             aria-label="Filter works by platform"
-            in:scale={{ duration: 140, start: 0.96 }}
+            in:scale={{
+              duration: 140,
+              start: reducedMotion.current ? 1 : 0.96,
+            }}
             out:fade={{ duration: 110 }}
           >
             {#each categories as cat (cat.id)}
@@ -497,6 +504,7 @@
     padding: 0;
     position: absolute;
     top: 100%;
+    transform-origin: top left;
     z-index: 5;
   }
 
@@ -574,6 +582,18 @@
     top: auto;
     transform: none;
     width: auto;
+  }
+
+  @media (any-pointer: coarse) {
+    .opus-search__input {
+      font-size: 1rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .opus-filter__chevron {
+      transition: none;
+    }
   }
 
   /* touch: press states replace hover states */

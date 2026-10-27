@@ -1,7 +1,6 @@
 <script lang="ts">
   import { resolve } from '$app/paths';
-  import { uiState } from '$lib/state/ui.svelte';
-  import { toggleOpusTheme } from '$lib/utils/opusTheme';
+  import { toggleTheme, uiState } from '$lib/state/ui.svelte';
 
   type OpusSection =
     | 'opus'
@@ -161,7 +160,7 @@
   <button
     class="opus-theme"
     type="button"
-    onclick={toggleOpusTheme}
+    onclick={toggleTheme}
     aria-pressed={isDark}
     aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
   >

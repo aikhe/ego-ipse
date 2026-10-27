@@ -1,5 +1,6 @@
 <script lang="ts">
   import { popIn, popOut, textSwap } from '$lib/utils/transitions';
+  import { tooltipWidth } from '$lib/utils/tooltipWidth';
   import { uiState } from '$lib/state/ui.svelte';
   import OpusNav from '$lib/components/Opus/OpusNav.svelte';
   import OpusFooter from '$lib/components/Opus/OpusFooter.svelte';
@@ -94,33 +95,6 @@
   let prevEl: HTMLElement | null = null;
   let lastX: number | null = null;
   let lastY: number | null = null;
-  let tipEl = $state<HTMLDivElement | null>(null);
-  let lastTipW: number | null = null;
-  let widthAnim: Animation | null = null;
-
-  // smooth width: content-driven auto width jumps skip css transitions,
-  // so tween the measured width via waapi whenever the text changes
-  $effect(() => {
-    const text = tip?.text;
-    if (!text) {
-      lastTipW = null;
-      return;
-    }
-    const el = tipEl;
-    if (!el) return;
-    // a previous tween may still hold the width: read the rendered width,
-    // cancel it, then measure the new intrinsic width before tweening
-    const from = el.getBoundingClientRect().width;
-    const fresh = lastTipW === null;
-    widthAnim?.cancel();
-    const to = el.offsetWidth;
-    lastTipW = to;
-    if (fresh || Math.abs(from - to) < 1) return;
-    widthAnim = el.animate([{ width: `${from}px` }, { width: `${to}px` }], {
-      duration: 280,
-      easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-    });
-  });
 
   // page scroll leaves a fixed pill stale: drop it on scroll.
   $effect(() => {
@@ -325,7 +299,7 @@
       class:opus-nvim__tip--below={tip.below}
       style:left={`${tip.x}px`}
       style:top={`${tip.y}px`}
-      bind:this={tipEl}
+      use:tooltipWidth={tip.text}
       in:popIn
       out:popOut
       aria-hidden="true"

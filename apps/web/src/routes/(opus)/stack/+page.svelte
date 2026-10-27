@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { popIn, popOut, textSwap } from '$lib/utils/transitions';
+  import { popIn, popOut, textSwap } from '$lib/utils/opusMotion';
   import { tooltipWidth } from '$lib/utils/tooltipWidth';
   import { uiState } from '$lib/state/ui.svelte';
   import OpusNav from '$lib/components/Opus/OpusNav.svelte';

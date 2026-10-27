@@ -4,6 +4,9 @@ import adapter from '@sveltejs/adapter-cloudflare';
 const config = {
   kit: {
     adapter: adapter(),
+    // inline every route stylesheet into the ssr html: the page css is small
+    // (~12kb gzip) and a chain of render-blocking requests delays first paint.
+    inlineStyleThreshold: Infinity,
     // nonce'd inline scripts for ssr pages; style-src stays permissive for svelte/gsap inline styles
     csp: {
       mode: 'auto',

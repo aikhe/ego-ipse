@@ -1,6 +1,6 @@
 import type { Work, WorkCell } from '$lib/types/work';
 import type { SanityOpusWork, SanityOpusWorkCell } from '$lib/types/sanity';
-import { sizedSanityUrl } from './common';
+import { sanitySrcset, sizedSanityUrl } from './common';
 import { fetchSanity } from './fetch';
 
 // sanity-generated slugs only; anything else cannot match a doc.
@@ -76,6 +76,7 @@ function toWorkCell(
   // width/height stay intrinsic so aspect-ratio lock + cls are unaffected.
   return {
     src: sizedSanityUrl(src, cdnWidth, 75),
+    srcset: sanitySrcset(src, cdnWidth, 75),
     alt,
     span: raw.wide ? 'wide' : undefined,
     ratio,

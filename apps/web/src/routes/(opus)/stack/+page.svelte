@@ -144,7 +144,7 @@
   }
 </script>
 
-<div class="opus-canvas">
+<main class="opus-canvas">
   <div class="opus-grid">
     <div class="opus-col opus-col--1">
       <OpusNav active="stack" />
@@ -284,7 +284,7 @@
       {/key}
     </div>
   {/if}
-</div>
+</main>
 
 <style>
   .opus-canvas .opus-grid:not(.opus-grid--overlay)::before {

@@ -40,9 +40,12 @@
 {@render children()}
 
 <style>
+  /* stable gutter: the scrollbar appearing mid-render would shift the
+    centered grid (and its bottom markers) as one large layout shift. */
   :global(html) {
     height: auto;
     overflow: auto;
+    scrollbar-gutter: stable;
   }
 
   :global(body) {

@@ -283,7 +283,7 @@
   clears the right viewport edge with room to spare on very wide
   screens (1920 etc.). Hidden everywhere below that. */
 @media (max-width: 120rem) {
-  div.opus-canvas div.opus-sticky {
+  main.opus-canvas div.opus-sticky {
     display: none;
   }
 }
@@ -291,29 +291,29 @@
 /* Mid screens: col--1 (nav) and col--3 (content) stay fixed,
   the gutter columns give way (base: 14 / 4 / 36 / 12 / 8). */
 @media (max-width: 90rem) {
-  div.opus-canvas > div.opus-grid {
+  main.opus-canvas > div.opus-grid {
     grid-template-columns: 14rem 3.5rem 36rem 10rem 6rem;
   }
 
-  div.opus-canvas div.opus-side {
+  main.opus-canvas div.opus-side {
     left: calc(50vw - 34.75rem);
   }
 
-  div.opus-canvas div.opus-posters-viewport,
-  div.opus-canvas div.opus-controls {
+  main.opus-canvas div.opus-posters-viewport,
+  main.opus-canvas div.opus-controls {
     width: calc(100% + 10rem + 2px);
   }
 
-  div.opus-canvas div.opus-stack-cat__grid {
+  main.opus-canvas div.opus-stack-cat__grid {
     width: calc(100% + 6rem + 2px);
   }
 
-  div.opus-canvas div.opus-section--works,
-  div.opus-canvas div.opus-work-detail__gallery {
+  main.opus-canvas div.opus-section--works,
+  main.opus-canvas div.opus-work-detail__gallery {
     width: calc(100% + 16rem + 4px);
   }
 
-  div.opus-canvas div.opus-works__head {
+  main.opus-canvas div.opus-works__head {
     width: calc(100% - 16rem - 4px);
   }
 
@@ -323,29 +323,29 @@
 }
 
 @media (max-width: 69.5rem) {
-  div.opus-canvas > div.opus-grid {
+  main.opus-canvas > div.opus-grid {
     grid-template-columns: 12rem 3rem 36rem 6rem 4rem;
   }
 
-  div.opus-canvas div.opus-side {
+  main.opus-canvas div.opus-side {
     left: calc(50vw - 30.5rem);
   }
 
-  div.opus-canvas div.opus-posters-viewport,
-  div.opus-canvas div.opus-controls {
+  main.opus-canvas div.opus-posters-viewport,
+  main.opus-canvas div.opus-controls {
     width: calc(100% + 6rem + 2px);
   }
 
-  div.opus-canvas div.opus-stack-cat__grid {
+  main.opus-canvas div.opus-stack-cat__grid {
     width: calc(100% + 2rem + 2px);
   }
 
-  div.opus-canvas div.opus-section--works,
-  div.opus-canvas div.opus-work-detail__gallery {
+  main.opus-canvas div.opus-section--works,
+  main.opus-canvas div.opus-work-detail__gallery {
     width: calc(100% + 10rem + 4px);
   }
 
-  div.opus-canvas div.opus-works__head {
+  main.opus-canvas div.opus-works__head {
     width: calc(100% - 10rem - 4px);
   }
 
@@ -357,31 +357,31 @@
 @media (max-width: 63rem) {
   /* nav sidebar no longer fits: it hides here and the Menu button
     (visible up to 63rem) takes over navigation. */
-  div.opus-canvas > div.opus-grid {
+  main.opus-canvas > div.opus-grid {
     grid-template-columns: 36rem 8rem;
   }
 
-  div.opus-canvas div.opus-col--1,
-  div.opus-canvas div.opus-col--2,
-  div.opus-canvas div.opus-col--5 {
+  main.opus-canvas div.opus-col--1,
+  main.opus-canvas div.opus-col--2,
+  main.opus-canvas div.opus-col--5 {
     display: none;
   }
 
-  div.opus-canvas div.opus-posters-viewport,
-  div.opus-canvas div.opus-controls {
+  main.opus-canvas div.opus-posters-viewport,
+  main.opus-canvas div.opus-controls {
     width: calc(100% + 8rem + 2px);
   }
 
-  div.opus-canvas div.opus-stack-cat__grid {
+  main.opus-canvas div.opus-stack-cat__grid {
     width: calc(100% + 4rem + 2px);
   }
 
-  div.opus-canvas div.opus-section--works,
-  div.opus-canvas div.opus-work-detail__gallery {
+  main.opus-canvas div.opus-section--works,
+  main.opus-canvas div.opus-work-detail__gallery {
     width: calc(100% + 8rem + 4px);
   }
 
-  div.opus-canvas div.opus-works__head {
+  main.opus-canvas div.opus-works__head {
     width: calc(100% - 8rem - 4px);
   }
 
@@ -389,12 +389,12 @@
     width: calc(44rem + 2px);
   }
 
-  div.opus-canvas div.opus-work__columns {
+  main.opus-canvas div.opus-work__columns {
     gap: 1.25rem;
     grid-template-columns: minmax(0, 1fr);
   }
 
-  div.opus-canvas div.opus-work__info {
+  main.opus-canvas div.opus-work__info {
     padding-bottom: 0;
     position: static;
   }
@@ -403,25 +403,25 @@
 /* Mobile: single column, sidebar/nav rail/gutters gone,
   nav lives behind the top-right Menu button. */
 @media (max-width: 48rem) {
-  div.opus-canvas > div.opus-grid {
+  main.opus-canvas > div.opus-grid {
     border-right: none;
     grid-template-columns: minmax(0, 1fr);
     width: 100%;
   }
 
-  div.opus-canvas > div.opus-grid:not(.opus-grid--overlay)::after,
-  div.opus-canvas > div.opus-grid:not(.opus-grid--overlay)::before {
+  main.opus-canvas > div.opus-grid:not(.opus-grid--overlay)::after,
+  main.opus-canvas > div.opus-grid:not(.opus-grid--overlay)::before {
     display: none;
   }
 
-  div.opus-canvas div.opus-col--1,
-  div.opus-canvas div.opus-col--2,
-  div.opus-canvas div.opus-col--4,
-  div.opus-canvas div.opus-col--5 {
+  main.opus-canvas div.opus-col--1,
+  main.opus-canvas div.opus-col--2,
+  main.opus-canvas div.opus-col--4,
+  main.opus-canvas div.opus-col--5 {
     display: none;
   }
 
-  div.opus-canvas div.opus-col--3 {
+  main.opus-canvas div.opus-col--3 {
     border-image: none !important;
     border-left: 2px solid var(--color-overlay-02) !important;
     border-right: none;
@@ -429,32 +429,32 @@
     padding: 4.5rem 0 6rem;
   }
 
-  div.opus-canvas div.opus-col__border--right {
+  main.opus-canvas div.opus-col__border--right {
     background: var(--color-overlay-02) !important;
     display: block;
   }
 
-  div.opus-canvas div.opus-posters-viewport,
-  div.opus-canvas div.opus-controls,
-  div.opus-canvas div.opus-section--works,
-  div.opus-canvas div.opus-work-detail__gallery,
-  div.opus-canvas div.opus-section--fleur-fig,
-  div.opus-canvas figure.opus-section--fleur-fig,
-  div.opus-canvas div.opus-section--osn-fig,
-  div.opus-canvas figure.opus-section--osn-fig,
-  div.opus-canvas div.opus-section--knots-fig,
-  div.opus-canvas figure.opus-section--knots-fig,
-  div.opus-canvas div.opus-stack-cat__grid,
+  main.opus-canvas div.opus-posters-viewport,
+  main.opus-canvas div.opus-controls,
+  main.opus-canvas div.opus-section--works,
+  main.opus-canvas div.opus-work-detail__gallery,
+  main.opus-canvas div.opus-section--fleur-fig,
+  main.opus-canvas figure.opus-section--fleur-fig,
+  main.opus-canvas div.opus-section--osn-fig,
+  main.opus-canvas figure.opus-section--osn-fig,
+  main.opus-canvas div.opus-section--knots-fig,
+  main.opus-canvas figure.opus-section--knots-fig,
+  main.opus-canvas div.opus-stack-cat__grid,
   div.opus-footer.opus-section--footer,
   div.opus-footer a.opus-footer__card {
     width: 100%;
   }
 
-  div.opus-canvas div.opus-poster-wrap {
+  main.opus-canvas div.opus-poster-wrap {
     flex-basis: 78%;
   }
 
-  div.opus-canvas div.opus-works__head {
+  main.opus-canvas div.opus-works__head {
     align-items: center;
     display: grid;
     gap: 0.5rem 0.75rem;
@@ -462,18 +462,18 @@
     width: 100%;
   }
 
-  div.opus-canvas div.opus-search {
+  main.opus-canvas div.opus-search {
     grid-column: 1 / -1;
     margin-left: 0;
     margin-right: 0;
   }
 
-  div.opus-canvas input.opus-search__input {
+  main.opus-canvas input.opus-search__input {
     box-sizing: border-box;
     width: 100%;
   }
 
-  div.opus-canvas div.opus-filter {
+  main.opus-canvas div.opus-filter {
     grid-column: 2;
     grid-row: 1;
     justify-self: end;
@@ -484,57 +484,57 @@
     transform: none;
   }
 
-  div.opus-canvas ul.opus-filter__menu {
+  main.opus-canvas ul.opus-filter__menu {
     left: auto;
     right: 0;
   }
 
-  div.opus-canvas div.opus-values__cols {
+  main.opus-canvas div.opus-values__cols {
     grid-template-columns: minmax(0, 1fr);
     margin-top: 0.5rem;
   }
 
-  div.opus-canvas div.opus-section--posters {
+  main.opus-canvas div.opus-section--posters {
     margin-top: 2rem;
   }
 
-  div.opus-canvas div.opus-work__info {
+  main.opus-canvas div.opus-work__info {
     gap: 0.25rem;
   }
 
-  div.opus-canvas dl.opus-work__meta {
+  main.opus-canvas dl.opus-work__meta {
     gap: 0.1rem;
   }
 
-  div.opus-canvas div.opus-work__quote {
+  main.opus-canvas div.opus-work__quote {
     margin-top: 0.5rem;
   }
 
-  div.opus-canvas p.opus-desc {
+  main.opus-canvas p.opus-desc {
     font-size: 1rem;
   }
 
-  div.opus-canvas p.opus-about__desc,
-  div.opus-canvas p.opus-services__desc,
-  div.opus-canvas p.opus-stack__desc,
-  div.opus-canvas p.opus-work-detail__desc,
-  div.opus-canvas p.opus-works__empty {
+  main.opus-canvas p.opus-about__desc,
+  main.opus-canvas p.opus-services__desc,
+  main.opus-canvas p.opus-stack__desc,
+  main.opus-canvas p.opus-work-detail__desc,
+  main.opus-canvas p.opus-works__empty {
     font-size: 1rem;
   }
 
-  div.opus-canvas span.opus-paper-label {
+  main.opus-canvas span.opus-paper-label {
     font-size: 1rem;
   }
 
-  div.opus-canvas svg.opus-paper-design {
+  main.opus-canvas svg.opus-paper-design {
     height: 20px;
   }
 
-  div.opus-canvas li.opus-values__item {
+  main.opus-canvas li.opus-values__item {
     font-size: 1rem;
   }
 
-  div.opus-canvas p.opus-values__quote-text {
+  main.opus-canvas p.opus-values__quote-text {
     font-size: 1rem;
   }
 
@@ -547,17 +547,17 @@
     gap: 0.25rem 1rem;
   }
 
-  div.opus-canvas div.opus-controls {
+  main.opus-canvas div.opus-controls {
     flex-wrap: wrap;
     gap: 0.75rem;
   }
 
-  div.opus-canvas div.opus-works-list {
+  main.opus-canvas div.opus-works-list {
     gap: 2.5rem;
     margin-top: 2.5rem;
   }
 
-  div.opus-canvas div.opus-work__preview {
+  main.opus-canvas div.opus-work__preview {
     gap: 0.35rem;
   }
 

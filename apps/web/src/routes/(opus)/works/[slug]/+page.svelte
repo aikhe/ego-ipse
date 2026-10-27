@@ -37,7 +37,7 @@
   }
 </script>
 
-<div class="opus-canvas">
+<main class="opus-canvas">
   <div class="opus-grid">
     <div class="opus-col opus-col--1">
       <OpusNav active="works" />
@@ -93,7 +93,7 @@
   {/if}
   <div class="opus-stripe opus-stripe--top" aria-hidden="true"></div>
   <div class="opus-stripe opus-stripe--bottom" aria-hidden="true"></div>
-</div>
+</main>
 
 <style>
   .opus-section {

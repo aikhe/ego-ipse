@@ -7,6 +7,8 @@
   import type { PageProps } from './$types';
   import WorkCard from '$lib/components/Work/WorkCard.svelte';
   import ike from '$lib/assets/ike.webp';
+  import ikeSmall from '$lib/assets/ike-64.webp?no-inline';
+  import ikeMedium from '$lib/assets/ike-128.webp?no-inline';
   import OpusFooter from '$lib/components/Opus/OpusFooter.svelte';
   import OpusGithub from '$lib/components/Opus/OpusGithub.svelte';
   import OpusValues from '$lib/components/Opus/OpusValues.svelte';
@@ -14,11 +16,19 @@
   import poster2Thumb from '$lib/assets/posters/2.webp';
   import poster3Thumb from '$lib/assets/posters/3.webp';
   import poster4Thumb from '$lib/assets/posters/4.webp';
-  // 400w thumbs: the 1x pick at desktop grid size (~282px wide).
+  // match the ~282px desktop cards while covering mobile and dense displays.
+  import poster1Desktop from '$lib/assets/posters/1-288.webp';
+  import poster2Desktop from '$lib/assets/posters/2-288.webp';
+  import poster3Desktop from '$lib/assets/posters/3-288.webp';
+  import poster4Desktop from '$lib/assets/posters/4-288.webp';
   import poster1Small from '$lib/assets/posters/1-400.webp';
   import poster2Small from '$lib/assets/posters/2-400.webp';
   import poster3Small from '$lib/assets/posters/3-400.webp';
   import poster4Small from '$lib/assets/posters/4-400.webp';
+  import poster1Medium from '$lib/assets/posters/1-600.webp';
+  import poster2Medium from '$lib/assets/posters/2-600.webp';
+  import poster3Medium from '$lib/assets/posters/3-600.webp';
+  import poster4Medium from '$lib/assets/posters/4-600.webp';
   // full-res webp: fullscreen overlay only. the grid keeps the small
   // thumbs so the initial page stays light; the overlay lazy-loads
   // these on demand. (1-full is resized to 1600w: covers 2x dpr at
@@ -29,15 +39,36 @@
   import poster4Full from '$lib/assets/posters/4-full.webp';
 
   const posters = [
-    { src: poster1Thumb, small: poster1Small },
-    { src: poster4Thumb, small: poster4Small },
-    { src: poster3Thumb, small: poster3Small },
-    { src: poster2Thumb, small: poster2Small },
+    {
+      src: poster1Thumb,
+      desktop: poster1Desktop,
+      small: poster1Small,
+      medium: poster1Medium,
+    },
+    {
+      src: poster4Thumb,
+      desktop: poster4Desktop,
+      small: poster4Small,
+      medium: poster4Medium,
+    },
+    {
+      src: poster3Thumb,
+      desktop: poster3Desktop,
+      small: poster3Small,
+      medium: poster3Medium,
+    },
+    {
+      src: poster2Thumb,
+      desktop: poster2Desktop,
+      small: poster2Small,
+      medium: poster2Medium,
+    },
   ];
-  // grid cell width: half the 36rem column, 78vw on the mobile scroller.
-  const posterSizes = '(max-width: 48rem) 78vw, 17.65rem';
+  // mobile cards occupy 78% of the column after its margins and borders.
+  const posterSizes =
+    '(max-width: 48rem) calc((100vw - 2rem - 4px) * 0.78), 17.65rem';
   const posterSrcset = (p: (typeof posters)[number]) =>
-    `${p.small} 400w, ${p.src} 800w`;
+    `${p.desktop} 288w, ${p.small} 400w, ${p.medium} 600w, ${p.src} 800w`;
   const posterFulls = [poster1Full, poster4Full, poster3Full, poster2Full];
 
   let { data }: PageProps = $props();
@@ -544,6 +575,8 @@
         <div class="opus-profile">
           <img
             src={ike}
+            srcset={`${ikeSmall} 64w, ${ikeMedium} 128w, ${ike} 256w`}
+            sizes="3.4rem"
             alt="Profile"
             width="256"
             height="256"

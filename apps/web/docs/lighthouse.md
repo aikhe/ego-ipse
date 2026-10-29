@@ -4,6 +4,9 @@ The production build scores **100 in Best Practices on desktop and mobile** in
 Lighthouse 13.6.0. Both reports also score 100 in SEO. Accessibility changes were
 excluded as requested.
 
+The later [image sharpness follow-up](./image-quality.md) supersedes the poster
+thumbnail settings below and records the updated image delivery validation.
+
 These are local Cloudflare Pages build results, not a verification of a new
 deployment to `ikerosacay.com`. Deployment and a fresh production audit are still
 required to verify Cloudflare's response processing.

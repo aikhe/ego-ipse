@@ -17,18 +17,22 @@ interface EdgeCache {
   put(key: string, res: Response): Promise<void>;
 }
 
-// stores successful responses in the cloudflare cache api, keyed by path only.
+// stores successful responses by path and an optional representation version.
 // the adapter worker already caches by full url, so without this every
 // `?junk=n` variant would miss and fan out upstream. without a platform
 // (vite dev) it just runs `load`.
 export async function cachedJson(
   event: Pick<RequestEvent, 'url' | 'platform'>,
   load: () => Promise<Loaded>,
-  cacheControl = CACHE_CONTROL
+  cacheControl = CACHE_CONTROL,
+  version?: string
 ): Promise<Response> {
   const cache = event.platform?.caches.default as unknown as
     EdgeCache | undefined;
-  const key = event.url.origin + event.url.pathname;
+  const key =
+    event.url.origin +
+    event.url.pathname +
+    (version ? `?v=${encodeURIComponent(version)}` : '');
 
   const hit = await cache?.match(key);
   if (hit) {
@@ -41,8 +45,8 @@ export async function cachedJson(
   }
 
   const { body, ok } = await load();
-  // security headers go in the stored copy: the adapter worker matches this
-  // entry for query-less requests and serves it without running hooks.
+  // security headers go in the stored copy: the adapter can serve a matching
+  // entry directly without running hooks.
   const res = json(body, {
     headers: {
       ...SECURITY_HEADERS,

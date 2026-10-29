@@ -3,6 +3,14 @@ import type { SanityOpusWork, SanityOpusWorkCell } from '$lib/types/sanity';
 import { sanitySrcset, sizedSanityUrl } from './common';
 import { fetchSanity } from './fetch';
 
+// separate the sharper image representation from already-cached work data.
+export const OPUS_WORKS_CACHE_VERSION = 'images-hq';
+
+export function opusWorksApiPath(slug?: string): string {
+  const path = `/api/opus-works${slug ? `/${encodeURIComponent(slug)}` : ''}`;
+  return `${path}?v=${OPUS_WORKS_CACHE_VERSION}`;
+}
+
 // sanity-generated slugs only; anything else cannot match a doc.
 export function isOpusWorkSlug(slug: string): boolean {
   return /^[a-z0-9-]{1,96}$/.test(slug);
@@ -59,7 +67,7 @@ function toWorkCell(
   raw: SanityOpusWorkCell,
   fallbackTitle: string,
   index: number,
-  cdnWidth = 900
+  cdnWidth = 1600
 ): WorkCell | null {
   const src = raw.src?.trim();
   if (!src) return null;
@@ -73,10 +81,11 @@ function toWorkCell(
   const alt = raw.alt?.trim()
     ? raw.alt.trim()
     : `${fallbackTitle} preview ${index + 1}`;
+  const imageWidth = Math.min(raw.assetWidth ?? cdnWidth, cdnWidth);
   // width/height stay intrinsic so aspect-ratio lock + cls are unaffected.
   return {
-    src: sizedSanityUrl(src, cdnWidth, 75),
-    srcset: sanitySrcset(src, cdnWidth, 75),
+    src: sizedSanityUrl(src, imageWidth, 88),
+    srcset: sanitySrcset(src, imageWidth, 88),
     alt,
     span: raw.wide ? 'wide' : undefined,
     ratio,
@@ -133,10 +142,10 @@ function mapSanityOpusWorkToWork(raw: SanityOpusWork): Work | null {
   const cells = (raw.cells ?? []).flatMap(
     (cell, i) => toWorkCell(cell, title, i) ?? []
   );
-  // detail gallery spans past the column (100% + 20rem): 1600px so wide
-  // desktop cells stay sharp while cards stay capped at 900px.
-  const gallery = (raw.gallery ?? []).flatMap(
-    (cell, i) => toWorkCell(cell, title, i, 1600) ?? []
+  // preserve native detail for large and dense gallery slots.
+  const gallerySource = raw.gallery?.length ? raw.gallery : raw.cells;
+  const gallery = (gallerySource ?? []).flatMap(
+    (cell, i) => toWorkCell(cell, title, i, 2400) ?? []
   );
   const quoteText = raw.quote?.text?.trim();
   const quoteBy = raw.quote?.by?.trim();

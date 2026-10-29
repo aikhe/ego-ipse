@@ -105,6 +105,10 @@
           {#if p.cell.src}
             <img
               src={p.cell.src}
+              srcset={p.cell.srcset}
+              sizes={p.wide
+                ? 'auto, (max-width: 48rem) 100vw, 56.2rem'
+                : 'auto, (max-width: 48rem) 50vw, 28.1rem'}
               alt={p.cell.alt ?? work.title}
               width={p.cell.width}
               height={p.cell.height}

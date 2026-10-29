@@ -3,6 +3,7 @@ import { cachedJson } from '$lib/server/edgeCache';
 import {
   fetchSanityOpusWorkBySlug,
   isOpusWorkSlug,
+  OPUS_WORKS_CACHE_VERSION,
 } from '$lib/sanity/opusWorks';
 import type { RequestHandler } from './$types';
 
@@ -14,10 +15,15 @@ export const GET: RequestHandler = async event => {
   if (!isOpusWorkSlug(slug)) {
     return json({ work: null }, { headers: { 'Cache-Control': 'no-store' } });
   }
-  return cachedJson(event, async () => {
-    const work = await fetchSanityOpusWorkBySlug(fetch, slug);
-    // null covers both missing docs and failed fetches: only cache a hit so
-    // a transient outage cannot pin a real page as missing for hours.
-    return { body: { work }, ok: work !== null };
-  });
+  return cachedJson(
+    event,
+    async () => {
+      const work = await fetchSanityOpusWorkBySlug(fetch, slug);
+      // null covers both missing docs and failed fetches: only cache a hit so
+      // a transient outage cannot pin a real page as missing for hours.
+      return { body: { work }, ok: work !== null };
+    },
+    undefined,
+    OPUS_WORKS_CACHE_VERSION
+  );
 };

@@ -1,5 +1,6 @@
 import { getJson } from '$lib/server/getJson';
 import type { SanityOpusWorksResult } from '$lib/sanity/opusWorks';
+import { opusWorksApiPath } from '$lib/sanity/opusWorks';
 import type { SanityOpusValues } from '$lib/types/sanity';
 import type { PageServerLoad } from './$types';
 
@@ -10,7 +11,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
   const [worksData, valuesData] = await Promise.all([
     getJson<Pick<SanityOpusWorksResult, 'sanitySelected'>>(
       fetch,
-      '/api/opus-works'
+      opusWorksApiPath()
     ),
     getJson<{ sanityValues?: SanityOpusValues | null }>(
       fetch,

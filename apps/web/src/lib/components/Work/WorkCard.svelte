@@ -51,10 +51,12 @@
 
   const placed = buildPlaced();
 
-  // rendered cell widths: half / full of the ~34rem preview grid on desktop,
-  // the stacked full-width grid on mobile.
-  const CELL_SIZES = '(max-width: 48rem) 50vw, 17rem';
-  const WIDE_SIZES = '(max-width: 48rem) 100vw, 34rem';
+  // lazy images use their actual layout width, including the stacked tablet
+  // layout; conservative fallbacks cover browsers without auto sizes.
+  const CELL_SIZES =
+    'auto, (max-width: 48rem) 50vw, (max-width: 63rem) 22.1rem, 18.6rem';
+  const WIDE_SIZES =
+    'auto, (max-width: 48rem) 100vw, (max-width: 63rem) 44.2rem, 37.1rem';
 </script>
 
 <article class="opus-work">

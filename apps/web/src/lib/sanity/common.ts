@@ -27,10 +27,8 @@ export function sizedSanityUrl(
   return `${src}${sep}auto=format&w=${width}&q=${quality}&fit=max`;
 }
 
-// responsive widths for sanity images: 400w / 600w cover 1x grid and wide
-// cells, the capped width serves dense or large displays. undefined for
-// non-sanity urls.
-const SRCSET_STEPS = [400, 600];
+// keep small candidates for cards and add enough steps for dense displays.
+const SRCSET_STEPS = [400, 600, 900, 1200, 1600, 2000];
 
 export function sanitySrcset(
   src: string,

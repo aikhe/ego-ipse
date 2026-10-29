@@ -1,6 +1,7 @@
 <script lang="ts">
   import { popIn, popOut, textSwap } from '$lib/utils/opusMotion';
   import { tooltipWidth } from '$lib/utils/tooltipWidth';
+  import { whenNearViewport } from '$lib/utils/whenNearViewport';
 
   interface ContributionDay {
     date: string;
@@ -146,25 +147,29 @@
   }
 
   $effect(() => {
-    let cancelled = false;
+    if (!ref) return;
+    const controller = new AbortController();
     async function load() {
       try {
-        const res = await fetch('/api/github/contributions');
+        const res = await fetch('/api/github/contributions', {
+          signal: controller.signal,
+        });
         if (!res.ok) throw new Error('contributions fetch failed');
         const data = (await res.json()) as {
           total?: number;
           contributions?: ContributionDay[];
         };
-        if (cancelled) return;
+        if (controller.signal.aborted) return;
         rawDays = Array.isArray(data.contributions) ? data.contributions : [];
         loaded = true;
       } catch {
-        if (!cancelled) failed = true;
+        if (!controller.signal.aborted) failed = true;
       }
     }
-    load();
+    const stopObserving = whenNearViewport(ref, () => void load());
     return () => {
-      cancelled = true;
+      stopObserving();
+      controller.abort();
     };
   });
 
@@ -172,19 +177,14 @@
   $effect(() => {
     if (!scrollEl) return;
     const weeks = Math.max(1, Math.ceil(days.length / 7));
-    const sync = () => {
-      const w = scrollEl!.clientWidth;
-      const next = (w - (weeks - 1) * GRID_GAP_PX) / weeks;
+    const ro = new ResizeObserver(([entry]) => {
+      if (!entry) return;
+      const next =
+        (entry.contentRect.width - (weeks - 1) * GRID_GAP_PX) / weeks;
       cellPx = Math.max(3, Math.min(12, next));
-    };
-    sync();
-    const ro = new ResizeObserver(sync);
+    });
     ro.observe(scrollEl);
-    window.addEventListener('resize', sync);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener('resize', sync);
-    };
+    return () => ro.disconnect();
   });
 
   // mobile breakpoint mirrors the opus layout (48rem): 6-month window

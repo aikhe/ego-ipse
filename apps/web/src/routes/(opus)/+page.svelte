@@ -12,64 +12,11 @@
   import OpusFooter from '$lib/components/Opus/OpusFooter.svelte';
   import OpusGithub from '$lib/components/Opus/OpusGithub.svelte';
   import OpusValues from '$lib/components/Opus/OpusValues.svelte';
-  import poster1Thumb from '$lib/assets/posters/1.webp';
-  import poster2Thumb from '$lib/assets/posters/2.webp';
-  import poster3Thumb from '$lib/assets/posters/3.webp';
-  import poster4Thumb from '$lib/assets/posters/4.webp';
-  // match the ~282px desktop cards while covering mobile and dense displays.
-  import poster1Desktop from '$lib/assets/posters/1-288.webp';
-  import poster2Desktop from '$lib/assets/posters/2-288.webp';
-  import poster3Desktop from '$lib/assets/posters/3-288.webp';
-  import poster4Desktop from '$lib/assets/posters/4-288.webp';
-  import poster1Small from '$lib/assets/posters/1-400.webp';
-  import poster2Small from '$lib/assets/posters/2-400.webp';
-  import poster3Small from '$lib/assets/posters/3-400.webp';
-  import poster4Small from '$lib/assets/posters/4-400.webp';
-  import poster1Medium from '$lib/assets/posters/1-600.webp';
-  import poster2Medium from '$lib/assets/posters/2-600.webp';
-  import poster3Medium from '$lib/assets/posters/3-600.webp';
-  import poster4Medium from '$lib/assets/posters/4-600.webp';
-  // full-res webp: fullscreen overlay only. the grid keeps the small
-  // thumbs so the initial page stays light; the overlay lazy-loads
-  // these on demand. (1-full is resized to 1600w: covers 2x dpr at
-  // overlay display size, the rest are native 1424w.)
-  import poster1Full from '$lib/assets/posters/1-full.webp';
-  import poster2Full from '$lib/assets/posters/2-full.webp';
-  import poster3Full from '$lib/assets/posters/3-full.webp';
-  import poster4Full from '$lib/assets/posters/4-full.webp';
-
-  const posters = [
-    {
-      src: poster1Thumb,
-      desktop: poster1Desktop,
-      small: poster1Small,
-      medium: poster1Medium,
-    },
-    {
-      src: poster4Thumb,
-      desktop: poster4Desktop,
-      small: poster4Small,
-      medium: poster4Medium,
-    },
-    {
-      src: poster3Thumb,
-      desktop: poster3Desktop,
-      small: poster3Small,
-      medium: poster3Medium,
-    },
-    {
-      src: poster2Thumb,
-      desktop: poster2Desktop,
-      small: poster2Small,
-      medium: poster2Medium,
-    },
-  ];
-  // mobile cards occupy 78% of the column after its margins and borders.
-  const posterSizes =
-    '(max-width: 48rem) calc((100vw - 2rem - 4px) * 0.78), 17.65rem';
-  const posterSrcset = (p: (typeof posters)[number]) =>
-    `${p.desktop} 288w, ${p.small} 400w, ${p.medium} 600w, ${p.src} 800w`;
-  const posterFulls = [poster1Full, poster4Full, poster3Full, poster2Full];
+  import {
+    posters,
+    posterFulls,
+    posterSizes,
+  } from '$lib/components/Poster/posterImages';
 
   let { data }: PageProps = $props();
 
@@ -530,8 +477,8 @@
   <link
     rel="preload"
     as="image"
-    href={poster1Thumb}
-    imagesrcset={posterSrcset(posters[0])}
+    href={posters[0].src}
+    imagesrcset={posters[0].srcset}
     imagesizes={posterSizes}
     fetchpriority="high"
   />
@@ -631,7 +578,7 @@
                 >
                   <img
                     src={poster.src}
-                    srcset={posterSrcset(poster)}
+                    srcset={poster.srcset}
                     sizes={posterSizes}
                     alt={`Poster ${i + 1}`}
                     width="800"

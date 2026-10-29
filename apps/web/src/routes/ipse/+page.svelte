@@ -4,10 +4,10 @@
   import ShaderLayout from '$lib/layouts/ShaderLayout.svelte';
   import PosterOverlay from '$lib/components/Poster/PosterOverlay.svelte';
 
-  import poster1 from '$lib/assets/posters/1.png';
-  import poster2 from '$lib/assets/posters/2.png';
-  import poster3 from '$lib/assets/posters/3.png';
-  import poster4 from '$lib/assets/posters/4.png';
+  import poster1 from '$lib/assets/posters/1-full.webp';
+  import poster2 from '$lib/assets/posters/2-full.webp';
+  import poster3 from '$lib/assets/posters/3-full.webp';
+  import poster4 from '$lib/assets/posters/4-full.webp';
 
   import { uiState } from '$lib/state/ui.svelte';
 

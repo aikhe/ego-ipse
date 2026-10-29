@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import '../styles/main.css';
+  import geistLatin from '$lib/assets/fonts/geist-latin.woff2';
+  import geistMonoLatin from '$lib/assets/fonts/geist-mono-latin.woff2';
   import { page } from '$app/state';
   import { SITE_JSON_LD_TAG, SITE_URL } from '$lib/site';
   import { getPageMetadata } from '$lib/utils/pageMetadata';
@@ -117,6 +119,20 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <svelte:head>
+  <link
+    rel="preload"
+    as="font"
+    type="font/woff2"
+    href={geistLatin}
+    crossorigin="anonymous"
+  />
+  <link
+    rel="preload"
+    as="font"
+    type="font/woff2"
+    href={geistMonoLatin}
+    crossorigin="anonymous"
+  />
   <title>{metadata.title}</title>
   <link rel="canonical" href={SITE_URL + page.url.pathname} />
   <meta

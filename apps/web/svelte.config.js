@@ -13,8 +13,8 @@ const config = {
       directives: {
         'default-src': ['self'],
         'script-src': ['self'],
-        'style-src': ['self', 'unsafe-inline', 'https://fonts.googleapis.com'],
-        'font-src': ['self', 'data:', 'https://fonts.gstatic.com'],
+        'style-src': ['self', 'unsafe-inline'],
+        'font-src': ['self'],
         'img-src': ['self', 'data:', 'blob:', 'https://cdn.sanity.io'],
         'connect-src': ['self', 'blob:', 'https://cdn.sanity.io'],
         'frame-ancestors': ['none'],
